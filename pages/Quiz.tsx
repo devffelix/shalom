@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Check, Sparkles, ChevronRight, Shield, Clock, Zap, Target, Lock, Users, Sun, Flame, BookOpen } from 'lucide-react';
+import { ArrowRight, Check, Sparkles, ChevronRight, Shield, Clock, Zap, Target, Lock, Users, Sun, Flame, BookOpen, Coffee, CreditCard, Star } from 'lucide-react';
 import { ShalomLogo } from '../components/Layout';
 
 interface Question {
@@ -29,6 +29,10 @@ const Quiz: React.FC = () => {
   // Loading state
   const [isGenerating, setIsGenerating] = useState(false);
   const [loadingText, setLoadingText] = useState('Orando por direção...');
+  
+  // Sales Letter State
+  const [showOffer, setShowOffer] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<'yearly' | 'monthly'>('yearly');
   
   const feedbackTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -223,6 +227,13 @@ const Quiz: React.FC = () => {
     }
   };
 
+  const handleCheckout = () => {
+      const link = selectedPlan === 'yearly' 
+        ? 'https://pay.cakto.com.br/4f62xu5' 
+        : 'https://pay.cakto.com.br/37whf2r_678375';
+      window.location.href = link;
+  };
+
   useEffect(() => {
     if (showFeedback && currentQ.type !== 'final') {
         feedbackTimeoutRef.current = setTimeout(() => {
@@ -277,7 +288,143 @@ const Quiz: React.FC = () => {
 
   // ---------------------------------------------------
 
-  // FINAL LANDING PAGE RENDER (High Conversion + Spiritual Language)
+  // SALES LETTER OVERLAY (A Carta de Vendas)
+  if (showOffer) {
+      return (
+          <div className="min-h-screen bg-black text-white overflow-y-auto animate-fade-in relative z-50">
+              <div className="max-w-2xl mx-auto p-6 md:p-12 pb-32">
+                  
+                  {/* Header / Hook */}
+                  <div className="text-center mb-10">
+                      <div className="inline-block p-3 bg-gold/10 rounded-full text-gold mb-6 border border-gold/20 shadow-[0_0_30px_rgba(251,191,36,0.2)]">
+                          <Coffee size={32} strokeWidth={1.5} />
+                      </div>
+                      <h1 className="text-3xl md:text-5xl font-serif font-black leading-tight mb-4 text-transparent bg-clip-text bg-gradient-to-r from-white via-stone-200 to-stone-400">
+                          Menos que uma pizza...<br/>
+                          <span className="text-gold">Mais valioso que ouro.</span>
+                      </h1>
+                      <div className="w-24 h-1 bg-gradient-to-r from-transparent via-gold to-transparent mx-auto rounded-full opacity-50"></div>
+                  </div>
+
+                  {/* The Letter Body */}
+                  <div className="font-serif text-lg leading-relaxed mx-auto mb-12">
+                      <p className="text-white font-bold text-xl mb-6">Paz, {name}.</p>
+                      
+                      <p className="text-stone-300 mb-4">Seu Plano Profético <span className="text-white font-bold">"{userNeed}"</span> está pronto.</p>
+                      
+                      <p className="text-stone-300 mb-4">Ele já está separado no nosso sistema.</p>
+
+                      <p className="text-stone-300 mb-4">Analisamos suas respostas com cuidado.</p>
+                      
+                      <p className="text-stone-300 mb-6">E desenhamos uma jornada exata para os próximos 14 dias.</p>
+
+                      <p className="text-stone-300 mb-4">Mas antes de te entregar as chaves deste novo tempo...</p>
+
+                      <p className="text-stone-300 mb-8">Preciso ser <span className="italic text-white">transparente</span> com você, como a luz.</p>
+
+                      <div className="border-l-4 border-gold pl-6 py-2 my-10 bg-gradient-to-r from-stone-900 to-transparent">
+                          <p className="text-xl text-white font-bold italic leading-tight">
+                              "Nós tomamos uma decisão radical: <br/><span className="text-gold">Não aceitamos anúncios no Shalom.</span>"
+                          </p>
+                      </div>
+
+                      <p className="text-stone-300 mb-4">Imagine você orando...</p>
+
+                      <p className="text-stone-300 mb-4">E, de repente, aparece uma propaganda de <span className="text-white font-bold bg-red-900/30 px-1 rounded">jogo de aposta</span>.</p>
+
+                      <p className="text-stone-300 mb-4">Isso seria um desrespeito com o seu momento sagrado.</p>
+
+                      <p className="text-stone-300 italic mb-8">O templo deve ser limpo.</p>
+
+                      <p className="text-stone-300 mb-4">Porém, manter esta estrutura tecnológica tem um custo alto.</p>
+
+                      <p className="text-stone-300 mb-4">Servidores. Inteligência Artificial. Equipe.</p>
+
+                      <p className="text-stone-300 mb-4">Não temos grandes investidores.</p>
+
+                      <p className="text-white font-bold text-xl mb-8">Temos apenas irmãos como você.</p>
+
+                      <p className="text-stone-300 font-bold">Por isso, pedimos uma pequena oferta de assinatura para manter este ministério no ar.</p>
+                  </div>
+
+                  {/* Pricing Cards */}
+                  <div className="space-y-4 mb-10">
+                      
+                      {/* Yearly (Best Value) */}
+                      <div 
+                          onClick={() => setSelectedPlan('yearly')}
+                          className={`relative cursor-pointer rounded-3xl p-6 border-2 transition-all duration-300 flex flex-col md:flex-row items-center justify-between gap-4 shadow-xl overflow-hidden group
+                          ${selectedPlan === 'yearly' ? 'bg-gradient-to-br from-stone-900 to-black border-gold ring-2 ring-gold/20' : 'bg-stone-900 border-stone-800 opacity-60 hover:opacity-100'}
+                          `}
+                      >
+                          {selectedPlan === 'yearly' && (
+                              <div className="absolute top-0 right-0 bg-gold text-black text-[10px] font-bold px-4 py-1 rounded-bl-xl uppercase tracking-wider">
+                                  Melhor Escolha
+                              </div>
+                          )}
+                          
+                          <div className="flex items-center gap-4 z-10">
+                              <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-colors ${selectedPlan === 'yearly' ? 'bg-gold border-gold text-black' : 'border-stone-600'}`}>
+                                  {selectedPlan === 'yearly' && <Check size={16} strokeWidth={4} />}
+                              </div>
+                              <div className="text-left">
+                                  <h4 className="font-bold text-white text-lg">Acesso Anual (1 Ano)</h4>
+                                  <p className="text-stone-400 text-xs">Equivale a <span className="text-green-400 font-bold">R$ 4,15 por mês</span></p>
+                              </div>
+                          </div>
+
+                          <div className="text-right z-10">
+                              <span className="text-xs text-red-400 line-through mr-2">De R$ 118,80</span>
+                              <div className="text-3xl font-black text-white tracking-tighter">
+                                  R$ 49,90 <span className="text-xs font-normal text-stone-400">/ano</span>
+                              </div>
+                          </div>
+                      </div>
+
+                      {/* Monthly */}
+                      <div 
+                          onClick={() => setSelectedPlan('monthly')}
+                          className={`relative cursor-pointer rounded-2xl p-5 border-2 transition-all duration-300 flex items-center justify-between gap-4
+                          ${selectedPlan === 'monthly' ? 'bg-stone-900 border-white/50' : 'bg-transparent border-stone-800 opacity-60 hover:opacity-100'}
+                          `}
+                      >
+                          <div className="flex items-center gap-4">
+                              <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${selectedPlan === 'monthly' ? 'border-white bg-white' : 'border-stone-600'}`}>
+                                  {selectedPlan === 'monthly' && <div className="w-2.5 h-2.5 bg-black rounded-full"></div>}
+                              </div>
+                              <h4 className="font-bold text-white">Plano Mensal</h4>
+                          </div>
+                          <div className="text-xl font-bold text-white">R$ 9,90</div>
+                      </div>
+                  </div>
+
+                  {/* Guarantee Box */}
+                  <div className="flex items-center justify-center gap-2 text-xs text-stone-400 mb-8 bg-stone-900/50 py-3 rounded-xl border border-stone-800">
+                      <Shield size={14} className="text-green-500" />
+                      Garantia de 7 dias. Se não edificar sua fé, devolvemos 100%.
+                  </div>
+
+                  {/* CTA Button */}
+                  <button 
+                      onClick={handleCheckout}
+                      className="w-full relative group overflow-hidden bg-gradient-to-r from-green-600 to-green-500 text-white py-5 rounded-2xl font-black text-xl shadow-[0_0_40px_-10px_rgba(34,197,94,0.6)] animate-pulse hover:scale-[1.02] transition-transform active:scale-[0.98]"
+                  >
+                      <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
+                      <span className="relative flex items-center justify-center gap-3">
+                          <CreditCard size={24} /> LIBERAR MEU ACESSO AGORA
+                      </span>
+                  </button>
+
+                  <p className="text-center text-[10px] text-stone-500 mt-6 max-w-xs mx-auto">
+                      Ambiente 100% Seguro. Sua contribuição ajuda a espalhar a palavra de Cristo pelo mundo.
+                  </p>
+
+              </div>
+          </div>
+      );
+  }
+
+  // FINAL LANDING PAGE RENDER (High Conversion + Spiritual Language) - "The Teaser"
   if (currentQ.type === 'final' && !isGenerating) {
     const pillar1 = getPillar1();
     const pillar2 = getPillar2();
@@ -393,7 +540,7 @@ const Quiz: React.FC = () => {
                 {/* 5. CTA Area */}
                 <div className="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black via-black to-transparent z-40">
                     <button 
-                        onClick={() => navigate('/')} 
+                        onClick={() => setShowOffer(true)} // Changed: Trigger Sales Overlay
                         className="w-full relative group overflow-hidden bg-gradient-to-r from-gold via-orange to-gold text-white py-5 rounded-2xl font-black text-xl shadow-[0_0_50px_-10px_rgba(251,191,36,0.5)] hover:scale-[1.02] transition-transform active:scale-[0.98] border border-white/20"
                     >
                         <div className="absolute inset-0 bg-white/30 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out"></div>
