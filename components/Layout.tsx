@@ -20,7 +20,8 @@ export const ShalomLogo: React.FC<{ size?: string }> = ({ size = "w-8 h-8" }) =>
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
-  const isLanding = location.pathname === '/';
+  // Simple layout for Landing AND Quiz
+  const isSimpleLayout = location.pathname === '/' || location.pathname === '/quiz';
 
   const navItems = [
     { path: '/app', icon: Home, label: 'Início' },
@@ -33,9 +34,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   const isActive = (path: string) => location.pathname === path;
 
-  // If we are on the landing page, render simple layout without navigation
+  // If we are on the landing page or quiz, render simple layout without navigation
   // Note: We use h-screen and overflow-y-auto because body has overflow-hidden globally for the app layout
-  if (isLanding) {
+  if (isSimpleLayout) {
     return (
       <div className="bg-paper dark:bg-black w-full h-screen overflow-y-auto overflow-x-hidden scroll-smooth">
         {children}

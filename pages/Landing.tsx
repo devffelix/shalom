@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BookOpen, Music, Zap, Sparkles, Star, ChevronRight, Shield, Heart, Mail, X, Loader2, ArrowRight, Check, CreditCard, HelpCircle, Lock, MessageCircle, Home, Battery, Sun, Share2, Book, Palette, MessageSquare, Bell, WifiOff, AlertTriangle, Coffee, Headphones, Smartphone, TrendingUp, XCircle, AlertOctagon, CheckCircle2, ChevronDown, ChevronUp, Gift, AlertCircle, Baby, HeartHandshake, ArrowDown, Download, Cloud, Moon, Info, Quote, Flame, Clock, Play, UserMinus } from 'lucide-react';
@@ -818,6 +817,14 @@ const Landing: React.FC = () => {
         <div className="text-subtle text-sm flex flex-col items-center gap-2">
           <ShalomLogo size="w-6 h-6" />
           <p>© {new Date().getFullYear()} Shalom App. Feito com fé.</p>
+          
+          {/* Secret Button to Quiz */}
+          <button 
+            onClick={() => navigate('/quiz')}
+            className="opacity-5 hover:opacity-100 transition-opacity duration-300 text-[10px] uppercase tracking-widest mt-4 p-2"
+          >
+            Acessar Quiz Secreto
+          </button>
         </div>
       </section>
 

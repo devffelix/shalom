@@ -10,6 +10,7 @@ import Challenges from './pages/Challenges';
 import Illustrations from './pages/Illustrations';
 import Settings from './pages/Settings';
 import Trails from './pages/Trails';
+import Quiz from './pages/Quiz';
 import { UserProgress } from './types';
 import { AudioProvider } from './contexts/AudioContext';
 
@@ -90,6 +91,7 @@ const App: React.FC = () => {
         <Layout>
           <Routes>
             <Route path="/" element={<Landing />} />
+            <Route path="/quiz" element={<Quiz />} />
             <Route path="/app" element={<Home />} />
             <Route path="/bible" element={<Bible />} />
             <Route path="/worship" element={<Worship />} />
