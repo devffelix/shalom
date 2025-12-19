@@ -1,13 +1,12 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sun, Battery, Heart, CloudRain, Zap, Book, ArrowRight, X, Sparkles, Bookmark, Trash2, Share2, Music, Calendar, HelpCircle, Frown, Loader2, Download, RefreshCw, MessageCircle, Crown, ScrollText, CheckCircle2, Flame, Target, ChevronRight } from 'lucide-react';
+import { Sun, Battery, Heart, CloudRain, Zap, Book, ArrowRight, X, Sparkles, Bookmark, Trash2, Share2, Music, Calendar, HelpCircle, Frown, Loader2, Download, RefreshCw, MessageCircle, Crown, ScrollText, CheckCircle2, Flame, Target, ChevronRight, HeartHandshake } from 'lucide-react';
 import { generatePrayer, fetchVerse } from '../services/api';
 import { calculateLevel, getUserXp } from '../services/gamification';
 import { Mood, UserProgress, Note, LevelData } from '../types';
 import { TOTAL_CHAPTERS, POPULAR_VERSES } from '../constants';
 
-// Mapping images to moods using specific religious/spiritual Unsplash images
 const MOOD_IMAGES: Record<string, string> = {
   [Mood.Anxious]: "https://images.unsplash.com/photo-1457139621581-298d1801c832?q=80&w=1103&auto=format&fit=crop", 
   [Mood.Tired]: "https://images.unsplash.com/photo-1612620980838-5541dad8e254?q=80&w=1074&auto=format&fit=crop", 
@@ -41,22 +40,15 @@ const MoodCard: React.FC<{ mood: Mood; icon: React.ReactNode; active: boolean; o
       ${active ? 'ring-4 ring-gold scale-95 shadow-xl ring-offset-2 ring-offset-paper' : 'scale-100 hover:scale-[1.05] hover:shadow-orange/20'}
     `}
   >
-    {/* Background Image */}
     <img 
       src={MOOD_IMAGES[mood]} 
       alt={mood} 
       className={`absolute inset-0 w-full h-full object-cover transition-transform duration-700 ${active ? 'scale-110' : 'group-hover:scale-110'}`}
     />
-    
-    {/* Gradient Overlay */}
     <div className={`absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 transition-opacity duration-300 ${active ? 'opacity-90' : 'opacity-70'}`}></div>
-
-    {/* Center Icon (New Style) */}
     <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 rounded-full backdrop-blur-md border border-white/20 transition-all duration-300 ${active ? 'bg-gold text-ink scale-110' : 'bg-white/10 text-white group-hover:bg-white/20'}`}>
        {React.cloneElement(icon as React.ReactElement<any>, { size: 20 })}
     </div>
-
-    {/* Text Content Bottom */}
     <div className="absolute bottom-3 left-0 right-0 text-center">
       <span className={`block font-sans font-bold text-xs md:text-sm tracking-wide transition-colors ${active ? 'text-gold' : 'text-white'}`}>
         {mood}
@@ -69,28 +61,18 @@ const Home: React.FC = () => {
   const navigate = useNavigate();
   const [verse, setVerse] = useState<{ text: string; ref: string } | null>(null);
   const [selectedMood, setSelectedMood] = useState<Mood | null>(null);
-  
-  // Hero Image State
   const [heroImage, setHeroImage] = useState<string>(LANDSCAPE_IMAGES[0]);
-
-  // AI Generation State
   const [aiPrayer, setAiPrayer] = useState<string>('');
   const [isLoadingPrayer, setIsLoadingPrayer] = useState(false);
   const [isLoadingVerse, setIsLoadingVerse] = useState(false);
-  
   const [progress, setProgress] = useState<UserProgress | null>(null);
   const [levelData, setLevelData] = useState<LevelData | null>(null);
   const [userName, setUserName] = useState('Viajante');
   const [isAmenAnimating, setIsAmenAnimating] = useState(false);
-  
-  // Notes state
   const [notes, setNotes] = useState<Note[]>([]);
   const [showAllNotes, setShowAllNotes] = useState(false);
-  
-  // Ref for capturing the card
   const prayerCardRef = useRef<HTMLDivElement>(null);
 
-  // Time-based Greeting Logic
   const today = new Date();
   const dateOptions: Intl.DateTimeFormatOptions = { weekday: 'long', day: 'numeric', month: 'long' };
   const dateString = today.toLocaleDateString('pt-BR', dateOptions);
@@ -107,17 +89,12 @@ const Home: React.FC = () => {
         setProgress(p);
         setLevelData(calculateLevel(p.xp || 0));
     } else {
-        // Initial defaults if nothing in storage
         setLevelData(calculateLevel(0));
     }
-    
     const savedNotes = localStorage.getItem('lumina_notes');
     if (savedNotes) setNotes(JSON.parse(savedNotes));
-
     const savedName = localStorage.getItem('lumina_username');
     if (savedName) setUserName(savedName);
-
-    // Initial load
     handleRefreshVerse();
   }, []);
 
@@ -130,15 +107,10 @@ const Home: React.FC = () => {
       const targetRef = (verse && verse.ref === randomRef) 
           ? POPULAR_VERSES[(randomIndex + 1) % POPULAR_VERSES.length] 
           : randomRef;
-
-      // Update Verse
       const v = await fetchVerse(targetRef);
       setVerse({ text: v.text, ref: v.reference });
-
-      // Update Image
       const randomImgIndex = Math.floor(Math.random() * LANDSCAPE_IMAGES.length);
       setHeroImage(LANDSCAPE_IMAGES[randomImgIndex]);
-
     } catch (e) {
       setVerse({ text: "O Senhor é o meu pastor, nada me faltará.", ref: "Psalms 23:1" });
     } finally {
@@ -162,6 +134,12 @@ const Home: React.FC = () => {
     }, 2000);
   };
 
+  const handleTalkToGuide = () => {
+    const moodText = selectedMood ? `estou me sentindo ${selectedMood.toLowerCase()} e ` : "";
+    const text = encodeURIComponent(`Olá, Shalom! ${moodText}gostaria de conversar ou desabafar com o Guia Espiritual.`);
+    window.open(`https://wa.me/551151989852?text=${text}`, '_blank');
+  };
+
   const handleShareVerse = async () => {
     if (verse && navigator.share) {
       try {
@@ -176,17 +154,15 @@ const Home: React.FC = () => {
   };
 
   const handleStudyVerse = (note: Note) => {
-    const message = `Me ajuda a entender e refletir sobre esse versículo: "${note.text}" - ${note.reference}`;
+    const message = `Olá! Gostaria de tirar uma dúvida sobre este versículo: "${note.text}" - ${note.reference}`;
     const url = `https://wa.me/551151989852?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
   };
 
   const handleDownloadImage = async () => {
     if (!prayerCardRef.current) return;
-    
     // @ts-ignore
     const html2canvas = window.html2canvas;
-    
     if (html2canvas) {
         try {
             const canvas = await html2canvas(prayerCardRef.current, {
@@ -251,22 +227,17 @@ const Home: React.FC = () => {
   };
 
   const percentage = progress ? Math.round((progress.readChapters.length / TOTAL_CHAPTERS) * 100) : 0;
-  
-  // Daily Goal Logic
   const dailyGoal = 3;
   const dailyCount = progress?.dailyReadCount || 0;
   const dailyProgressPercent = Math.min((dailyCount / dailyGoal) * 100, 100);
 
   return (
     <div className="space-y-6 animate-fade-in pb-4 relative">
-      
-      {/* Background Ambience Effects */}
       <div className="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none -z-10">
          <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-orange/5 rounded-full blur-[100px]"></div>
          <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-gold/5 rounded-full blur-[100px]"></div>
       </div>
 
-      {/* Header Info with Streak Badge */}
       <div className="flex flex-col gap-1 px-2 pt-2 relative">
         <div className="flex justify-between items-start">
              <div>
@@ -278,12 +249,9 @@ const Home: React.FC = () => {
                 {timeGreeting}, <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-orange to-gold">{userName}</span>.
                 </h2>
              </div>
-
-             {/* Streak Badge */}
              <div className="bg-surface dark:bg-stone-800 p-2 pr-4 rounded-full shadow-soft flex items-center gap-3 border border-stone-100 dark:border-stone-700 animate-slide-up">
                  <div className="w-10 h-10 bg-orange/10 rounded-full flex items-center justify-center text-orange relative">
                      <Flame size={20} fill="currentColor" className="animate-pulse" />
-                     {/* Particle effect dot */}
                      <div className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-stone-800"></div>
                  </div>
                  <div className="flex flex-col">
@@ -292,8 +260,6 @@ const Home: React.FC = () => {
                  </div>
              </div>
         </div>
-        
-        {/* Level Progress Mini Bar */}
         {levelData && (
           <div className="mt-4 flex items-center gap-3 animate-fade-in">
              <div className="bg-gold p-1 rounded-md text-ink shadow-sm">
@@ -305,45 +271,27 @@ const Home: React.FC = () => {
                      <span>{levelData.currentTitle}</span>
                  </div>
                  <div className="w-full h-1.5 bg-stone-200 dark:bg-stone-800 rounded-full overflow-hidden">
-                     <div 
-                        className="h-full bg-gradient-to-r from-gold to-orange rounded-full transition-all duration-1000" 
-                        style={{ width: `${levelData.progressPercent}%` }}
-                     ></div>
+                     <div className="h-full bg-gradient-to-r from-gold to-orange rounded-full transition-all duration-1000" style={{ width: `${levelData.progressPercent}%` }}></div>
                  </div>
              </div>
           </div>
         )}
       </div>
 
-      {/* Hero: Immersive Verse Card */}
       <div className="relative w-full min-h-[26rem] rounded-[2.5rem] overflow-hidden shadow-2xl group transition-all duration-500 hover:shadow-orange/20 flex flex-col border border-white/10">
-        <img 
-          src={heroImage}
-          alt="Verse Background" 
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-[30s] ease-in-out group-hover:scale-110"
-        />
+        <img src={heroImage} alt="Verse Background" className="absolute inset-0 w-full h-full object-cover transition-transform duration-[30s] ease-in-out group-hover:scale-110" />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/20"></div>
-        
-        {/* Refresh Verse Button */}
-        <button 
-          onClick={handleRefreshVerse}
-          disabled={isLoadingVerse}
-          className="absolute top-6 right-6 p-2.5 rounded-full bg-black/30 backdrop-blur-md text-white/80 hover:bg-white hover:text-ink transition-all z-20 border border-white/20 active:scale-90"
-        >
+        <button onClick={handleRefreshVerse} disabled={isLoadingVerse} className="absolute top-6 right-6 p-2.5 rounded-full bg-black/30 backdrop-blur-md text-white/80 hover:bg-white hover:text-ink transition-all z-20 border border-white/20 active:scale-90">
            <RefreshCw size={18} className={isLoadingVerse ? "animate-spin" : ""} />
         </button>
-        
         <div className="relative z-10 flex flex-col items-center justify-between flex-1 text-center px-6 py-8">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 shadow-lg mb-4">
              <Sparkles size={12} className="text-gold animate-pulse" />
              <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/90">Palavra do Dia</span>
           </div>
-          
           {verse && !isLoadingVerse ? (
             <div className="flex-1 flex flex-col justify-center w-full max-w-2xl animate-fade-in my-2">
-              <p className="font-serif text-2xl md:text-3xl lg:text-4xl leading-relaxed text-white drop-shadow-2xl mb-6 break-words font-medium">
-                "{verse.text}"
-              </p>
+              <p className="font-serif text-2xl md:text-3xl lg:text-4xl leading-relaxed text-white drop-shadow-2xl mb-6 break-words font-medium">"{verse.text}"</p>
               <div className="flex flex-col items-center gap-3">
                  <div className="w-20 h-0.5 bg-gradient-to-r from-transparent via-gold to-transparent opacity-80"></div>
                  <p className="font-sans font-bold text-sm tracking-widest text-gold uppercase">{verse.ref}</p>
@@ -354,64 +302,37 @@ const Home: React.FC = () => {
                 <Loader2 className="w-10 h-10 text-white/50 animate-spin" />
             </div>
           )}
-
-          {/* Action Buttons on Card */}
           <div className="flex gap-3 w-full max-w-sm justify-center mt-6">
-            <button 
-              onClick={handleReadChapter}
-              className="flex-1 flex items-center justify-center gap-2 py-4 px-4 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-2xl text-white text-xs font-bold transition-all border border-white/10 active:scale-95 shadow-lg"
-            >
+            <button onClick={handleReadChapter} className="flex-1 flex items-center justify-center gap-2 py-4 px-4 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-2xl text-white text-xs font-bold transition-all border border-white/10 active:scale-95 shadow-lg">
                <Book size={16} /> Ler Capítulo
             </button>
-            <button 
-              onClick={handleShareVerse}
-              className="flex-1 flex items-center justify-center gap-2 py-4 px-4 bg-white text-ink hover:bg-stone-100 rounded-2xl text-xs font-bold transition-all shadow-xl active:scale-95"
-            >
+            <button onClick={handleShareVerse} className="flex-1 flex items-center justify-center gap-2 py-4 px-4 bg-white text-ink hover:bg-stone-100 rounded-2xl text-xs font-bold transition-all shadow-xl active:scale-95">
                <Share2 size={16} /> Compartilhar
             </button>
           </div>
         </div>
       </div>
 
-      {/* QUICK ACCESS BENTO GRID */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 h-auto md:h-64">
-          {/* Card 1: Bible Progress (Big Square/Tall on mobile) */}
-          <div 
-            onClick={() => navigate('/bible')}
-            className="col-span-1 md:col-span-2 row-span-2 bg-surface dark:bg-stone-800 rounded-[2.5rem] p-6 shadow-sm border border-stone-100 dark:border-stone-700 relative overflow-hidden group cursor-pointer"
-          >
+          <div onClick={() => navigate('/bible')} className="col-span-1 md:col-span-2 row-span-2 bg-surface dark:bg-stone-800 rounded-[2.5rem] p-6 shadow-sm border border-stone-100 dark:border-stone-700 relative overflow-hidden group cursor-pointer">
               <div className="absolute top-0 right-0 w-40 h-40 bg-orange/5 rounded-full blur-3xl -mr-10 -mt-10 transition-colors group-hover:bg-orange/10"></div>
-              
               <div className="flex flex-col justify-between h-full relative z-10">
                  <div className="flex justify-between items-start mb-4">
-                     <div className="w-12 h-12 bg-orange/10 text-orange rounded-2xl flex items-center justify-center">
-                         <Book size={24} />
-                     </div>
-                     <div className="bg-paper dark:bg-stone-900 px-3 py-1 rounded-full text-[10px] font-bold text-subtle border border-stone-200 dark:border-stone-700 uppercase">
-                         Bíblia
-                     </div>
+                     <div className="w-12 h-12 bg-orange/10 text-orange rounded-2xl flex items-center justify-center"><Book size={24} /></div>
+                     <div className="bg-paper dark:bg-stone-900 px-3 py-1 rounded-full text-[10px] font-bold text-subtle border border-stone-200 dark:border-stone-700 uppercase">Bíblia</div>
                  </div>
-                 
                  <div>
                      <h4 className="font-serif font-bold text-xl text-ink dark:text-white mb-1 group-hover:text-orange transition-colors">Continuar Leitura</h4>
                      <p className="text-xs text-subtle mb-4">Você leu {percentage}% das escrituras.</p>
-                     
                      <div className="w-full h-2 bg-stone-100 dark:bg-stone-700 rounded-full overflow-hidden">
                         <div className="h-full bg-gradient-to-r from-orange to-red-500 rounded-full transition-all duration-1000" style={{ width: `${percentage}%` }}></div>
                      </div>
                  </div>
               </div>
           </div>
-
-          {/* Card 2: Worship (Wide on Desktop, Square on mobile) */}
-          <div 
-             onClick={() => navigate('/worship')}
-             className="col-span-1 md:col-span-2 bg-stone-900 text-white rounded-[2.5rem] p-6 shadow-lg relative overflow-hidden group cursor-pointer flex flex-col justify-center"
-          >
+          <div onClick={() => navigate('/worship')} className="col-span-1 md:col-span-2 bg-stone-900 text-white rounded-[2.5rem] p-6 shadow-lg relative overflow-hidden group cursor-pointer flex flex-col justify-center">
               <div className="absolute inset-0 bg-gradient-to-br from-stone-900 to-black"></div>
-              {/* Animated glow */}
               <div className="absolute -right-10 -bottom-10 w-32 h-32 bg-gold rounded-full blur-[60px] opacity-20 group-hover:opacity-40 transition-opacity"></div>
-              
               <div className="relative z-10 flex items-center justify-between">
                   <div className="flex items-center gap-4">
                       <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-md">
@@ -422,55 +343,29 @@ const Home: React.FC = () => {
                           <p className="text-xs text-stone-400">Atmosfera de Adoração</p>
                       </div>
                   </div>
-                  <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
-                      <ChevronRight size={18} />
-                  </div>
+                  <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center"><ChevronRight size={18} /></div>
               </div>
           </div>
-
-          {/* Card 3: Goals/Trails */}
-          <div 
-             onClick={() => navigate('/trails')}
-             className="col-span-1 bg-gradient-to-br from-gold to-orange text-white rounded-[2.5rem] p-6 shadow-lg shadow-orange/20 relative overflow-hidden group cursor-pointer flex flex-col justify-between h-40 md:h-auto"
-          >
-              <div className="absolute top-0 right-0 p-4 opacity-10 transform scale-150 group-hover:rotate-12 transition-transform">
-                  <Target size={60} />
-              </div>
-              <div className="w-10 h-10 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-md">
-                  <Target size={20} />
-              </div>
-              <div>
-                  <h4 className="font-bold text-lg leading-none mb-1">Metas</h4>
-                  <p className="text-[10px] text-white/80 font-medium">Foco Diário</p>
-              </div>
+          <div onClick={() => navigate('/trails')} className="col-span-1 bg-gradient-to-br from-gold to-orange text-white rounded-[2.5rem] p-6 shadow-lg shadow-orange/20 relative overflow-hidden group cursor-pointer flex flex-col justify-between h-40 md:h-auto">
+              <div className="absolute top-0 right-0 p-4 opacity-10 transform scale-150 group-hover:rotate-12 transition-transform"><Target size={60} /></div>
+              <div className="w-10 h-10 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-md"><Target size={20} /></div>
+              <div><h4 className="font-bold text-lg leading-none mb-1">Metas</h4><p className="text-[10px] text-white/80 font-medium">Foco Diário</p></div>
           </div>
-
-          {/* Card 4: Challenges */}
-          <div 
-             onClick={() => navigate('/challenges')}
-             className="col-span-1 bg-surface dark:bg-stone-800 rounded-[2.5rem] p-6 shadow-sm border border-stone-100 dark:border-stone-700 relative overflow-hidden group cursor-pointer flex flex-col justify-between h-40 md:h-auto"
-          >
-              <div className="absolute top-0 right-0 w-20 h-20 bg-purple-500/10 rounded-full blur-xl -mr-5 -mt-5"></div>
-              <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-2xl flex items-center justify-center">
-                  <Zap size={20} />
-              </div>
-              <div>
-                  <h4 className="font-bold text-lg leading-none mb-1 text-ink dark:text-white">Jornada</h4>
-                  <p className="text-[10px] text-subtle font-medium">Desafios de Fé</p>
-              </div>
+          {/* Card Especial de WhatsApp/Desabafo */}
+          <div onClick={() => {
+              const text = encodeURIComponent("Olá, Shalom! Gostaria de uma palavra de sabedoria.");
+              window.open(`https://wa.me/551151989852?text=${text}`, '_blank');
+          }} className="col-span-1 bg-green-500 text-white rounded-[2.5rem] p-6 shadow-lg shadow-green-500/20 relative overflow-hidden group cursor-pointer flex flex-col justify-between h-40 md:h-auto animate-pulse">
+              <div className="absolute top-0 right-0 p-4 opacity-10 transform scale-150 group-hover:rotate-12 transition-transform"><HeartHandshake size={60} /></div>
+              <div className="w-10 h-10 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-md"><MessageCircle size={20} /></div>
+              <div><h4 className="font-bold text-lg leading-none mb-1">Guia</h4><p className="text-[10px] text-white/80 font-medium">Falar Agora</p></div>
           </div>
       </div>
 
-      {/* Mood Section */}
       <div className="-mx-4 md:mx-0 py-4">
         <div className="flex justify-between items-end px-6 md:px-2 mb-4">
-           <div>
-              <h3 className="text-xl font-bold text-ink dark:text-white font-serif flex items-center gap-2">
-                 <Heart className="text-red-500" size={20} fill="currentColor" /> Como está seu coração?
-              </h3>
-           </div>
+           <div><h3 className="text-xl font-bold text-ink dark:text-white font-serif flex items-center gap-2"><Heart className="text-red-500" size={20} fill="currentColor" /> Como está seu coração?</h3></div>
         </div>
-        
         <div className="flex gap-4 overflow-x-auto pb-8 px-6 md:px-2 no-scrollbar snap-x items-center">
           <div className="snap-start"><MoodCard mood={Mood.Anxious} icon={<Zap />} active={selectedMood === Mood.Anxious} onClick={() => handleMoodSelect(Mood.Anxious)} /></div>
           <div className="snap-start"><MoodCard mood={Mood.Tired} icon={<Battery />} active={selectedMood === Mood.Tired} onClick={() => handleMoodSelect(Mood.Tired)} /></div>
@@ -482,80 +377,38 @@ const Home: React.FC = () => {
         </div>
       </div>
 
-      {/* DAILY READING METER WIDGET */}
       <div className="bg-surface dark:bg-stone-900 p-6 rounded-[2.5rem] shadow-sm border border-stone-100 dark:border-stone-800 flex items-center gap-6 relative overflow-hidden group">
-         {/* Background Decoration */}
          <div className="absolute right-0 top-0 h-full w-24 bg-gradient-to-l from-orange/5 to-transparent pointer-events-none"></div>
-
-         <div className="w-16 h-16 rounded-2xl bg-orange/10 flex items-center justify-center flex-shrink-0 text-orange border border-orange/10 shadow-sm">
-            <ScrollText size={32} />
-         </div>
-
+         <div className="w-16 h-16 rounded-2xl bg-orange/10 flex items-center justify-center flex-shrink-0 text-orange border border-orange/10 shadow-sm"><ScrollText size={32} /></div>
          <div className="flex-1 min-w-0">
             <div className="flex justify-between items-center mb-3">
                 <h3 className="font-bold text-ink dark:text-white text-lg">Leitura Diária</h3>
                 <span className="text-xs font-bold text-orange bg-orange/10 px-2 py-1 rounded-lg uppercase">{dailyCount}/{dailyGoal} Caps</span>
             </div>
-            
             <div className="h-4 w-full bg-stone-100 dark:bg-stone-800 rounded-full overflow-hidden shadow-inner">
-                <div 
-                   className="h-full bg-gradient-to-r from-orange to-gold rounded-full transition-all duration-1000 ease-out relative" 
-                   style={{ width: `${dailyProgressPercent}%` }}
-                >
-                   {dailyCount >= dailyGoal && (
-                       <div className="absolute inset-0 bg-white/30 animate-[shimmer_2s_infinite]"></div>
-                   )}
+                <div className="h-full bg-gradient-to-r from-orange to-gold rounded-full transition-all duration-1000 ease-out relative" style={{ width: `${dailyProgressPercent}%` }}>
+                   {dailyCount >= dailyGoal && <div className="absolute inset-0 bg-white/30 animate-[shimmer_2s_infinite]"></div>}
                 </div>
             </div>
-
-            {dailyCount >= dailyGoal && (
-                <div className="mt-3 text-xs font-bold text-green-600 flex items-center gap-1 animate-fade-in bg-green-50 dark:bg-green-900/20 px-3 py-1.5 rounded-xl w-fit">
-                    <CheckCircle2 size={12} /> Meta batida! Você está incrível.
-                </div>
-            )}
+            {dailyCount >= dailyGoal && <div className="mt-3 text-xs font-bold text-green-600 flex items-center gap-1 animate-fade-in bg-green-50 dark:bg-green-900/20 px-3 py-1.5 rounded-xl w-fit"><CheckCircle2 size={12} /> Meta batida! Você está incrível.</div>}
          </div>
       </div>
 
-      {/* My Notes Section */}
       {notes.length > 0 && (
         <div className="pt-4 animate-fade-in">
           <div className="flex justify-between items-end px-2 mb-5">
-            <h3 className="text-xl font-bold text-ink dark:text-white font-serif flex items-center gap-2">
-                <Bookmark className="text-gold" size={20} fill="currentColor" /> Minhas Anotações
-            </h3>
-            <button 
-              onClick={() => setShowAllNotes(!showAllNotes)}
-              className="text-xs font-bold text-subtle hover:text-ink transition-colors uppercase tracking-wider bg-surface dark:bg-stone-800 px-3 py-1 rounded-full border border-stone-200 dark:border-stone-700"
-            >
-              {showAllNotes ? 'Ver menos' : 'Ver todas'}
-            </button>
+            <h3 className="text-xl font-bold text-ink dark:text-white font-serif flex items-center gap-2"><Bookmark className="text-gold" size={20} fill="currentColor" /> Minhas Anotações</h3>
+            <button onClick={() => setShowAllNotes(!showAllNotes)} className="text-xs font-bold text-subtle hover:text-ink transition-colors uppercase tracking-wider bg-surface dark:bg-stone-800 px-3 py-1 rounded-full border border-stone-200 dark:border-stone-700">{showAllNotes ? 'Ver menos' : 'Ver todas'}</button>
           </div>
-          
           <div className="grid gap-4">
             {notes.slice(0, showAllNotes ? undefined : 2).map((note) => (
               <div key={note.id} className="bg-surface dark:bg-stone-800 p-6 rounded-[2rem] border border-stone-100 dark:border-stone-700 shadow-sm relative group hover:border-gold/30 transition-colors">
-                 <button 
-                    onClick={(e) => deleteNote(note.id, e)}
-                    className="absolute top-5 right-5 p-2 text-stone-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-full transition-all opacity-0 group-hover:opacity-100"
-                 >
-                    <Trash2 size={16} />
-                 </button>
-                 <div className="flex items-center gap-2 mb-3">
-                    <span className="text-xs font-bold text-gold uppercase tracking-wider bg-gold/10 px-2 py-1 rounded-md">{note.reference}</span>
-                 </div>
+                 <button onClick={(e) => deleteNote(note.id, e)} className="absolute top-5 right-5 p-2 text-stone-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-full transition-all opacity-0 group-hover:opacity-100"><Trash2 size={16} /></button>
+                 <div className="flex items-center gap-2 mb-3"><span className="text-xs font-bold text-gold uppercase tracking-wider bg-gold/10 px-2 py-1 rounded-md">{note.reference}</span></div>
                  <p className="font-serif text-ink dark:text-stone-200 italic leading-relaxed text-lg mb-6">"{note.text}"</p>
-                 
                  <div className="flex items-center justify-between">
-                    <button 
-                        onClick={() => handleStudyVerse(note)}
-                        className="flex items-center gap-2 text-xs font-bold text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-3 py-2 rounded-xl hover:bg-green-100 dark:hover:bg-green-900/40 transition-colors"
-                    >
-                        <MessageCircle size={14} /> Estudar este Versículo
-                    </button>
-                    
-                    <span className="text-[10px] font-bold text-stone-300 uppercase tracking-widest bg-paper dark:bg-stone-900 px-2 py-1 rounded">
-                      {new Date(note.date).toLocaleDateString()}
-                    </span>
+                    <button onClick={() => handleStudyVerse(note)} className="flex items-center gap-2 text-xs font-bold text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-3 py-2 rounded-xl hover:bg-green-100 dark:hover:bg-green-900/40 transition-colors"><MessageCircle size={14} /> Perguntar ao Guia</button>
+                    <span className="text-[10px] font-bold text-stone-300 uppercase tracking-widest bg-paper dark:bg-stone-900 px-2 py-1 rounded">{new Date(note.date).toLocaleDateString()}</span>
                  </div>
               </div>
             ))}
@@ -563,112 +416,44 @@ const Home: React.FC = () => {
         </div>
       )}
 
-      {/* Prayer Modal Sheet */}
       {selectedMood && (
         <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center sm:p-4 bg-ink/60 backdrop-blur-md animate-fade-in">
-          
-          {/* Confetti/Particle Effects */}
           {isAmenAnimating && (
             <div className="fixed inset-0 z-[60] pointer-events-none flex items-center justify-center">
               {Array.from({ length: 15 }).map((_, i) => (
-                <div 
-                  key={i} 
-                  className="absolute text-4xl animate-float-up"
-                  style={{
-                    left: `${50 + (Math.random() * 60 - 30)}%`, 
-                    bottom: '20%',
-                    animationDelay: `${Math.random() * 0.5}s`,
-                    animationDuration: `${1 + Math.random()}s`
-                  }}
-                >
+                <div key={i} className="absolute text-4xl animate-float-up" style={{left: `${50 + (Math.random() * 60 - 30)}%`, bottom: '20%', animationDelay: `${Math.random() * 0.5}s`, animationDuration: `${1 + Math.random()}s`}}>
                   {['🙏', '✨', '🙌', '🤍', '🕊️'][Math.floor(Math.random() * 5)]}
                 </div>
               ))}
             </div>
           )}
-
-          <div 
-             className="bg-paper dark:bg-stone-900 md:rounded-[2.5rem] rounded-t-[2.5rem] w-full max-w-md p-0 relative shadow-2xl animate-slide-up max-h-[85vh] overflow-y-auto overflow-x-hidden"
-             style={{ boxShadow: "0 -10px 40px rgba(0,0,0,0.3)" }}
-          >
-            {/* THIS DIV is what will be captured by html2canvas */}
+          <div className="bg-paper dark:bg-stone-900 md:rounded-[2.5rem] rounded-t-[2.5rem] w-full max-w-md p-0 relative shadow-2xl animate-slide-up max-h-[85vh] overflow-y-auto overflow-x-hidden" style={{ boxShadow: "0 -10px 40px rgba(0,0,0,0.3)" }}>
             <div ref={prayerCardRef} className="bg-paper dark:bg-stone-900 md:rounded-t-[2.5rem]">
-                {/* Modal Visual Header with Static Image */}
                 <div className="h-48 w-full relative bg-ink md:rounded-t-[2.5rem]">
-                    <img 
-                        src={MOOD_IMAGES[selectedMood]} 
-                        className="w-full h-full object-cover" 
-                        alt="Header" 
-                        crossOrigin="anonymous" 
-                    />
+                    <img src={MOOD_IMAGES[selectedMood]} className="w-full h-full object-cover" alt="Header" crossOrigin="anonymous" />
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-paper dark:to-stone-900"></div>
                 </div>
-
                 <div className="px-8 pb-8 -mt-16 relative z-10">
-                    <div className="flex justify-center mb-6">
-                        <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-surface dark:bg-stone-800 text-gold shadow-2xl border-4 border-paper dark:border-stone-900">
-                            <Heart size={40} fill="currentColor" />
-                        </div>
-                    </div>
-                    
-                    <div className="text-center mb-8">
-                        <h3 className="text-2xl font-serif font-bold text-ink dark:text-white leading-tight">
-                            Oração para<br/>
-                            <span className="text-gold text-3xl">{selectedMood}</span>
-                        </h3>
-                    </div>
-
+                    <div className="flex justify-center mb-6"><div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-surface dark:bg-stone-800 text-gold shadow-2xl border-4 border-paper dark:border-stone-900"><Heart size={40} fill="currentColor" /></div></div>
+                    <div className="text-center mb-8"><h3 className="text-2xl font-serif font-bold text-ink dark:text-white leading-tight">Oração para<br/><span className="text-gold text-3xl">{selectedMood}</span></h3></div>
                     {isLoadingPrayer && !aiPrayer ? (
-                    <div className="space-y-4 py-4">
-                        <div className="h-4 bg-stone-200 dark:bg-stone-800 rounded w-3/4 mx-auto animate-pulse"></div>
-                        <div className="h-4 bg-stone-200 dark:bg-stone-800 rounded w-full animate-pulse"></div>
-                        <div className="h-4 bg-stone-200 dark:bg-stone-800 rounded w-5/6 mx-auto animate-pulse"></div>
-                        <div className="h-4 bg-stone-200 dark:bg-stone-800 rounded w-2/3 mx-auto animate-pulse"></div>
-                    </div>
+                    <div className="space-y-4 py-4"><div className="h-4 bg-stone-200 dark:bg-stone-800 rounded w-3/4 mx-auto animate-pulse"></div><div className="h-4 bg-stone-200 dark:bg-stone-800 rounded w-full animate-pulse"></div><div className="h-4 bg-stone-200 dark:bg-stone-800 rounded w-5/6 mx-auto animate-pulse"></div><div className="h-4 bg-stone-200 dark:bg-stone-800 rounded w-2/3 mx-auto animate-pulse"></div></div>
                     ) : (
                     <div className="text-center animate-fade-in">
-                        <div className="relative mb-6">
-                            <span className="absolute -top-6 left-0 text-8xl text-gold/10 font-serif leading-none">"</span>
-                            <p className="text-lg text-brown-dark dark:text-stone-300 leading-loose font-serif italic px-2">
-                                {aiPrayer}
-                            </p>
-                            <span className="absolute -bottom-10 right-0 text-8xl text-gold/10 font-serif leading-none">"</span>
-                        </div>
-                        
+                        <div className="relative mb-6"><span className="absolute -top-6 left-0 text-8xl text-gold/10 font-serif leading-none">"</span><p className="text-lg text-brown-dark dark:text-stone-300 leading-loose font-serif italic px-2">{aiPrayer}</p><span className="absolute -bottom-10 right-0 text-8xl text-gold/10 font-serif leading-none">"</span></div>
                         <div className="text-xs text-subtle font-bold uppercase tracking-widest mt-8 mb-2">Shalom App</div>
                     </div>
                     )}
                 </div>
             </div>
-
-            {/* Close Button - Outside the capture area */}
-            <button 
-                onClick={() => setSelectedMood(null)}
-                className="absolute top-4 right-4 p-2 bg-black/20 backdrop-blur-md rounded-full text-white hover:bg-black/40 border border-white/10 z-50"
-            >
-                <X size={20} />
-            </button>
-
-            {/* Action Buttons */}
-            <div className="px-8 pb-8 pt-0 flex gap-3">
-                 <button 
-                    onClick={handleDownloadImage}
-                    disabled={isLoadingPrayer}
-                    className="flex-1 bg-surface dark:bg-stone-800 text-ink dark:text-white py-4 rounded-2xl font-bold text-sm shadow-md border border-stone-200 dark:border-stone-700 hover:bg-stone-50 dark:hover:bg-stone-700 transition-all flex items-center justify-center gap-2"
-                >
-                    <Download size={18} /> Salvar Oração
-                </button>
-                <button 
-                    onClick={handleAmen}
-                    disabled={isAmenAnimating}
-                    className={`
-                      flex-[2] bg-ink dark:bg-gold text-white dark:text-stone-900 py-4 rounded-2xl font-bold text-lg shadow-xl 
-                      hover:bg-stone-800 dark:hover:bg-orange transition-all active:scale-[0.98]
-                      ${isAmenAnimating ? 'scale-95 opacity-80' : ''}
-                    `}
-                >
-                    {isAmenAnimating ? 'Amém! 🙏' : 'Amém'}
-                </button>
+            <button onClick={() => setSelectedMood(null)} className="absolute top-4 right-4 p-2 bg-black/20 backdrop-blur-md rounded-full text-white hover:bg-black/40 border border-white/10 z-50"><X size={20} /></button>
+            <div className="px-8 pb-8 pt-0 flex flex-col gap-3">
+                 <div className="flex gap-3">
+                    <button onClick={handleDownloadImage} disabled={isLoadingPrayer} className="flex-1 bg-surface dark:bg-stone-800 text-ink dark:text-white py-4 rounded-2xl font-bold text-sm shadow-md border border-stone-200 dark:border-stone-700 hover:bg-stone-50 dark:hover:bg-stone-700 transition-all flex items-center justify-center gap-2"><Download size={18} /> Salvar</button>
+                    <button onClick={handleAmen} disabled={isAmenAnimating} className={`flex-[2] bg-ink dark:bg-gold text-white dark:text-stone-900 py-4 rounded-2xl font-bold text-lg shadow-xl hover:bg-stone-800 dark:hover:bg-orange transition-all active:scale-[0.98] ${isAmenAnimating ? 'scale-95 opacity-80' : ''}`}>{isAmenAnimating ? 'Amém! 🙏' : 'Amém'}</button>
+                 </div>
+                 {/* Novo Botão de Desabafo Contextual no Modal */}
+                 <button onClick={handleTalkToGuide} className="w-full bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 py-4 rounded-2xl font-bold text-sm border border-green-200 dark:border-green-800 flex items-center justify-center gap-2 hover:bg-green-100 transition-all"><MessageCircle size={18} /> Preciso desabafar com alguém</button>
             </div>
           </div>
         </div>

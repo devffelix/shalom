@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, BookOpen, Music, Zap, Settings, Palette, Target } from 'lucide-react';
+import { Home, BookOpen, Music, Zap, Settings, Palette, Target, MessageCircle } from 'lucide-react';
 import MiniPlayer from './MiniPlayer';
 
 interface LayoutProps {
@@ -10,7 +10,6 @@ interface LayoutProps {
 
 export const ShalomLogo: React.FC<{ size?: string }> = ({ size = "w-8 h-8" }) => (
   <div className={`${size} bg-gradient-to-br from-gold to-orange rounded-lg flex items-center justify-center shadow-lg`}>
-    {/* Stylized Dove Icon */}
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white w-[60%] h-[60%]">
       <path d="M12 2C12 2 14 5 16 6C18 7 21 6 21 6L20 12C20 12 21 15 18 17C15 19 10 19 10 19L6 22L8 17C8 17 5 15 5 12C5 9 8 7 8 7L12 2Z" fill="currentColor" fillOpacity="0.2" strokeLinecap="round" strokeLinejoin="round"/>
       <path d="M12 2C12 2 14 5 16 6C18 7 21 6 21 6L20 12C20 12 21 15 18 17C15 19 10 19 10 19L6 22L8 17C8 17 5 15 5 12C5 9 8 7 8 7L12 2Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"/>
@@ -20,7 +19,6 @@ export const ShalomLogo: React.FC<{ size?: string }> = ({ size = "w-8 h-8" }) =>
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
-  // Simple layout for Landing AND Quiz
   const isSimpleLayout = location.pathname === '/' || location.pathname === '/quiz';
 
   const navItems = [
@@ -34,8 +32,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   const isActive = (path: string) => location.pathname === path;
 
-  // If we are on the landing page or quiz, render simple layout without navigation
-  // Note: We use h-screen and overflow-y-auto because body has overflow-hidden globally for the app layout
+  const handleWhatsApp = () => {
+    const text = encodeURIComponent("Olá, Shalom! Gostaria de conversar com o Guia Espiritual.");
+    window.open(`https://wa.me/551151989852?text=${text}`, '_blank');
+  };
+
   if (isSimpleLayout) {
     return (
       <div className="bg-paper dark:bg-black w-full h-screen overflow-y-auto overflow-x-hidden scroll-smooth">
@@ -47,10 +48,18 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="h-screen w-full bg-paper flex flex-col md:flex-row text-ink transition-colors duration-300">
       
-      {/* Global Mini Player */}
       <MiniPlayer />
 
-      {/* Desktop Sidebar (Hidden on Mobile) */}
+      {/* WhatsApp Floating Button */}
+      <button 
+        onClick={handleWhatsApp}
+        className="fixed bottom-24 right-6 md:bottom-10 md:right-10 z-50 w-14 h-14 bg-green-500 text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all animate-bounce-slow ring-4 ring-green-500/20"
+        title="Conversar com Guia"
+      >
+        <MessageCircle size={28} fill="currentColor" className="opacity-20 absolute" />
+        <MessageCircle size={28} className="relative z-10" />
+      </button>
+
       <aside className="hidden md:flex flex-col w-72 bg-surface dark:bg-stone-900 border-r border-stone-100 dark:border-stone-800 h-full p-6 shadow-soft z-20">
         <div className="mb-10 flex items-center gap-3 px-2">
           <ShalomLogo />
@@ -75,7 +84,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           ))}
         </nav>
 
-        {/* Desktop Settings Link */}
         <Link 
           to="/settings"
           className={`
@@ -90,7 +98,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         </Link>
       </aside>
 
-      {/* Mobile Top Bar */}
       <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-paper/80 dark:bg-stone-950/80 backdrop-blur-md z-20 flex items-center justify-between px-6 border-b border-stone-100/50 dark:border-stone-800/50">
         <div className="flex items-center gap-2">
           <ShalomLogo size="w-7 h-7" />
@@ -103,12 +110,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         </Link>
       </div>
 
-      {/* Main Content Area */}
       <main className="flex-1 h-full overflow-y-auto overflow-x-hidden md:p-8 pt-20 pb-28 md:pb-8 px-4 w-full max-w-5xl mx-auto scroll-smooth no-scrollbar">
         {children}
       </main>
 
-      {/* Mobile Bottom Navigation (Visible on Mobile) */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-surface dark:bg-stone-900 border-t border-stone-100 dark:border-stone-800 px-2 py-4 flex justify-around items-center z-30 shadow-[0_-4px_20px_-2px_rgba(0,0,0,0.05)] pb-safe">
         {navItems.map((item) => {
           const active = isActive(item.path);

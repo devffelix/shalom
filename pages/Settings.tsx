@@ -1,7 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
-import { User, Moon, Sun, Trash2, Save, Camera, ChevronRight, LogOut, Info, Award, Brain, Heart, Scroll, Cross, Key, Users, Mountain, BookOpen, Crown, Zap, Lock, Star } from 'lucide-react';
+import { User, Moon, Sun, Trash2, Save, Camera, ChevronRight, LogOut, Info, Award, Brain, Heart, Scroll, Cross, Key, Users, Mountain, BookOpen, Crown, Zap, Lock, Star, Loader2 } from 'lucide-react';
 import { getAllDisplayBadges, getUserXp, calculateLevel } from '../services/gamification';
+import { updateUserName } from '../services/supabase';
 import { Badge } from '../types';
 
 // Icon Map
@@ -70,6 +71,7 @@ const Settings: React.FC = () => {
   const [avatar, setAvatar] = useState<string | null>(null);
   const [isDark, setIsDark] = useState(false);
   const [showSaveMsg, setShowSaveMsg] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [badges, setBadges] = useState<{ badge: Badge, earned: boolean }[]>([]);
   const [stats, setStats] = useState({ xp: 0, level: 1, title: '' });
 
@@ -99,8 +101,19 @@ const Settings: React.FC = () => {
 
   }, []);
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    setIsSaving(true);
+    
+    // Sync with Supabase
+    const userEmail = localStorage.getItem('lumina_email');
+    if (userEmail && name.trim()) {
+      await updateUserName(userEmail, name.trim());
+    }
+
+    // Save locally
     localStorage.setItem('lumina_username', name);
+    
+    setIsSaving(false);
     setShowSaveMsg(true);
     setTimeout(() => setShowSaveMsg(false), 2000);
   };
@@ -189,13 +202,15 @@ const Settings: React.FC = () => {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="Seu nome"
-                      className="w-full p-3 pl-4 bg-paper dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 focus:border-gold outline-none text-ink dark:text-white font-bold transition-colors"
+                      disabled={isSaving}
+                      className="w-full p-3 pl-4 bg-paper dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 focus:border-gold outline-none text-ink dark:text-white font-bold transition-colors disabled:opacity-50"
                     />
                     <button 
                         onClick={handleSave}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-gold text-ink rounded-lg shadow-md hover:bg-orange hover:text-white transition-colors"
+                        disabled={isSaving}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-gold text-ink rounded-lg shadow-md hover:bg-orange hover:text-white transition-colors disabled:opacity-50"
                     >
-                        {showSaveMsg ? <Star size={14} fill="currentColor"/> : <Save size={14} />}
+                        {isSaving ? <Loader2 size={14} className="animate-spin" /> : showSaveMsg ? <Star size={14} fill="currentColor"/> : <Save size={14} />}
                     </button>
                   </div>
               </div>

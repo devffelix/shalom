@@ -27,3 +27,21 @@ export const checkSubscription = async (email: string): Promise<boolean> => {
     return false;
   }
 };
+
+export const updateUserName = async (email: string, name: string): Promise<boolean> => {
+  try {
+    const { error } = await supabase
+      .from('signatures')
+      .update({ name: name })
+      .eq('email', email);
+
+    if (error) {
+      console.error('Erro ao atualizar nome no banco:', error);
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error('Erro inesperado ao atualizar nome:', err);
+    return false;
+  }
+};

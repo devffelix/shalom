@@ -1,6 +1,8 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BookOpen, Music, Zap, Sparkles, Star, ChevronRight, Shield, Heart, Mail, X, Loader2, ArrowRight, Check, CreditCard, HelpCircle, Lock, MessageCircle, Home, Battery, Sun, Share2, Book, Palette, MessageSquare, Bell, WifiOff, AlertTriangle, Coffee, Headphones, Smartphone, TrendingUp, XCircle, AlertOctagon, CheckCircle2, ChevronDown, ChevronUp, Gift, AlertCircle, Baby, HeartHandshake, ArrowDown, Download, Cloud, Moon, Info, Quote, Flame, Clock, Play, UserMinus } from 'lucide-react';
+// Fix: Import missing Settings icon from lucide-react
+import { BookOpen, Music, Zap, Sparkles, Star, ChevronRight, Shield, Heart, Mail, X, Loader2, ArrowRight, Check, CreditCard, HelpCircle, Lock, MessageCircle, Home, Battery, Sun, Share2, Book, Palette, MessageSquare, Bell, WifiOff, AlertTriangle, Coffee, Headphones, Smartphone, TrendingUp, XCircle, AlertOctagon, CheckCircle2, ChevronDown, ChevronUp, Gift, AlertCircle, Baby, HeartHandshake, ArrowDown, Download, Cloud, Moon, Info, Quote, Flame, Clock, Play, UserMinus, Monitor, Tablet, Search, MoreVertical, Menu, Settings } from 'lucide-react';
 import { ShalomLogo } from '../components/Layout';
 import { checkSubscription } from '../services/supabase';
 
@@ -59,6 +61,7 @@ const Landing: React.FC = () => {
   };
 
   const faqs = [
+    { q: "O que é o Shalom?", a: "O Shalom é o seu companheiro espiritual diário. Ele une a sabedoria milenar da Bíblia com a conveniência do WhatsApp e de um app moderno, enviando orações personalizadas, reflexões profundas e louvores selecionados para manter sua fé ativa todos os dias, em qualquer lugar." },
     { q: "Preciso pagar algo a mais pelas conversas no WhatsApp?", a: "Não! O plano anual cobre o acesso ilimitado ao Guia Espiritual e todas as funcionalidades do app." },
     { q: "Funciona no iPhone e Android?", a: "Sim, o Shalom é um Web App compatível com todos os celulares modernos, tablets e computadores." },
     { q: "Como cancelo se não gostar?", a: "Direto pelo app ou enviando um e-mail para nosso suporte. É simples, rápido e sem burocracia." }
@@ -172,9 +175,18 @@ const Landing: React.FC = () => {
                      <p>Vê notícias, responde mensagens, trabalha, ri de memes, vê séries.</p>
                      <p>O dia termina. O cansaço bate. Você dorme.</p>
                      <p>E Ele ficou lá... <strong className="text-white">esperando.</strong></p>
-                     <p>Imagine alguém que morreu por você ser tratado com tanto silêncio.</p>
+                     <p>Imagine um amor tão grande que deu a própria vida… e ainda assim espera pacientemente por você todos os dias. Jesus não está com raiva de você. Ele continua te chamando, mesmo no silêncio.</p>
                      <p className="text-white">Jesus não está com raiva de você. <span className="underline decoration-orange decoration-2 underline-offset-4">Ele está triste.</span></p>
                      <p>Ele vê sua ansiedade crescendo porque você tenta carregar o mundo sozinho, enquanto Ele está a uma oração de distância querendo carregar o fardo por você.</p>
+                     
+                     {/* ADDED VERSE BOX */}
+                     <div className="mt-8 bg-white/5 border-l-4 border-gold p-6 rounded-r-2xl backdrop-blur-sm animate-fade-in group">
+                        <Sparkles size={16} className="text-gold mb-3 opacity-50 group-hover:opacity-100 transition-opacity" />
+                        <p className="font-serif italic text-white text-xl leading-relaxed m-0">
+                          "A Bíblia diz que Ele está à porta e bate. Não para acusar, mas para entrar e ceiar com você."
+                        </p>
+                        <p className="mt-3 text-gold font-bold text-xs uppercase tracking-[0.2em] opacity-80">Apocalipse 3:20</p>
+                     </div>
                   </div>
                </div>
             </div>
@@ -188,44 +200,110 @@ const Landing: React.FC = () => {
                 </div>
             </div>
 
-            {/* NEW SECTION: OPEN LETTER (Fear/Anxiety Hook) */}
+            {/* NEW SECTION: OPEN LETTER (REWRITTEN COPY) */}
             <div className="max-w-2xl mx-auto mb-32 text-center md:text-left animate-fade-in">
                 <div className="border-l-4 border-gold pl-6 py-3 mb-10 bg-stone-50 dark:bg-stone-900/50 rounded-r-xl inline-block shadow-sm">
-                    <p className="font-bold text-ink dark:text-white text-xl md:text-2xl italic font-serif m-0">"Caros irmãos e irmãs..."</p>
+                    <p className="font-bold text-ink dark:text-white text-xl md:text-2xl italic font-serif m-0">Caros irmãos e irmãs…</p>
                 </div>
 
-                <div className="font-serif text-xl md:text-2xl text-stone-600 dark:text-stone-300 leading-relaxed space-y-8">
-                    <p>O mundo está ficando insuportável.</p>
+                <div className="font-serif text-xl md:text-2xl text-stone-600 dark:text-stone-300 leading-relaxed space-y-10">
+                    <p><span className="font-bold text-ink dark:text-white">O mundo está ficando pesado demais.</span></p>
 
-                    <p>A pressão no trabalho aumenta, mas o salário não.</p>
+                    <p>A pressão no trabalho aumenta, <br/>mas o salário não.</p>
 
-                    <p>Seus filhos estão expostos a coisas na internet que você nem imagina.</p>
+                    <p>Seus filhos estão expostos a coisas que você <span className="bg-red-50 dark:bg-red-900/20 px-1 font-bold">nunca imaginou</span>. <br/>O casamento, que deveria ser abrigo, virou tension.</p>
 
-                    <p>O casamento, que deveria ser seu porto seguro, virou um campo minado.</p>
+                    <p>Você sorri na igreja… <br/><span className="italic">mas chora escondido no banheiro.</span></p>
 
-                    <p>Você sorri na igreja, mas <span className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 font-bold px-1">chora escondido no banheiro</span>.</p>
+                    <p className="font-bold text-orange text-2xl">E a pior sensação de todas:</p>
 
-                    <p>E a pior sensação de todas...</p>
+                    <p>Mesmo acreditando em Deus, <br/><span className="bg-gold/10 dark:bg-gold/5 px-2 py-1 rounded border-l-2 border-gold font-bold">às vezes você se sente sozinho.</span></p>
 
-                    <p>A sensação de que Deus ficou em silêncio bem na hora que sua vida desmorona.</p>
+                    <p>A ansiedade aperta. <br/>A oração não sai. <br/>E a paz… <span className="underline decoration-red-400">simplesmente não vem.</span></p>
 
-                    <p className="font-bold text-ink dark:text-white border-l-4 border-red-500 pl-4 py-1">Você não está apenas cansado. Você está com medo.</p>
-                    
-                    <p>Medo do futuro. Medo de falhar. Medo de não ser o suficiente.</p>
+                    <p>Se isso já aconteceu com você, deixe-me dizer algo importante:</p>
 
-                    <p>A cada notificação de notícia ruim no celular, o coração dispara.</p>
+                    <p>👉 Isso <span className="font-bold text-ink dark:text-white">não é fraqueza</span>. <br/>👉 Isso é a vida real de quem ainda está lutando.</p>
 
-                    <p>Você olha para o lado e vê famílias que pareciam perfeitas sendo destruídas do dia para a noite.</p>
+                    <p>Você não está apenas cansado. <br/><span className="text-red-600 dark:text-red-400 font-black text-3xl">Você está com medo.</span></p>
 
-                    <p>E uma voz sussurra na sua mente: "E se o próximo for você?"</p>
+                    <p>Medo do futuro. <br/>Medo de falhar. <br/>Medo de não ser suficiente.</p>
 
-                    <p>A solidão bate na porta do quarto, mesmo com a casa cheia de gente.</p>
+                    <p>Cada notícia ruim no celular acelera o coração. <br/>Você vê famílias que pareciam firmes desmoronando do dia para a noite.</p>
 
-                    <p>Você tenta orar, mas o cansaço é tanto que as palavras travam na garganta.</p>
+                    <p className="text-center italic text-2xl md:text-3xl py-6 text-subtle">“E se o próximo for eu?”</p>
 
-                    <p>O inimigo não está brincando. Ele quer roubar sua paz e matar sua esperança.</p>
+                    <p>A solidão bate à porta do quarto, <br/>mesmo com a casa cheia de gente.</p>
 
-                    <p>E sem a armadura certa, blindada pela Palavra diária, <span className="font-bold text-red-600 dark:text-red-400">você é um alvo fácil</span>.</p>
+                    <p>Você tenta orar, <br/>mas o <span className="font-bold">cansaço é tanto</span> que as palavras travam na garganta.</p>
+
+                    <p>Não porque você deixou de crer. <br/>But because you are trying to <span className="text-gold-dark dark:text-gold font-bold">carry everything alone.</span></p>
+
+                    <p>A verdade é que, com tanta correria, <br/>a distância entre você e Deus não acontece de uma vez…<br/>Ela cresce aos poucos.</p>
+
+                    <p>Você quer orar, mas <span className="bg-stone-100 dark:bg-stone-800 px-1">falta tempo</span>. <br/>Quer ler a Bíblia, mas <span className="bg-stone-100 dark:bg-stone-800 px-1">falta constância</span>. <br/>Quer ouvir Deus, mas <span className="bg-stone-100 dark:bg-stone-800 px-1">falta silêncio</span>.</p>
+
+                    <p className="font-bold text-ink dark:text-white">O mundo grita. <br/><span className="text-gold">A fé sussurra.</span></p>
+
+                    <p>E você vai apenas sobrevivendo… <br/>quando the plan of God was always to see you <span className="font-bold text-green-600 dark:text-green-400">living in peace</span>.</p>
+
+                    <p className="font-bold text-2xl">Mas e se…</p>
+
+                    <p>👉 Deus pudesse te lembrar <span className="font-bold">todos os dias</span> que Ele está ali? <br/>👉 E se, no momento em que o medo batesse, uma palavra de consolo chegasse até você? <br/>👉 E se, quando a dúvida surgisse, a <span className="text-gold font-bold">Palavra certa</span> te mostrowe o caminho?</p>
+
+                    <p><span className="font-black text-ink dark:text-white bg-gold/20 px-2 py-1 rounded">Foi por isso que nasceu Shalom.</span></p>
+
+                    <p>Não como um substituto da fé. <br/>Mas como um <span className="italic underline underline-offset-4 decoration-gold decoration-2">guia diário</span> para te ajudar a caminhar com Deus, mesmo nos dias difíceis.</p>
+
+                    <p>…No seu <span className="text-green-500 font-bold">WhatsApp</span>. <br/>…No seu ritmo. <br/>...Na sua vida real.</p>
+
+                    <p className="font-bold text-ink dark:text-white">Shalom te acompanha todos os dias com:</p>
+
+                    <ul className="space-y-4 text-lg list-none p-0">
+                      <li className="flex items-start gap-2">✨ Uma oração pela manhã, para <span className="font-bold">começar firme</span></li>
+                      <li className="flex items-start gap-2">⚡ Uma mensagem no meio do dia, para <span className="font-bold">renovar as forças</span></li>
+                      <li className="flex items-start gap-2">🌙 E uma oração à noite, para <span className="font-bold">devolver a paz</span> ao coração</li>
+                    </ul>
+
+                    <p className="font-bold">Além disso:</p>
+
+                    <p className="text-lg leading-relaxed">
+                        Palavra diária explicada de <span className="font-bold">forma simples</span>,<br/>
+                        desafios espirituais para fortalecer sua fé,<br/>
+                        louvores que acalmam a alma<br/>
+                        e uma resposta carinhosa sempre que você precisar falar.
+                    </p>
+
+                    <p>Tudo baseado <span className="underline font-bold">exclusivamente na Bíblia</span>. <br/>Nada inventado. <br/>Nada além da Palavra de Deus.</p>
+
+                    <p className="text-center font-bold border-y border-stone-200 dark:border-stone-800 py-6">
+                        Shalom não substitui Jesus. <br/><span className="text-gold text-2xl">Shalom te aproxima de Jesus.</span>
+                    </p>
+
+                    <p>Com o tempo, você vai perceber:</p>
+
+                    <ul className="space-y-2 text-lg font-bold list-none p-0">
+                      <li className="flex items-center gap-2"><CheckCircle2 size={18} className="text-green-500" /> Vai orar mais</li>
+                      <li className="flex items-center gap-2"><CheckCircle2 size={18} className="text-green-500" /> Vai entender mais a Bíblia</li>
+                      <li className="flex items-center gap-2"><CheckCircle2 size={18} className="text-green-500" /> Vai ter direção para as batalhas</li>
+                      <li className="flex items-center gap-2"><CheckCircle2 size={18} className="text-green-500" /> Vai sentir paz onde antes havia medo</li>
+                    </ul>
+
+                    <p><span className="bg-ink text-white dark:bg-white dark:text-ink px-4 py-2 rounded-full font-bold">Sua vida espiritual vai sair do automático.</span></p>
+
+                    <p>Se você está sentindo, agora mesmo, que Deus está te chamando para mais perto… <span className="font-bold">não ignore isso.</span></p>
+
+                    <p>👉 Ative o Shalom no seu WhatsApp hoje <br/>👉 Receba a primeira oração ainda hoje <br/>👉 Comece a caminhar acompanhado, <span className="font-bold">todos os dias</span></p>
+
+                    <p>Neste início, estamos liberando um <span className="text-gold font-bold">plano especial</span> para quem sente que esse chamado é agora.</p>
+
+                    <p>Because the truth is simple:</p>
+
+                    <p className="text-2xl font-bold">Deus não te abandonou. <br/>Ele está aqui. <br/><span className="bg-gold text-ink px-2">Ele está contigo.</span></p>
+
+                    <p>E agora… <br/>Ele vai caminhar com você, todos os dias.</p>
+
+                    <p className="text-3xl font-serif font-black pt-10">Shalom. <br/><span className="text-gold">A paz que fala com você.</span></p>
                 </div>
             </div>
 
@@ -306,7 +384,7 @@ const Landing: React.FC = () => {
                         A Bíblia deixa de ser um livro fechado.
                     </h2>
                     <div className="space-y-6 text-xl text-stone-600 dark:text-stone-300 font-serif leading-relaxed">
-                        <p>Muitos tentam ler e param no terceiro dia.</p>
+                        <p>Mutilos tentam ler e param no terceiro dia.</p>
                         <p>O texto parece difícil. O sono vem.</p>
                         <p>No <span className="font-bold text-gold-dark dark:text-gold">Shalom</span>, é diferente.</p>
                         <p>Entregamos porções digeríveis.</p>
@@ -316,7 +394,7 @@ const Landing: React.FC = () => {
                 </div>
             </div>
 
-            {/* --- NEW SECTION: CASAMENTO (Couple Praying) --- */}
+            {/* --- NEW SECTION: CASAMENTO (Updated Pattern) --- */}
             <div className="my-24 bg-gradient-to-br from-stone-50 to-orange-50 dark:from-stone-900 dark:to-stone-800 rounded-[3rem] p-8 md:p-12 relative overflow-hidden border border-stone-200 dark:border-stone-800">
                <div className="grid md:grid-cols-2 gap-12 items-center relative z-10">
                   <div className="space-y-8">
@@ -324,13 +402,13 @@ const Landing: React.FC = () => {
                           <HeartHandshake size={12} /> Aliança Blindada
                       </div>
                       <h3 className="font-serif font-bold text-3xl md:text-5xl text-ink dark:text-white leading-tight">
-                          Seu casamento precisa de um terceiro elo.
+                          Seu casamento precisa de um third elo.
                       </h3>
-                      <div className="font-serif text-lg md:text-xl text-stone-600 dark:text-stone-300 leading-loose">
+                      <div className="font-serif text-lg md:text-xl text-stone-600 dark:text-stone-300 leading-loose space-y-6">
                           <p>As lutas diárias desgastam o amor.</p>
                           <p>Pequenas brigas viram grandes silêncios.</p>
-                          <p>O segredo para reverter isso não é apenas diálogo, é <span className="font-bold text-ink dark:text-white">oração conjunta</span>.</p>
-                          <p>O Shalom envia devocionais para casais que quebram o orgulho e unem os corações diante de Deus.</p>
+                          <p>O segredo para reverter isso não é apenas diálogo, <br/>é <span className="font-bold text-ink dark:text-white">oração conjunta</span>.</p>
+                          <p>O Shalom envia devocionais para casais que <br/>quebram o orgulho e unem os corações diante de Deus.</p>
                           <p className="italic font-medium text-orange">"O cordão de três dobras não se rompe facilmente."</p>
                       </div>
                   </div>
@@ -359,10 +437,10 @@ const Landing: React.FC = () => {
                 </div>
             </div>
 
-            {/* --- SEÇÃO FAMÍLIA (Updated Image) --- */}
+            {/* --- SEÇÃO FAMÍLIA (Updated Pattern) --- */}
             <div className="my-24 bg-stone-50 dark:bg-stone-900/50 rounded-[3rem] p-8 md:p-12 border border-stone-200 dark:border-stone-800">
                <div className="grid md:grid-cols-2 gap-12 items-center">
-                  {/* Visual Column (Left for variation) */}
+                  {/* Visual Column */}
                   <div className="order-2 md:order-1 relative group">
                       <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-[2.5rem] blur-2xl opacity-20 group-hover:opacity-30 transition-opacity"></div>
                       <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl h-[500px]">
@@ -400,20 +478,20 @@ const Landing: React.FC = () => {
                       <h3 className="font-serif font-bold text-3xl md:text-4xl text-ink dark:text-white leading-tight">
                           Seus filhos veem você orando?
                       </h3>
-                      <div className="font-serif text-lg md:text-xl text-stone-600 dark:text-stone-300 leading-loose">
+                      <div className="font-serif text-lg md:text-xl text-stone-600 dark:text-stone-300 leading-loose space-y-6">
                           <p>O mundo lá fora não tem misericórdia da sua família.</p>
-                          <p>Seus filhos são bombardeados por valores invertidos na escola e nas telas.</p>
-                          <p>Se você não ensinar a verdade em casa, <strong className="text-red-500">o mundo ensinará a mentira lá fora.</strong></p>
-                          <p>O <span className="font-bold text-ink dark:text-white">Shalom</span> ajuda você a levantar um altar na sua sala.</p>
-                          <p className="bg-indigo-50 dark:bg-indigo-900/10 p-2 rounded-lg border-l-4 border-indigo-500 font-bold text-indigo-800 dark:text-indigo-200">
-                              Salve a fé da próxima geração. Comece hoje.
+                          <p>Seus filhos são bombardeados por <br/>valores invertidos na escola e nas telas.</p>
+                          <p>Se você não ensinar a verdade em casa, <br/><strong className="text-red-500">o mundo ensinará a mentira lá fora.</strong></p>
+                          <p>O <span className="font-bold text-ink dark:text-white">Shalom</span> ajuda você a <br/>levantar um altar na sua sala.</p>
+                          <p className="bg-indigo-50 dark:bg-indigo-900/10 p-4 rounded-2xl border-l-4 border-indigo-500 font-bold text-indigo-800 dark:text-indigo-200">
+                              Salve a fé da próxima geração. <br/>Comece hoje.
                           </p>
                       </div>
                   </div>
                </div>
             </div>
 
-            {/* --- SEÇÃO VISUAL NOVA 1: ATMOSFERA DE ADORAÇÃO --- */}
+            {/* --- SEÇÃO VISUAL NOVA 1: ATMOSFERA DE ADORAÇÃO (NEW COPY) --- */}
             <div className="my-24 bg-stone-900 dark:bg-black rounded-[3rem] p-8 md:p-12 relative overflow-hidden text-white shadow-2xl">
                 
                 {/* SLOGAN 4: INSIDE WORSHIP */}
@@ -439,9 +517,14 @@ const Landing: React.FC = () => {
                         <h3 className="font-serif font-bold text-3xl md:text-5xl leading-tight">
                             A música certa quebra cadeias invisíveis.
                         </h3>
-                        <p className="text-stone-300 text-lg leading-relaxed max-w-md">
-                            Shalom seleciona louvores específicos para o estado do seu coração. Se está ansioso, cansado ou grato, temos a melodia certa para conectar você ao Céu em segundos.
-                        </p>
+                        <div className="space-y-4">
+                            <p className="text-white text-xl leading-relaxed font-bold">
+                                Shalom cria 3 novos louvores todos os dias.
+                            </p>
+                            <p className="text-stone-300 text-lg leading-relaxed max-w-md">
+                                Selecionamos aqueles que seu coração mais precisa para te conectar ao Céu em segundos.
+                            </p>
+                        </div>
                     </div>
                     
                     {/* Visual Card */}
@@ -559,7 +642,7 @@ const Landing: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Card 3: Gratidão */}
+                    {/* Card 2: Gratidão */}
                     <div className="h-80 rounded-[2.5rem] relative overflow-hidden group cursor-default md:col-span-1">
                         <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=800&auto=format&fit=crop" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Sunrise" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
@@ -597,7 +680,7 @@ const Landing: React.FC = () => {
                      <div className="space-y-4 text-lg text-stone-600 dark:text-stone-300 leading-relaxed">
                         <p>Muitos de nós gastamos sem pensar com streamings, lanches e coisas que perecem.</p>
                         <p>Mas hesitamos em investir no fortalecimento do nosso espírito.</p>
-                        <p>Shalom custa menos que um cafezinho por dia.</p>
+                        <p>Shalom custa menos que uma pizza por ano.</p>
                         <p>Mas o valor de ter sua mente blindada pela Palavra...</p>
                         <p className="font-bold text-gold text-xl mt-4">Isso não tem preço.</p>
                      </div>
@@ -651,6 +734,175 @@ const Landing: React.FC = () => {
 
       {/* PRICING SECTION - The Offer */}
       <section id="pricing" className="py-24 px-6 relative bg-gradient-to-b from-white to-stone-50 dark:from-stone-950 dark:to-black">
+         
+         {/* --- MULTI-DEVICE MOCKUP SECTION (Fiel à Interface do App) --- */}
+         <div className="max-w-6xl mx-auto mb-32 relative">
+             <div className="text-center mb-24 px-6">
+                <div className="inline-flex items-center gap-2 text-gold font-bold text-xs uppercase tracking-widest mb-4">
+                    <Smartphone size={16} /> <Tablet size={16} /> <Monitor size={16} /> Presença constante em sua vida
+                </div>
+                <h3 className="text-3xl md:text-6xl font-serif font-black text-ink dark:text-white mb-6 leading-tight">
+                    Sua jornada de fé,<br/>em <span className="text-gold">qualquer lugar.</span>
+                </h3>
+                <p className="text-subtle text-lg max-w-2xl mx-auto">
+                    Acompanhe seu progresso bíblico no PC, ouça louvores no Tablet e receba sua oração diária no celular. Tudo conectado.
+                </p>
+             </div>
+
+             <div className="relative h-[500px] md:h-[750px] w-full flex items-center justify-center">
+                 
+                 {/* 1. MOCKUP PC (MELHORADO) - BÍBLIA ABERTA NO DESKTOP */}
+                 <div className="absolute w-[90%] md:w-[70%] aspect-video bg-[#0f172a] rounded-[2rem] shadow-[0_60px_120px_-30px_rgba(0,0,0,0.8)] border-[12px] border-[#1e293b] overflow-hidden transform -translate-y-24 z-0 scale-90 md:scale-100 group">
+                    {/* Top Browser Bar */}
+                    <div className="h-10 bg-[#1e293b] border-b border-white/5 flex items-center px-4 gap-2">
+                        <div className="flex gap-1.5">
+                            <div className="w-3 h-3 rounded-full bg-[#ff5f56]"></div>
+                            <div className="w-3 h-3 rounded-full bg-[#ffbd2e]"></div>
+                            <div className="w-3 h-3 rounded-full bg-[#27c93f]"></div>
+                        </div>
+                        <div className="mx-auto bg-black/30 rounded-md px-6 py-1 text-[10px] text-stone-400 font-medium">app.shalom.com/bible/genesis-1</div>
+                    </div>
+                    
+                    <div className="flex h-full w-full bg-[#fafaf9] dark:bg-[#0c0a09] font-sans">
+                        {/* Realistic Sidebar */}
+                        <div className="w-64 bg-white dark:bg-[#1c1917] border-r border-stone-200 dark:border-stone-800 flex flex-col py-6">
+                             <div className="px-6 mb-10 flex items-center gap-2">
+                                <ShalomLogo size="w-8 h-8" />
+                                <span className="font-serif font-black text-lg dark:text-white tracking-tighter">Shalom</span>
+                             </div>
+                             
+                             <div className="px-3 space-y-1">
+                                <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-400 font-medium text-sm"><Home size={18} /> Início</div>
+                                <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-ink dark:bg-white text-white dark:text-ink font-bold text-sm shadow-lg"><BookOpen size={18} /> Bíblia</div>
+                                <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-400 font-medium text-sm"><Music size={18} /> Louvor</div>
+                                <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-400 font-medium text-sm"><Zap size={18} /> Jornada</div>
+                             </div>
+
+                             <div className="mt-auto px-6">
+                                <div className="p-4 bg-gold/10 rounded-2xl border border-gold/20">
+                                    <p className="text-[10px] font-black text-gold uppercase mb-1">Seu Progresso</p>
+                                    <div className="w-full h-1.5 bg-gold/20 rounded-full overflow-hidden mb-2">
+                                        <div className="w-1/3 h-full bg-gold"></div>
+                                    </div>
+                                    <p className="text-[10px] text-stone-500 font-bold">15/50 Capítulos</p>
+                                </div>
+                             </div>
+                        </div>
+
+                        {/* Content Area */}
+                        <div className="flex-1 flex flex-col overflow-hidden bg-[#fafaf9] dark:bg-[#0c0a09]">
+                            {/* Top Internal Navigation */}
+                            <div className="px-8 py-4 border-b border-stone-100 dark:border-stone-800 flex justify-between items-center">
+                                <div className="flex items-center gap-4">
+                                    <h4 className="font-serif font-black text-2xl dark:text-white">Gênesis <span className="text-orange">1</span></h4>
+                                    <div className="bg-stone-100 dark:bg-stone-800 p-1.5 rounded-lg flex gap-1">
+                                        <div className="w-4 h-4 bg-stone-300 rounded-sm"></div>
+                                        <div className="w-4 h-4 bg-stone-300 rounded-sm"></div>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    <div className="w-8 h-8 rounded-full bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-stone-400"><Search size={14} /></div>
+                                    <div className="w-20 h-8 rounded-full bg-ink dark:bg-white text-white dark:text-ink text-[10px] font-bold flex items-center justify-center shadow-md">LIDO</div>
+                                </div>
+                            </div>
+                            
+                            {/* Bible Reader Text */}
+                            <div className="flex-1 p-12 overflow-hidden relative">
+                                <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-stone-200/20 to-transparent"></div>
+                                <div className="space-y-6 max-w-2xl mx-auto opacity-80">
+                                    <div className="flex gap-4">
+                                        <span className="text-orange font-black text-xs shrink-0 mt-1">1</span>
+                                        <p className="text-lg font-serif dark:text-stone-300 leading-relaxed">No princípio criou Deus o céu e a terra.</p>
+                                    </div>
+                                    <div className="flex gap-4 bg-gold/10 border-l-4 border-gold p-4 rounded-r-xl">
+                                        <span className="text-orange font-black text-xs shrink-0 mt-1">2</span>
+                                        <p className="text-lg font-serif dark:text-stone-300 leading-relaxed">E a terra era sem forma e vazia; e havia trevas sobre a face do abismo; e o <span className="font-bold underline decoration-gold">Espírito de Deus</span> se movia sobre a face das águas.</p>
+                                    </div>
+                                    <div className="flex gap-4">
+                                        <span className="text-orange font-black text-xs shrink-0 mt-1">3</span>
+                                        <p className="text-lg font-serif dark:text-stone-300 leading-relaxed">E disse Deus: Haja luz; e houve luz.</p>
+                                    </div>
+                                    <div className="h-4 bg-stone-100 dark:bg-stone-800 rounded-full w-full opacity-50"></div>
+                                    <div className="h-4 bg-stone-100 dark:bg-stone-800 rounded-full w-5/6 opacity-50"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                 </div>
+
+                 {/* 2. MOCKUP TABLET (Remains Realistic) */}
+                 <div className="absolute left-[2%] md:left-[10%] w-[50%] md:w-[38%] aspect-[3/4] bg-stone-900 rounded-[3rem] shadow-[0_40px_80px_-15px_rgba(0,0,0,0.7)] border-[14px] border-stone-950 overflow-hidden transform translate-y-24 -rotate-6 z-10 hover:rotate-0 transition-all duration-700 hidden md:block">
+                    <div className="h-full w-full bg-stone-900 p-8 flex flex-col">
+                        <div className="flex items-center gap-2 mb-8">
+                            <div className="w-8 h-8 bg-gold rounded-xl flex items-center justify-center text-ink"><Music size={16} /></div>
+                            <h4 className="text-white font-serif font-bold text-lg">Louvor</h4>
+                        </div>
+                        <div className="relative aspect-square bg-stone-800 rounded-3xl mb-8 flex items-center justify-center overflow-hidden shadow-2xl group">
+                            <img src="https://images.unsplash.com/photo-1483043012503-8a8849b4c949?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" className="absolute inset-0 w-full h-full object-cover opacity-40" />
+                            <div className="w-20 h-20 bg-gold rounded-full flex items-center justify-center text-ink shadow-2xl animate-pulse"><Play size={32} fill="currentColor" /></div>
+                        </div>
+                        <div className="space-y-4">
+                            <div className="h-2 w-full bg-white/10 rounded-full overflow-hidden">
+                                <div className="h-full bg-gold w-1/3"></div>
+                            </div>
+                            <div className="flex justify-between text-[10px] text-stone-400 font-mono"><span>1:24</span><span>4:15</span></div>
+                            <h5 className="text-white font-bold text-xl truncate">Milagres do Caminho</h5>
+                            <p className="text-gold text-xs font-bold uppercase tracking-widest">Soraya Moraes</p>
+                        </div>
+                    </div>
+                 </div>
+
+                 {/* 3. MOCKUP SMARTPHONE (DESTAQUE) */}
+                 <div className="absolute right-[5%] md:right-[18%] w-[85%] md:w-[22%] aspect-[9/19.5] bg-stone-950 rounded-[3.5rem] shadow-[0_60px_120px_-20px_rgba(0,0,0,0.8)] border-[10px] border-stone-900 overflow-hidden z-20 transform translate-y-40 md:rotate-3 hover:rotate-0 transition-all duration-700">
+                    <div className="h-full w-full bg-paper dark:bg-stone-950 flex flex-col p-6 overflow-hidden">
+                        <div className="h-6 w-1/3 bg-stone-900 absolute top-0 left-1/2 -translate-x-1/2 rounded-b-2xl"></div>
+                        
+                        <div className="mt-4 flex justify-between items-center mb-6">
+                            <div className="flex flex-col">
+                                <span className="text-[10px] font-black text-gold uppercase tracking-tighter">Bom dia,</span>
+                                <span className="text-sm font-serif font-black text-ink dark:text-white">Viajante</span>
+                            </div>
+                            <div className="w-8 h-8 rounded-full bg-orange/10 flex items-center justify-center text-orange"><Flame size={16} /></div>
+                        </div>
+
+                        <div className="w-full aspect-[4/5] bg-ink rounded-[2rem] p-5 relative overflow-hidden flex flex-col justify-center text-center shadow-lg mb-6">
+                            <img src="https://images.unsplash.com/photo-1458093257227-0f30303eb1f0?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" className="absolute inset-0 w-full h-full object-cover opacity-50" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+                            <div className="relative z-10">
+                                <Sparkles className="text-gold mx-auto mb-3" size={16} />
+                                <p className="text-white font-serif italic text-xs leading-relaxed">"O Senhor é o meu pastor, nada me faltará."</p>
+                                <p className="text-gold font-bold text-[8px] mt-2 tracking-widest uppercase">Salmos 23:1</p>
+                            </div>
+                        </div>
+
+                        <p className="text-[10px] font-bold text-subtle uppercase tracking-widest mb-3">Como está seu coração?</p>
+                        <div className="flex gap-2">
+                             <div className="w-12 h-16 bg-stone-100 dark:bg-stone-900 rounded-2xl flex flex-col items-center justify-center gap-1 border-2 border-gold shadow-sm">
+                                <div className="p-1 bg-gold rounded-full text-ink"><Zap size={10} /></div>
+                                <span className="text-[8px] font-bold text-gold">Ansioso</span>
+                             </div>
+                             <div className="w-12 h-16 bg-stone-100 dark:bg-stone-900 rounded-2xl flex flex-col items-center justify-center gap-1 opacity-40">
+                                <div className="p-1 bg-stone-700 rounded-full text-white"><Sun size={10} /></div>
+                                <span className="text-[8px] font-bold text-stone-500">Feliz</span>
+                             </div>
+                             <div className="w-12 h-16 bg-stone-100 dark:bg-stone-900 rounded-2xl flex flex-col items-center justify-center gap-1 opacity-40">
+                                <div className="p-1 bg-stone-700 rounded-full text-white"><Battery size={10} /></div>
+                                <span className="text-[8px] font-bold text-stone-500">Cansado</span>
+                             </div>
+                        </div>
+
+                        <div className="mt-auto -mx-6 h-14 bg-white dark:bg-stone-900 border-t border-stone-100 dark:border-stone-800 flex justify-around items-center px-4">
+                             <div className="text-gold"><Home size={18} /></div>
+                             <div className="text-stone-300"><BookOpen size={18} /></div>
+                             <div className="text-stone-300"><Music size={18} /></div>
+                             <div className="text-stone-300"><Zap size={18} /></div>
+                        </div>
+                    </div>
+                 </div>
+
+             </div>
+         </div>
+
          <div className="max-w-3xl mx-auto relative z-10">
             {/* Headlines */}
             <div className="text-center mb-10">
@@ -721,7 +973,7 @@ const Landing: React.FC = () => {
                             className={`relative cursor-pointer rounded-3xl p-6 border-2 transition-all flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl ${selectedPlan === 'yearly' ? 'border-gold bg-white dark:bg-stone-800 ring-4 ring-gold/10' : 'border-stone-200 opacity-60'}`}
                         >
                              {/* Badge */}
-                             <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-100 text-green-700 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wide border border-green-200">
+                             <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-green-100 text-green-700 text-sm font-black px-8 py-2.5 rounded-full uppercase tracking-widest border-2 border-green-200 shadow-md">
                                 92% Escolhem
                              </div>
 
@@ -742,8 +994,8 @@ const Landing: React.FC = () => {
                              </div>
 
                              {/* Float Badge */}
-                             <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-stone-900 text-white text-[10px] font-bold px-4 py-1.5 rounded-full shadow-lg flex items-center gap-1 whitespace-nowrap">
-                                <TrendingUp size={10} className="text-green-400" /> R$ 0,14 POR DIA
+                             <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-stone-900 text-white text-[10px] font-bold px-4 py-1.5 rounded-full shadow-lg flex items-center gap-1 whitespace-nowrap border border-white/10">
+                                <TrendingUp size={10} className="text-green-400" /> Menos que uma pizza por ano...
                              </div>
                         </div>
                     </div>
