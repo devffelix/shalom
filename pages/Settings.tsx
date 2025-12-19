@@ -230,24 +230,24 @@ const Settings: React.FC = () => {
          </div>
 
          {/* Stats Row */}
-         <div className="grid grid-cols-3 gap-3">
-             <div className="bg-gradient-to-br from-gold to-orange p-4 rounded-3xl text-white shadow-lg relative overflow-hidden">
-                <div className="absolute -right-4 -bottom-4 opacity-20"><Crown size={60} /></div>
-                <span className="text-xs font-bold uppercase opacity-80">Nível</span>
-                <div className="text-3xl font-black">{stats.level}</div>
-                <div className="text-[10px] font-medium truncate">{stats.title}</div>
+         <div className="grid grid-cols-3 gap-4">
+             <div className="bg-gradient-to-br from-gold to-orange p-6 rounded-[2.5rem] text-white shadow-lg relative overflow-hidden">
+                <div className="absolute -right-4 -bottom-4 opacity-20"><Crown size={80} /></div>
+                <span className="text-xs font-black uppercase opacity-80 tracking-widest">Nível</span>
+                <div className="text-5xl font-black tracking-tighter my-1">{stats.level}</div>
+                <div className="text-xs font-bold truncate opacity-90">{stats.title}</div>
              </div>
              
-             <div className="bg-surface dark:bg-stone-900 p-4 rounded-3xl border border-stone-100 dark:border-stone-800 shadow-sm relative overflow-hidden">
-                <div className="absolute -right-4 -bottom-4 text-stone-100 dark:text-stone-800"><Zap size={60} /></div>
-                <span className="text-xs font-bold text-subtle uppercase">XP Total</span>
-                <div className="text-2xl font-black text-ink dark:text-white">{stats.xp}</div>
+             <div className="bg-surface dark:bg-stone-900 p-6 rounded-[2.5rem] border border-stone-100 dark:border-stone-800 shadow-sm relative overflow-hidden">
+                <div className="absolute -right-4 -bottom-4 text-stone-100 dark:text-stone-800"><Zap size={80} /></div>
+                <span className="text-xs font-black text-subtle uppercase tracking-widest">XP Total</span>
+                <div className="text-4xl font-black text-ink dark:text-white my-1 tracking-tighter">{stats.xp}</div>
              </div>
 
-             <div className="bg-surface dark:bg-stone-900 p-4 rounded-3xl border border-stone-100 dark:border-stone-800 shadow-sm relative overflow-hidden">
-                <div className="absolute -right-4 -bottom-4 text-stone-100 dark:text-stone-800"><Award size={60} /></div>
-                <span className="text-xs font-bold text-subtle uppercase">Emblemas</span>
-                <div className="text-2xl font-black text-ink dark:text-white">{badges.filter(b => b.earned).length}<span className="text-sm text-stone-400 font-medium">/{badges.length}</span></div>
+             <div className="bg-surface dark:bg-stone-900 p-6 rounded-[2.5rem] border border-stone-100 dark:border-stone-800 shadow-sm relative overflow-hidden">
+                <div className="absolute -right-4 -bottom-4 text-stone-100 dark:text-stone-800"><Award size={80} /></div>
+                <span className="text-xs font-black text-subtle uppercase tracking-widest">Emblemas</span>
+                <div className="text-4xl font-black text-ink dark:text-white my-1 tracking-tighter">{badges.filter(b => b.earned).length}<span className="text-lg text-stone-400 font-bold">/{badges.length}</span></div>
              </div>
          </div>
 

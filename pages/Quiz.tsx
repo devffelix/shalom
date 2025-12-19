@@ -1,191 +1,279 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Check, Sparkles, ChevronRight, Shield, Clock, Zap, Target, Lock, Users, Sun, Flame, BookOpen, Coffee, CreditCard, Star, Heart } from 'lucide-react';
+// Fix: Added missing BookOpen import from lucide-react
+import { ArrowRight, Check, Sparkles, ChevronRight, Zap, Star, MessageCircle, Quote, AlertCircle, Loader2, PenTool, Calendar, TrendingUp, Sun, Flame, Battery, HelpCircle, BookOpen } from 'lucide-react';
 import { ShalomLogo } from '../components/Layout';
+
+// Image Optimization Helper
+const optimizeImg = (url: string) => `https://wsrv.nl/?url=${encodeURIComponent(url)}&w=800&q=80&output=webp`;
+
+const ALL_QUIZ_IMAGES = [
+  "https://files.catbox.moe/jg59lo.png",
+  "https://files.catbox.moe/tnwf7r.png",
+  "https://files.catbox.moe/6cpmb1.png",
+  "https://files.catbox.moe/mi2tyx.png",
+  "https://files.catbox.moe/2mxx5i.png",
+  "https://files.catbox.moe/z6h7br.png",
+  "https://files.catbox.moe/xnke72.png",
+  "https://files.catbox.moe/tlhrp2.png",
+  "https://files.catbox.moe/9ijb3y.png",
+  "https://files.catbox.moe/82k0mn.png",
+  "https://files.catbox.moe/jvm5by.png",
+  "https://files.catbox.moe/r5vgr9.png"
+].map(optimizeImg);
 
 interface Question {
   id: number;
   type: 'text' | 'choice' | 'final';
   question: string;
+  image?: string;
   options?: string[];
-  feedback?: (name: string, answer: string) => string;
+  feedbackTitle?: string;
+  feedback?: (name: string, answer: string) => string | React.ReactNode;
 }
+
+const Highlight: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <span className="bg-orange/20 px-1.5 py-0.5 rounded-sm font-bold border-b border-orange/30 inline-block">{children}</span>
+);
+
+const Circle: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <span className="relative inline-block px-2 py-0.5 mx-1">
+    <span className="absolute inset-0 border-2 border-orange/40 rounded-[45%_55%_50%_50%/_50%_50%_50%_50%] transform -rotate-1 scale-110"></span>
+    <span className="relative italic font-bold text-ink">{children}</span>
+  </span>
+);
+
+const questions: Question[] = [
+  {
+    id: 1,
+    type: 'text',
+    question: 'Quiz de 55 segundos. Como posso te chamar?',
+    image: optimizeImg("https://files.catbox.moe/jg59lo.png"),
+    feedbackTitle: "Deus na palma da sua mão!",
+    feedback: (n) => (
+      <div className="text-left space-y-6 font-sans text-stone-700">
+        <p className="font-serif italic text-2xl text-orange mb-4 leading-tight">Que bênção ter você aqui, irmão(ã) <span className="font-black not-italic text-ink">{n}</span>. 🙏</p>
+        <div className="space-y-4 text-base md:text-lg leading-relaxed">
+          <p className="font-bold text-ink text-xl">Não foi por acaso que você chegou até aqui.</p>
+          <p>Antes de continuar, preciso ser muito claro com você. <Circle>Essa não é mais uma conversa genérica.</Circle></p>
+          <p>Esse quiz não foi feito para todo mundo. Ele existe por um <Highlight>propósito maior</Highlight>.</p>
+          <p>Nós acreditamos que Deus trabalha com direção, não com acaso. Deus conhece o seu nome. E, a partir daqui, eu vou caminhar com você também. 🤍</p>
+          <p className="font-serif italic text-sm mt-4">📖 “O Senhor firma os passos de quem nele confia.” — Salmos 37:23</p>
+        </div>
+      </div>
+    )
+  },
+  {
+    id: 2,
+    type: 'choice',
+    question: 'Hoje, como você sente que está sua fé?',
+    image: optimizeImg("https://files.catbox.moe/tnwf7r.png"),
+    options: ['Já foi mais firme do que é hoje', 'Oscila muito conforme os problemas', 'Está viva, mas precisa ser fortalecida'],
+    feedbackTitle: "AUTOAVALIAÇÃO DE FÉ",
+    feedback: (n) => (
+      <div className="text-left space-y-5 text-stone-700 leading-relaxed">
+        <p className="font-bold text-xl text-ink">Irmão(ã) {n}, <Highlight>reconhecer isso não é fracasso.</Highlight></p>
+        <p>Mas ignorar esse sinal seria perigoso. A fé nunca desaparece de uma vez — <Circle>ela esfria</Circle> quando não é cuidada.</p>
+        <p>E Deus está te mostrando isso agora… não amanhã.</p>
+        <p className="bg-orange/5 p-6 rounded-xl border-l-4 border-orange italic font-serif text-xl">
+          “Tenho, porém, contra ti que abandonaste o teu <Highlight>primeiro amor</Highlight>.” — Apocalipse 2:4
+        </p>
+      </div>
+    )
+  },
+  {
+    id: 3,
+    type: 'choice',
+    question: 'Com que frequência a oração faz parte do seu dia a dia?',
+    image: optimizeImg("https://files.catbox.moe/6cpmb1.png"),
+    options: ['Só quando estou enfrentando algo difícil', 'Em alguns dias, mas sem constância', 'Poderia ser muito melhor do que é hoje'],
+    feedbackTitle: "ROTINA DE ORAÇÃO",
+    feedback: () => (
+      <div className="text-left space-y-5 text-stone-700 leading-relaxed">
+        <p className="font-bold text-2xl text-ink">Deus não se afasta. <Circle>Somos nós que vamos ficando ocupados demais.</Circle></p>
+        <p>A questão não é se você acredita. É se sua rotina reflete essa fé.</p>
+        <p className="bg-gold/10 p-6 rounded-2xl border-l-4 border-gold-dark italic font-serif text-xl text-ink">
+          “Clama a mim e responder-te-ei.” — Jeremias 33:3
+        </p>
+      </div>
+    )
+  },
+  {
+    id: 4,
+    type: 'choice',
+    question: 'Você sente clareza ao tentar ouvir a direção de Deus?',
+    image: optimizeImg("https://files.catbox.moe/mi2tyx.png"),
+    options: ['Muitas vezes me sinto confuso(a)', 'Às vezes entendo, às vezes não', 'Sinto que preciso aprender a ouvir melhor'],
+    feedbackTitle: "CONEXÃO / ESCUTA",
+    feedback: () => (
+      <div className="text-left space-y-5 text-stone-700 leading-relaxed">
+        <p className="font-bold text-xl text-ink">Quando Deus parece em silêncio, geralmente o <Highlight>coração está cheio demais.</Highlight></p>
+        <p>Cheio de ruído. Cheio de medo. <Circle>Cheio de pressa.</Circle> A boa notícia? Quem aprende a parar… volta a ouvir com clareza.</p>
+        <p className="italic text-sm">“As minhas ovelhas ouvem a minha voz.” (João 10:27)</p>
+      </div>
+    )
+  },
+  {
+    id: 5,
+    type: 'choice',
+    question: 'Quando enfrenta medo, ansiedade ou tristeza você sabe exatamente que passagem bíblica buscar?',
+    image: optimizeImg("https://files.catbox.moe/2mxx5i.png"),
+    options: ['Não, geralmente fico perdido(a)', 'Às vezes lembro de algo, mas não aprofundo', 'Sinto que poderia usar melhor a Palavra'],
+    feedbackTitle: "CONHECIMENTO BÍBLICO",
+    feedback: () => (
+      <div className="text-left space-y-5 text-stone-700 leading-relaxed">
+        <p className="font-bold text-2xl text-ink"><Circle>O inimigo conhece a Palavra.</Circle></p>
+        <p>Por isso, quem não conhece… luta desarmado. Não é sobre decorar versículos. É sobre ter a <Highlight>Palavra certa na hora certa.</Highlight></p>
+        <p className="italic text-sm">“O meu povo foi destruído por falta de conhecimento.” — Oséias 4:6</p>
+      </div>
+    )
+  },
+  {
+    id: 6,
+    type: 'choice',
+    question: 'Como é sua rotina de leitura bíblica hoje?',
+    image: optimizeImg("https://files.catbox.moe/z6h7br.png"),
+    options: ['Não consigo manter uma rotina', 'Leio quando lembro ou quando sobra tempo', 'Sei que preciso de mais constância'],
+    feedbackTitle: "CONSTÂNCIA NA BÍBLIA",
+    feedback: () => (
+      <div className="text-left space-y-5 text-stone-700 leading-relaxed">
+        <p className="font-bold text-xl text-ink">Fé sem constância vira <Circle>emoção passageira.</Circle></p>
+        <p>E emoção não sustenta batalha longa. Deus trabalha com disciplina diária, aos poucos…</p>
+        <p className="bg-orange/5 p-6 rounded-xl border-l-4 border-orange italic font-serif text-xl">
+          “Quem é <Highlight>fiel no pouco</Highlight>, também é fiel no muito.” — Lucas 16:10
+        </p>
+      </div>
+    )
+  },
+  {
+    id: 7,
+    type: 'choice',
+    question: 'Em algum momento recente você sentiu que estava lutando espiritualmente sozinho?',
+    image: optimizeImg("https://files.catbox.moe/xnke72.png"),
+    options: ['Sim, com frequência', 'Às vezes, principalmente nos dias difíceis', 'Tento ser forte, mas sinto falta de apoio'],
+    feedbackTitle: "SOLIDÃO ESPIRITUAL",
+    feedback: (n) => (
+      <div className="text-left space-y-5 text-stone-700 leading-relaxed">
+        <p className="font-bold text-2xl text-ink leading-tight">Caminhar sem direção espiritual gera <Highlight>cansaço profundo</Highlight>.</p>
+        <p>Deus nunca planejou que você lutasse sozinho. Mesmo quando ninguém te entende, Jesus te segura pela mão. E aqui, você não vai mais caminhar sozinho, {n}.</p>
+        <p className="italic text-sm">“Não é bom que o homem esteja só.” — Gênesis 2:18</p>
+      </div>
+    )
+  },
+  {
+    id: 8,
+    type: 'choice',
+    question: 'Quando sente tristeza ou desânimo, você tem alguém de fé para conversar?',
+    image: optimizeImg("https://files.catbox.moe/tlhrp2.png"),
+    options: ['Não, geralmente guardo tudo para mim', 'Às vezes, mas não com frequência', 'Sinto falta de alguém disponível no dia a dia'],
+    feedbackTitle: "APOIO EMOCIONAL",
+    feedback: () => (
+      <div className="text-left space-y-5 text-stone-700 leading-relaxed">
+        <p className="font-bold text-2xl text-ink"><Highlight>Silenciar a dor não a cura.</Highlight></p>
+        <p>Só a empurra para dentro. E o coração que não fala… <Circle>adoece em silêncio</Circle>. Dor compartilhada pesa menos.</p>
+        <p className="italic text-sm">“Levai as cargas uns dos outros.” — Gálatas 6:2</p>
+      </div>
+    )
+  },
+  {
+    id: 9,
+    type: 'choice',
+    question: 'Viver mais perto de Deus e com paz no coração é importante para você hoje?',
+    image: optimizeImg("https://files.catbox.moe/9ijb3y.png"),
+    options: ['Sim, é algo que eu preciso', 'Sim, sinto falta disso', 'Sim, mas não sei por onde começar'],
+    feedbackTitle: "FÉ NO PROPÓSITO",
+    feedback: () => (
+      <div className="text-left space-y-5 text-stone-700 leading-relaxed">
+        <p className="font-bold text-xl text-ink">Esse desejo não nasceu em você <Circle>por acaso</Circle>.</p>
+        <p>Perder a clareza do que tem que ser feito é o primeiro passo para aceitar menos do que Deus prometeu. Deus nunca chamou você para apenas sobreviver.</p>
+        <p className="italic text-sm">“Aproximem-se de Deus, e Ele se aproximará de vocês.” (Tiago 4:8)</p>
+      </div>
+    )
+  },
+  {
+    id: 10,
+    type: 'choice',
+    question: 'O que mais tem te impedido de viver essa proximidade com Deus no dia a dia?',
+    image: optimizeImg("https://files.catbox.moe/82k0mn.png"),
+    options: ['Falta de direção prática', 'Falta de constância', 'Cansaço e correria', 'Sempre deixo para depois'],
+    feedbackTitle: "DESEJO DE MUDANÇA",
+    feedback: () => (
+      <div className="text-left space-y-5 text-stone-700 leading-relaxed">
+        <p className="font-bold text-2xl text-ink leading-tight"><Highlight>Entender já é um sinal.</Highlight></p>
+        <p>Mas entender sem decisão vira frustração espiritual. A pergunta agora é: você vai continuar desejando… ou começar a agir?</p>
+        <p className="italic text-sm">“O espírito está pronto, mas a carne é fraca.” (Mateus 26:41)</p>
+      </div>
+    )
+  },
+  {
+    id: 11,
+    type: 'choice',
+    question: 'Se existisse uma forma simples de caminhar com Deus todos os dias, direto no WhatsApp, faria sentido para você?',
+    image: optimizeImg("https://files.catbox.moe/jvm5by.png"),
+    options: ['Sim, facilitaria muito', 'Sim, seria exatamente o que preciso', 'Sim, me ajudaria a manter constância'],
+    feedbackTitle: "A SOLUÇÃO",
+    feedback: () => (
+      <div className="text-left space-y-5 text-stone-700 leading-relaxed">
+        <p className="font-black text-2xl text-orange"><Circle>O chamado já foi feito.</Circle></p>
+        <p className="bg-orange/5 p-6 rounded-xl border-l-4 border-orange italic font-serif text-xl">
+          📖 “Escolhei hoje a quem servireis.” — Josué 24:15
+        </p>
+      </div>
+    )
+  },
+  {
+    id: 12,
+    type: 'choice',
+    question: 'Irmão(ã) [nome], Deus preparou algo especial só para você! Seu Plano Espiritual de 14 dias está pronto.',
+    image: optimizeImg("https://files.catbox.moe/r5vgr9.png"),
+    options: ['Quero começar agora', 'Quero conhecer como funciona', 'Sinto que Deus me trouxe por um motivo'],
+    feedbackTitle: "ENTREGA",
+    feedback: (n) => (
+      <div className="text-left space-y-5 text-stone-700 leading-relaxed">
+        <p className="font-bold text-xl text-ink">Prepare seu coração, {n}.</p>
+        <p>O que você vai receber a seguir é uma <Highlight>rota de fuga</Highlight> do cansaço e do desânimo. Você está a um passo da sua nova rotina com o Criador.</p>
+        <p className="italic text-sm">“Melhor é serem dois do que um.” (Eclesiastes 4:9)</p>
+      </div>
+    )
+  },
+  {
+    id: 13,
+    type: 'final',
+    question: 'Consolidando seu Plano Profético...',
+    feedback: () => '' 
+  }
+];
 
 const Quiz: React.FC = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
-  
-  // State for data capture
   const [name, setName] = useState('');
-  const [userNeed, setUserNeed] = useState('Fortalecimento Espiritual');
+  const [userNeed, setUserNeed] = useState('seu Renovo Espiritual');
   const [currentAnswer, setCurrentAnswer] = useState('');
   const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({}); 
-
   const [inputText, setInputText] = useState('');
   const [showFeedback, setShowFeedback] = useState(false);
   const [animatingOut, setAnimatingOut] = useState(false);
-  
-  // Loading state
   const [isGenerating, setIsGenerating] = useState(false);
   const [loadingText, setLoadingText] = useState('Orando por direção...');
-  
-  // Sales Letter State
   const [showOffer, setShowOffer] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<'yearly' | 'monthly'>('yearly');
 
-  // Questions Database
-  const questions: Question[] = [
-    {
-      id: 1,
-      type: 'text',
-      question: 'Como posso te chamar?',
-      feedback: (n) => `Que bênção tremenda ter você aqui, ${n}! Sinta a paz do Senhor. Glória a Deus por este encontro! ✨`
-    },
-    {
-      id: 2,
-      type: 'choice',
-      question: 'Você sente que sua fé já foi mais forte do que é hoje?',
-      options: ['Sim, muito', 'Um pouco', 'Não sinto diferença'],
-      feedback: (n, a) => {
-        if (a.includes('Sim')) return `Glória a Deus pela sua sinceridade, ${n}. O fogo do avivamento voltará a queimar no seu altar! 🙌`;
-        if (a.includes('Um')) return `Aleluia, ${n}! O Senhor é o sopro que renova a chama que está fumegando. 🔥`;
-        return `Exaltado seja o nome do Senhor, ${n}! Vamos elevar sua fé a níveis de glória ainda maiores. 🌳`;
-      }
-    },
-    {
-      id: 3,
-      type: 'choice',
-      question: 'Com que frequência você ora durante a semana?',
-      options: ['Todos os dias', 'Só quando estou precisando', 'Quase nunca'],
-      feedback: (n, a) => {
-        if (a.includes('Todos')) return `Santo é o Senhor! A intimidade diária é a chave de toda vitória profética. 🕊️`;
-        if (a.includes('Só quando')) return `Deus te espera com saudade, ${n}. Ele quer ser seu refúgio antes mesmo da luta. Glória a Ele! 🤝`;
-        return `O Pai está de braços abertos para te receber no secreto. Hoje é o dia do seu recomeço. Aleluia! 💛`;
-      }
-    },
-    {
-      id: 4,
-      type: 'choice',
-      question: 'Você já sentiu dificuldade de ouvir Deus?',
-      options: ['Sim, frequentemente', 'Às vezes', 'Raramente'],
-      feedback: (n, a) => {
-        if (a.includes('frequentemente')) return `O barulho do mundo vai silenciar. Você ouvirá o doce sussurro do Espírito Santo. Glória a Deus! 📻`;
-        if (a.includes('s vezes')) return `A sensibilidade espiritual será restaurada. Louvado seja Deus pela sua busca! ✨`;
-        return `Glória a Deus por essa comunhão! O Senhor te confiará revelações ainda mais profundas. 🗝️`;
-      }
-    },
-    {
-      id: 5,
-      type: 'choice',
-      question: 'Quando enfrenta medo ou dor, você sabe que passagem buscar?',
-      options: ['Sei algumas', 'Tenho dificuldade', 'Não sei por onde começar'],
-      feedback: (n, a) => {
-        if (a.includes('Não sei') || a.includes('dificuldade')) return `Fique em paz, em nome de Jesus. A Palavra será sua espada afiada contra todo mal. Aleluia! ⚔️`;
-        return `Glória ao Altíssimo! Vamos blindar sua mente com promessas que o inimigo não pode tocar. 🛡️`;
-      }
-    },
-    {
-      id: 6,
-      type: 'choice',
-      question: 'Você consegue manter uma rotina de leitura da Bíblia?',
-      options: ['Sim, mas falho as vezes', 'Tento, mas paro', 'Gostaria de começar'],
-      feedback: (n, a) => {
-        if (a.includes('começar') || a.includes('paro')) return `O maná diário renovará suas forças. Glória a Deus pela sua fome da Palavra! 📖`;
-        return `A disciplina gera unção, ${n}. Deus honrará sua perseverança no caminho santo. ❤️`;
-      }
-    },
-    {
-      id: 7,
-      type: 'choice',
-      question: 'Já sentiu que estava caminhando espiritualmente sozinho?',
-      options: ['Sim, muitas vezes', 'Algumas vezes', 'Raramente'],
-      feedback: (n, a) => {
-        if (a.includes('Sim') || a.includes('Algumas')) return `Jesus prometeu: "Eis que estou convosco todos os dias". Você sentirá o toque dEle. Glória a Deus! 👣`;
-        return `Glória a Deus pela sua igreja e amigos! Você será um farol para os que estão na escuridão. 🕯️`;
-      }
-    },
-    {
-      id: 8,
-      type: 'choice',
-      question: 'Quando sente tristeza, você tem alguém de fé pra conversar?',
-      options: ['Tenho poucos', 'Ninguém que entenda', 'Sinto falta disso'],
-      feedback: (n, a) => {
-        if (a.includes('Ninguém')) return `O Shalom será seu companheiro fiel de oração. Deus ouve o seu clamor agora! Aleluia! 🫂`;
-        return `A comunhão fortalece a fé. Glória a Deus pelos laços que Ele te deu para proteção. ⚓`;
-      }
-    },
-    {
-      id: 9,
-      type: 'choice',
-      question: 'Acredita que Deus tem um plano maior para você?',
-      options: ['Creio plenamente', 'Tenho dúvidas as vezes', 'Quero acreditar mais'],
-      feedback: (n, a) => {
-        if (a.includes('dúvidas') || a.includes('Quero')) return `Profetizo que seus olhos se abrirão para o sobrenatural de Deus em sua vida. Glória! 🚀`;
-        return `Amém e amém! Seus pés pisarão em lugares que o Senhor já preparou. Aleluia! ✨`;
-      }
-    },
-    {
-      id: 10,
-      type: 'choice',
-      question: 'Você gostaria de sentir mais paz e direção de Deus no dia a dia?',
-      options: ['Sim, preciso muito', 'Seria ótimo', 'Com certeza'],
-      feedback: () => `A paz que excede todo entendimento está descendo sobre seu lar agora. Glória a Deus! 🕊️`
-    },
-    {
-      id: 11,
-      type: 'choice',
-      question: 'Qual é sua maior necessidade hoje?',
-      options: ['Paz de Espírito', 'Força Emocional', 'Propósito de Vida', 'Restauração Familiar', 'Alívio da Ansiedade'],
-      feedback: (n, a) => {
-        return `Deus já atendeu seu pedido sobre "${a}". Creia, a providência já está a caminho! Glória a Ele! 💌`;
-      }
-    },
-    {
-      id: 12,
-      type: 'choice',
-      question: 'Se tivesse 10 minutos por dia com direção bíblica e oração, mudaria algo?',
-      options: ['Sim, mudaria tudo', 'Acho que sim', 'Quero tentar'],
-      feedback: () => `Dez minutos com o Rei valem mais que mil anos longe dEle. Glória a Deus pela sua decisão! ⏱️`
-    },
-    {
-      id: 13,
-      type: 'choice',
-      question: 'Você se compromete diante de Deus a buscar mudança por 14 dias?',
-      options: ['Eu me comprometo', 'Vou tentar', 'Quero mudança'],
-      feedback: (n) => `Essa aliança hoje move os céus ao seu favor, ${n}. Glória ao Senhor pela sua fidelidade! 🙌`
-    },
-    {
-      id: 14,
-      type: 'choice',
-      question: 'Se existisse uma forma simples de estar mais perto de Deus, você quer experimentar?',
-      options: ['Sim, eu quero', 'Estou pronto', 'Me mostre como'],
-      feedback: () => `As portas do Reino estão se abrindo. Bem-vindo ao tempo da revelação! Glória a Deus! 🚪`
-    },
-    {
-      id: 15,
-      type: 'final',
-      question: 'Gerando seu Plano Profético...',
-      feedback: () => '' 
-    }
-  ];
-
-  const currentQ = questions[step];
-  const progress = ((step + 1) / questions.length) * 100;
+  useEffect(() => {
+    if (quizAnswers[10] === 'Cansaço e correria') setUserNeed('Combate ao Cansaço e Estresse');
+    else if (quizAnswers[10] === 'Falta de constância') setUserNeed('Constância e Disciplina Espiritual');
+    else if (quizAnswers[2] === 'Oscila muito conforme os problemas') setUserNeed('Fortalecimento da Fé Inabalável');
+  }, [quizAnswers]);
 
   const handleAnswer = (answer: string) => {
+    if (currentQ.type === 'text' && !answer.trim()) return;
     setCurrentAnswer(answer);
     setQuizAnswers(prev => ({ ...prev, [currentQ.id]: answer }));
-
     if (currentQ.id === 1) {
-      if (!answer.trim()) return;
       setName(answer.trim());
       localStorage.setItem('lumina_username', answer.trim());
     }
-    if (currentQ.id === 11) {
-      setUserNeed(answer);
-    }
-
     setAnimatingOut(true);
     setTimeout(() => {
       setShowFeedback(true);
@@ -194,7 +282,7 @@ const Quiz: React.FC = () => {
   };
 
   const nextQuestion = () => {
-    if (step < questions.length - 1) {
+    if (step < questions.length - 2) {
         setAnimatingOut(true);
         setTimeout(() => {
             setStep(s => s + 1);
@@ -205,303 +293,185 @@ const Quiz: React.FC = () => {
         }, 300);
     } else {
         setIsGenerating(true);
-        const loadingStages = [
-            "Consultando as Escrituras...",
-            "Preparando Palavra Profética...",
-            "Alinhando seu propósito...",
-            "Finalizando seu Plano Divino..."
-        ];
-        
+        const loadingStages = ["Analisando suas respostas...", "Consultando as Escrituras...", "Preparando sua Carta de Direção...", "Alinhando seu propósito...", "Finalizando seu Plano Divino..."];
         let stage = 0;
         const interval = setInterval(() => {
             stage++;
-            if (stage < loadingStages.length) {
-                setLoadingText(loadingStages[stage]);
-            } else {
-                clearInterval(interval);
-                setIsGenerating(false);
-            }
+            if (stage < loadingStages.length) setLoadingText(loadingStages[stage]);
+            else { clearInterval(interval); setIsGenerating(false); setStep(questions.length - 1); }
         }, 1200);
     }
   };
 
-  const handleCheckout = () => {
-      const link = selectedPlan === 'yearly' 
-        ? 'https://pay.cakto.com.br/4f62xu5' 
-        : 'https://pay.cakto.com.br/37whf2r_678375';
-      window.location.href = link;
-  };
+  const currentQ = questions[step];
+  const progressPercent = ((step + 1) / (questions.length - 1)) * 100;
 
-  // --- HELPERS PARA A PÁGINA FINAL (PERSONALIZAÇÃO) ---
-  const getProblemStatement = () => {
-    const faith = quizAnswers[2] || '';
-    const routine = quizAnswers[6] || '';
-    if (faith.includes('Sim') && routine.includes('paro')) return "O inimigo tem tentado roubar sua constância para impedir que você viva o novo de Deus.";
-    if (routine.includes('começar') || routine.includes('falho')) return "Você tem um coração disposto, mas as distrações do mundo têm sufocado sua intimidade com o Pai.";
-    if (faith.includes('Não sinto diferença')) return "Você está em um platô espiritual, mas o Senhor te chama para águas mais profundas.";
-    return "O mundo tem tentado perturbar sua paz e te afastar do propósito divino.";
-  };
-
-  const getCustomPlanTitle = () => {
-      if (userNeed.includes('Ansiedade')) return 'Protocolo da Paz de Cristo';
-      if (userNeed.includes('Família')) return 'Restauração do Altar Familiar';
-      if (userNeed.includes('Propósito')) return 'Chamado Profético';
-      if (userNeed.includes('Força')) return 'Renovo da Águia';
-      return 'Caminho da Graça';
-  };
-
-  const getPillar1 = () => {
-      const prayer = quizAnswers[3] || '';
-      if (prayer.includes('Só quando')) return { title: "Disciplina de Daniel", desc: "Transformaremos o clamor de emergência em comunhão constante e poderosa." };
-      return { title: "Intimidade Profunda", desc: "Levar sua vida de oração do átrio para o Santo dos Santos." };
-  };
-
-  const getPillar2 = () => {
-      const lonely = quizAnswers[7] || '';
-      const hearing = quizAnswers[4] || '';
-      if (lonely.includes('Sim') || lonely.includes('Algumas')) return { title: "Presença Manifesta", desc: "Você nunca mais caminhará só. O Espírito Santo será seu companheiro tangível." };
-      if (hearing.includes('dificuldade')) return { title: "Ouvidos Ungidos", desc: "Técnicas bíblicas para limpar os ruídos e discernir claramente a voz de Deus." };
-      return { title: "Sabedoria do Alto", desc: "Conteúdo que edifica sua mente antes que o mundo tente contaminá-la." };
-  };
-
-  // SALES LETTER OVERLAY
   if (showOffer) {
-      return (
-          <div className="min-h-screen bg-black text-white overflow-y-auto animate-fade-in relative z-50">
-              <div className="max-w-2xl mx-auto p-6 md:p-12 pb-32">
-                  <div className="text-center mb-10">
-                      <div className="inline-block p-3 bg-gold/10 rounded-full text-gold mb-6 border border-gold/20 shadow-[0_0_30px_rgba(251,191,36,0.2)]">
-                          <Coffee size={32} strokeWidth={1.5} />
-                      </div>
-                      <h1 className="text-3xl md:text-5xl font-serif font-black leading-tight mb-4 text-transparent bg-clip-text bg-gradient-to-r from-white via-stone-200 to-stone-400">
-                          Menos que uma pizza...<br/>
-                          <span className="text-gold">Mais valioso que ouro.</span>
-                      </h1>
-                      <div className="w-24 h-1 bg-gradient-to-r from-transparent via-gold to-transparent mx-auto rounded-full opacity-50"></div>
-                  </div>
-                  <div className="font-serif text-lg leading-relaxed mx-auto mb-12">
-                      <p className="text-white font-bold text-xl mb-6">Paz, {name}.</p>
-                      <p className="text-stone-300 mb-4">Seu Plano Profético <span className="text-white font-bold">"{userNeed}"</span> está pronto.</p>
-                      <p className="text-stone-300 mb-4">Ele já está separado no nosso sistema.</p>
-                      <p className="text-stone-300 mb-4">Analisamos suas respostas com cuidado.</p>
-                      <p className="text-stone-300 mb-6">E desenhamos uma jornada exata para os próximos 14 dias.</p>
-                      <p className="text-stone-300 mb-4">Mas antes de te entregar as chaves deste novo tempo...</p>
-                      <p className="text-stone-300 mb-8">Preciso ser <span className="italic text-white">transparente</span> com você, como a luz.</p>
-                      <div className="border-l-4 border-gold pl-6 py-2 my-10 bg-gradient-to-r from-stone-900 to-transparent">
-                          <p className="text-xl text-white font-bold italic leading-tight">
-                              "Nós tomamos uma decisão radical: <br/><span className="text-gold">Não aceitamos anúncios no Shalom.</span>"
-                          </p>
-                      </div>
-                      <p className="text-stone-300 mb-4">Imagine você orando...</p>
-                      <p className="text-stone-300 mb-4">E, de repente, aparece uma propaganda de <span className="text-white font-bold bg-red-900/30 px-1 rounded">jogo de aposta</span>.</p>
-                      <p className="text-stone-300 mb-4">Isso seria um desrespeito com o seu momento sagrado.</p>
-                      <p className="text-stone-300 italic mb-8">O templo deve ser limpo.</p>
-                      <p className="text-stone-300 mb-4">Porém, manter esta estrutura tecnológica tem um custo alto.</p>
-                      <p className="text-stone-300 mb-4">Servidores. Inteligência Artificial. Equipe.</p>
-                      <p className="text-stone-300 mb-4">Não temos grandes investidores.</p>
-                      <p className="text-white font-bold text-xl mb-8">Temos apenas irmãos como você.</p>
-                      <p className="text-stone-300 font-bold">Por isso, pedimos uma pequena oferta de assinatura para manter este ministério no ar.</p>
-                  </div>
-                  <div className="space-y-4 mb-10">
-                      <div 
-                          onClick={() => setSelectedPlan('yearly')}
-                          className={`relative cursor-pointer rounded-3xl p-6 border-2 transition-all duration-300 flex flex-col md:flex-row items-center justify-between gap-4 shadow-xl overflow-hidden group
-                          ${selectedPlan === 'yearly' ? 'bg-gradient-to-br from-stone-900 to-black border-gold ring-2 ring-gold/20' : 'bg-stone-900 border-stone-800 opacity-60 hover:opacity-100'}
-                          `}
-                      >
-                          {selectedPlan === 'yearly' && (
-                              <div className="absolute top-0 right-0 bg-gold text-black text-[10px] font-bold px-4 py-1 rounded-bl-xl uppercase tracking-wider">Melhor Escolha</div>
-                          )}
-                          <div className="flex items-center gap-4 z-10">
-                              <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-colors ${selectedPlan === 'yearly' ? 'bg-gold border-gold text-black' : 'border-stone-600'}`}>
-                                  {selectedPlan === 'yearly' && <Check size={16} strokeWidth={4} />}
-                              </div>
-                              <div className="text-left">
-                                  <h4 className="font-bold text-white text-lg">Acesso Anual (1 Ano)</h4>
-                                  <p className="text-stone-400 text-xs">Equivale a <span className="text-green-400 font-bold">R$ 4,15 por mês</span></p>
-                              </div>
-                          </div>
-                          <div className="text-right z-10">
-                              <span className="text-xs text-red-400 line-through mr-2">De R$ 118,80</span>
-                              <div className="text-3xl font-black text-white tracking-tighter">R$ 49,90 <span className="text-xs font-normal text-stone-400">/ano</span></div>
-                          </div>
-                      </div>
-                      <div 
-                          onClick={() => setSelectedPlan('monthly')}
-                          className={`relative cursor-pointer rounded-2xl p-5 border-2 transition-all duration-300 flex items-center justify-between gap-4
-                          ${selectedPlan === 'monthly' ? 'bg-stone-900 border-white/50' : 'bg-transparent border-stone-800 opacity-60 hover:opacity-100'}
-                          `}
-                      >
-                          <div className="flex items-center gap-4">
-                              <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${selectedPlan === 'monthly' ? 'border-white bg-white' : 'border-stone-600'}`}>
-                                  {selectedPlan === 'monthly' && <div className="w-2.5 h-2.5 bg-black rounded-full"></div>}
-                              </div>
-                              <h4 className="font-bold text-white">Plano Mensal</h4>
-                          </div>
-                          <div className="text-xl font-bold text-white">R$ 9,90</div>
-                      </div>
-                  </div>
-                  <div className="flex items-center justify-center gap-2 text-xs text-stone-400 mb-8 bg-stone-900/50 py-3 rounded-xl border border-stone-800">
-                      <Shield size={14} className="text-green-500" /> Garantia de 7 dias. Se não edificar sua fé, devolvemos 100%.
-                  </div>
-                  <button 
-                      onClick={handleCheckout}
-                      className="w-full relative group overflow-hidden bg-gradient-to-r from-green-600 to-green-500 text-white py-5 rounded-2xl font-black text-xl shadow-[0_0_40px_-10px_rgba(34,197,94,0.6)] animate-pulse hover:scale-[1.02] transition-transform active:scale-[0.98]"
-                  >
-                      <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
-                      <span className="relative flex items-center justify-center gap-3"><CreditCard size={24} /> LIBERAR MEU ACESSO AGORA</span>
-                  </button>
-                  <p className="text-center text-[10px] text-stone-500 mt-6 max-w-xs mx-auto">Ambiente 100% Seguro. Sua contribuição ajuda a espalhar a palavra de Cristo pelo mundo.</p>
-              </div>
-          </div>
-      );
-  }
-
-  // FINAL TEASER
-  if (currentQ.type === 'final' && !isGenerating) {
-    const pillar1 = getPillar1();
-    const pillar2 = getPillar2();
-    const planTitle = getCustomPlanTitle();
-    const problem = getProblemStatement();
     return (
-        <div className="min-h-screen bg-black text-white overflow-y-auto overflow-x-hidden animate-fade-in relative font-sans">
-            <div className="fixed inset-0 pointer-events-none">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gold/20 via-black to-black blur-3xl"></div>
+        <div className="min-h-screen bg-[#fcfbf7] text-ink overflow-y-auto animate-fade-in relative z-50 selection:bg-orange/20">
+            <div className="bg-orange text-white py-3 text-center font-black text-[10px] md:text-xs uppercase tracking-[0.2em] shadow-md sticky top-0 z-[60] flex items-center justify-center gap-2">
+               <Zap size={14} fill="currentColor" /> PROMOÇÃO DE DEZEMBRO - ÚLTIMAS VAGAS COM DESCONTO
             </div>
-            <div className="sticky top-0 z-30 bg-black/80 backdrop-blur-xl border-b border-white/10 px-6 py-4 flex justify-between items-center">
-                <div className="flex items-center gap-2"><ShalomLogo size="w-6 h-6" /><span className="font-serif font-bold text-sm text-gold">Revelação do Plano</span></div>
-                <div className="text-[10px] font-bold bg-gold/10 text-gold border border-gold/30 px-3 py-1 rounded-full animate-pulse">DIREÇÃO CONFIRMADA</div>
-            </div>
-            <div className="max-w-xl mx-auto px-6 pb-36 pt-8 relative z-10">
-                <div className="mb-10 text-center">
-                    <div className="inline-block px-4 py-1.5 rounded-full bg-gradient-to-r from-gold/20 to-orange/20 border border-gold/30 text-gold text-xs font-bold uppercase tracking-widest mb-6">Glória a Deus!</div>
-                    <h1 className="text-3xl md:text-4xl font-serif font-bold leading-tight mb-4 text-transparent bg-clip-text bg-gradient-to-b from-white to-stone-400">{name}, Deus preparou este caminho para <span className="text-gold underline decoration-gold/30 underline-offset-4">{userNeed}</span>.</h1>
-                    <p className="text-stone-400 text-sm leading-relaxed max-w-sm mx-auto">Não é coincidência. Baseado no que você abriu do seu coração, o Espírito Santo desenhou esta jornada de 14 dias para você.</p>
-                </div>
-                <div className="bg-stone-900/80 backdrop-blur-md rounded-3xl p-8 border border-red-500/20 mb-8 relative overflow-hidden group hover:border-red-500/40 transition-colors">
-                    <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-red-500 to-orange-600"></div>
-                    <h3 className="flex items-center gap-2 text-red-400 font-bold text-xs uppercase tracking-widest mb-4"><Zap size={14} /> Discernimento Espiritual</h3>
-                    <p className="text-stone-300 font-serif italic text-lg leading-relaxed">"{problem}"</p>
-                    <p className="text-xs text-stone-500 mt-6 uppercase font-bold tracking-widest flex items-center gap-2">Mas hoje nós declaramos: <span className="text-white">Basta.</span></p>
-                </div>
-                <div className="space-y-4 mb-12">
-                    <h3 className="text-center text-xs font-bold text-stone-500 uppercase tracking-widest mb-6">A Trindade da Sua Transformação</h3>
-                    <div className="bg-gradient-to-r from-stone-900 to-stone-900/50 rounded-2xl p-5 border border-white/10 flex items-start gap-4 hover:border-gold/30 transition-colors">
-                        <div className="w-10 h-10 rounded-full bg-blue-900/30 flex items-center justify-center text-blue-400 flex-shrink-0 shadow-[0_0_15px_rgba(59,130,246,0.2)]"><Clock size={20} /></div>
-                        <div><h4 className="font-bold text-white text-base mb-1">{pillar1.title}</h4><p className="text-xs text-stone-400 leading-relaxed">{pillar1.desc}</p></div>
-                    </div>
-                    <div className="bg-gradient-to-r from-stone-900 to-stone-900/50 rounded-2xl p-5 border border-white/10 flex items-start gap-4 hover:border-gold/30 transition-colors">
-                        <div className="w-10 h-10 rounded-full bg-purple-900/30 flex items-center justify-center text-purple-400 flex-shrink-0 shadow-[0_0_15px_rgba(168,85,247,0.2)]"><Users size={20} /></div>
-                        <div><h4 className="font-bold text-white text-base mb-1">{pillar2.title}</h4><p className="text-xs text-stone-400 leading-relaxed">{pillar2.desc}</p></div>
-                    </div>
-                    <div className="bg-gradient-to-br from-gold/10 via-orange/5 to-transparent rounded-2xl p-6 border border-gold/40 flex items-start gap-4 relative overflow-hidden">
-                        <div className="absolute top-0 right-0 p-3 opacity-10 rotate-12"><Sun size={80} /></div>
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gold to-orange flex items-center justify-center text-white flex-shrink-0 shadow-lg shadow-orange/20"><Shield size={20} /></div>
-                        <div className="relative z-10"><h4 className="font-bold text-gold text-base mb-1">{planTitle}</h4><p className="text-xs text-stone-300 leading-relaxed">Uma rotina guiada pelo Espírito Santo para vencer {userNeed.toLowerCase()} através do poder da Palavra.</p></div>
-                    </div>
-                </div>
-                <div className="text-center mb-8">
-                    <div className="inline-block p-5 rounded-3xl bg-stone-900 border border-stone-800">
-                        <p className="text-stone-500 text-[10px] uppercase tracking-widest mb-3">Deus testemunhou seu "Sim"</p>
-                        <div className="flex items-center justify-center gap-3 text-white font-serif font-bold text-lg"><div className="bg-green-500/20 p-1 rounded-full"><Check className="text-green-500" size={16} /></div>"Eu me comprometo."</div>
-                    </div>
-                </div>
-                <div className="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black via-black to-transparent z-40">
-                    <button onClick={() => setShowOffer(true)} className="w-full relative group overflow-hidden bg-gradient-to-r from-gold via-orange to-gold text-white py-5 rounded-2xl font-black text-xl shadow-[0_0_50px_-10px_rgba(251,191,36,0.5)] hover:scale-[1.02] transition-transform active:scale-[0.98] border border-white/20">
-                        <div className="absolute inset-0 bg-white/30 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out"></div>
-                        <span className="relative flex items-center justify-center gap-3"><Flame size={20} fill="currentColor" /> RECEBER MINHA BÊNÇÃO</span>
-                    </button>
-                    <p className="text-center text-[10px] text-stone-500 mt-4 flex items-center justify-center gap-1 opacity-60"><Lock size={10} /> Oferta profética disponível por tempo limitado</p>
-                </div>
-            </div>
-        </div>
-    );
-  }
 
-  // LOADING SCREEN
-  if (isGenerating) {
-      return (
-          <div className="min-h-screen bg-black flex flex-col items-center justify-center p-8 relative overflow-hidden">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gold/10 via-black to-black animate-pulse-slow"></div>
-              <div className="relative z-10 text-center w-full max-w-sm">
-                  <div className="w-32 h-32 mx-auto mb-10 relative flex items-center justify-center">
-                      <div className="absolute inset-0 bg-gold/20 rounded-full blur-2xl animate-pulse"></div>
-                      <div className="absolute inset-0 border-t-2 border-gold rounded-full animate-spin"></div>
-                      <div className="absolute inset-2 border-b-2 border-orange rounded-full animate-[spin_1.5s_linear_infinite_reverse]"></div>
-                      <BookOpen className="text-white relative z-10 drop-shadow-[0_0_15px_rgba(251,191,36,0.8)]" size={40} />
-                  </div>
-                  <h2 className="text-2xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-gold to-white mb-4 animate-fade-in">{loadingText}</h2>
-                  <p className="text-stone-500 text-xs uppercase tracking-widest">Aguarde a providência...</p>
-              </div>
-          </div>
-      )
-  }
+            <div className="max-w-2xl mx-auto p-6 md:p-12 pb-32">
+                <div className="text-center mb-10">
+                    <div className="inline-block p-4 bg-orange/10 rounded-3xl text-orange mb-6 border border-orange/20 shadow-soft">
+                        <Flame size={40} strokeWidth={1.5} className="animate-pulse" />
+                    </div>
+                    <h1 className="text-4xl md:text-6xl font-serif font-black leading-tight mb-4 text-ink">
+                        Sua fé merece um <br/>
+                        <span className="text-orange underline decoration-orange/20 underline-offset-8 italic">novo recomeço.</span>
+                    </h1>
+                </div>
+                
+                <div className="font-serif text-lg md:text-xl leading-relaxed mx-auto mb-12 space-y-8 text-stone-800">
+                    <p className="text-ink font-bold text-2xl">Prezado(a) {name},</p>
+                    <p>Sua jornada espiritual está prestes a mudar de nível. Através das suas respostas, identificamos que o que você mais precisa hoje é de <strong className="text-orange">{userNeed}</strong>.</p>
+                    <p>O Shalom não é apenas um app. É o seu companheiro diário que não te deixa desistir. Imagine acordar e, antes de qualquer estresse, receber uma oração e a direção bíblica exata para o seu dia no WhatsApp.</p>
+                    <div className="bg-white border-2 border-dashed border-stone-200 p-8 my-10 shadow-sm rounded-3xl relative overflow-hidden group">
+                        <Quote className="absolute -top-4 -left-2 text-gold/10 group-hover:text-gold/20 transition-colors" size={100} />
+                        <p className="text-2xl text-ink font-bold italic leading-tight mb-4 relative z-10">
+                           "Investir na sua vida espiritual é o único investimento com retorno eterno."
+                        </p>
+                        <p className="text-xs text-subtle font-sans font-bold uppercase tracking-widest">— EQUIPE SHALOM</p>
+                    </div>
+                </div>
 
-  // FEEDBACK SCREEN RENDER (Spiritual Gradient + Particles)
-  if (showFeedback) {
-    return (
-        <div className="min-h-screen bg-black flex flex-col items-center justify-center text-center relative overflow-hidden animate-fade-in px-6">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-stone-900 via-black to-black"></div>
-            <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                {Array.from({ length: 15 }).map((_, i) => (
-                    <div key={i} className="absolute rounded-full bg-gradient-to-t from-gold to-transparent blur-md opacity-0 animate-float-up"
-                        style={{
-                            left: `${Math.random() * 100}%`,
-                            bottom: `-20px`,
-                            width: `${Math.random() * 40 + 10}px`,
-                            height: `${Math.random() * 40 + 10}px`,
-                            animationDelay: `${Math.random() * 0.5}s`,
-                            animationDuration: `${3 + Math.random()}s`
-                        }}
-                    ></div>
-                ))}
-            </div>
-            <div className="relative z-10 max-w-xl">
-                <div className="bg-white/5 backdrop-blur-2xl border border-white/10 p-10 rounded-[3rem] shadow-[0_0_60px_-15px_rgba(251,191,36,0.3)] transform transition-all duration-700 hover:border-gold/30">
-                    <div className="mb-8 flex justify-center">
-                        <div className="p-5 bg-gradient-to-br from-gold to-orange rounded-full shadow-[0_0_40px_rgba(251,191,36,0.5)] animate-pulse">
-                            <Sparkles className="text-white" size={36} />
+                <div className="space-y-6 mb-12">
+                    <div onClick={() => setSelectedPlan('yearly')} className={`relative cursor-pointer rounded-[2.5rem] overflow-hidden border-2 transition-all duration-300 flex flex-col shadow-2xl group ${selectedPlan === 'yearly' ? 'bg-white border-gold ring-8 ring-gold/10 scale-105' : 'bg-white border-stone-200 opacity-70 hover:opacity-100'}`}>
+                        <div className="p-8">
+                            <div className="absolute top-4 right-4 bg-gold text-ink text-[10px] font-black px-5 py-2 rounded-full uppercase tracking-widest shadow-lg">RECOMENDADO</div>
+                            <div className="flex items-center justify-between gap-4">
+                                <div className="flex items-center gap-4">
+                                    <div className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-colors ${selectedPlan === 'yearly' ? 'bg-gold border-gold text-white' : 'border-stone-200'}`}>
+                                        <Check size={20} strokeWidth={4} />
+                                    </div>
+                                    <div className="text-left">
+                                        <h4 className="font-black text-ink text-2xl tracking-tight">Plano Anual</h4>
+                                        <p className="text-stone-500 text-xs font-bold">Apenas R$ 0,13 por dia</p>
+                                    </div>
+                                </div>
+                                <div className="text-right">
+                                    <span className="text-xs text-red-500 line-through font-bold">R$ 118,80</span>
+                                    <div className="text-4xl font-black text-ink tracking-tighter">R$ 49,90 <span className="text-xs font-normal text-stone-400">/ano</span></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <h4 className="text-gold font-bold text-xs uppercase tracking-[0.3em] mb-4">Revelação do Espírito</h4>
-                    <p className="text-2xl md:text-3xl font-serif font-bold text-stone-100 leading-tight mb-4 drop-shadow-lg">
-                        {currentQ.feedback ? currentQ.feedback(name, currentAnswer) : "Glória a Deus!"}
-                    </p>
+
+                    <div onClick={() => setSelectedPlan('monthly')} className={`relative cursor-pointer rounded-3xl overflow-hidden border-2 transition-all duration-300 flex flex-col ${selectedPlan === 'monthly' ? 'bg-white border-stone-800' : 'bg-transparent border-stone-200 opacity-60'}`}>
+                        <div className="p-6 flex items-center justify-between gap-4">
+                            <div className="flex items-center gap-4">
+                                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${selectedPlan === 'monthly' ? 'border-ink bg-ink' : 'border-stone-300'}`}>
+                                    {selectedPlan === 'monthly' && <div className="w-2 h-2 bg-white rounded-full"></div>}
+                                </div>
+                                <h4 className="font-bold text-ink text-lg">Plano Mensal</h4>
+                            </div>
+                            <div className="text-2xl font-black text-ink">R$ 9,90</div>
+                        </div>
+                    </div>
                 </div>
-                <button onClick={nextQuestion} className="mt-12 group bg-white text-black px-10 py-5 rounded-2xl font-black text-lg shadow-2xl hover:bg-gold hover:scale-105 active:scale-95 transition-all flex items-center gap-3 mx-auto">
-                    CONTINUAR JORNADA <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+
+                <button onClick={() => { const link = selectedPlan === 'yearly' ? 'https://pay.cakto.com.br/4f62xu5' : 'https://pay.cakto.com.br/37whf2r_678375'; window.location.href = link; }} className="w-full relative group overflow-hidden bg-green-500 text-white py-7 rounded-3xl font-black text-2xl shadow-[0_10px_0_rgb(21,128,61)] hover:bg-green-600 hover:-translate-y-1 transition-all active:translate-y-1 active:shadow-none mb-4">
+                    <span className="relative flex items-center justify-center gap-3">ATIVAR MEU ACESSO AGORA <ArrowRight size={28} /></span>
                 </button>
+                <p className="text-center text-[10px] text-stone-400 uppercase tracking-[0.2em] font-black">🔒 AMBIENTE 100% SEGURO. ACESSO IMEDIATO.</p>
             </div>
         </div>
     );
   }
 
-  // QUESTION SCREEN RENDER
+  if (currentQ.type === 'final' && !isGenerating) {
+    return (
+        <div className="min-h-screen bg-[#f5f3f0] text-ink overflow-y-auto animate-fade-in relative font-sans">
+            <div className="absolute inset-0 opacity-[0.05] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')]"></div>
+            <div className="max-w-xl mx-auto px-6 pb-36 pt-16 relative z-10">
+                <div className="mb-12 text-center">
+                    <div className="inline-block px-4 py-1.5 rounded-full bg-orange/10 border border-orange/20 text-orange text-[10px] font-bold uppercase tracking-[0.3em] mb-6">Diagnóstico Confirmado</div>
+                    <h1 className="text-4xl md:text-5xl font-serif font-black leading-tight mb-6 text-ink">
+                        Irmão(ã) <span className="text-orange">{name}</span>, isso não é coincidência. <br/>
+                        <Circle>É direção.</Circle>
+                    </h1>
+                </div>
+
+                <div className="bg-[#fdfcf0] shadow-2xl rounded-sm p-8 md:p-12 mb-12 border-t-[20px] border-orange/10 relative transform -rotate-1">
+                    <div className="absolute top-4 right-4 opacity-20"><PenTool size={32} className="text-orange" /></div>
+                    <div className="space-y-6 font-serif text-xl leading-relaxed text-stone-800">
+                        <p className="font-bold text-2xl text-ink leading-tight">Vimos que <Highlight>está faltando constância</Highlight> e clareza no seu caminhar.</p>
+                        <p className="italic underline decoration-orange/30 underline-offset-8 text-lg">E isso está afetando sua paz, sua fé e como você lida com o cansaço.</p>
+                        <p>Deus não te trouxe até aqui para voltar ao automático. <Circle>Este é o seu ponto de virada.</Circle></p>
+                        <div className="py-6 border-y border-stone-200 space-y-4 text-center">
+                            <p className="font-black text-ink text-2xl leading-tight">Escolha hoje: <br/> Continuar tentando sozinho… <br/> Ou começar uma nova rotina com o Mestre.</p>
+                        </div>
+                        <p className="text-center font-bold text-orange text-2xl">📖 “Eis que faço novas todas as coisas.” — Ap 21:5</p>
+                    </div>
+                </div>
+
+                <div className="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-[#f5f3f0] via-[#f5f3f0] to-transparent z-40">
+                    <div className="max-w-xl mx-auto space-y-4">
+                        <button onClick={() => setShowOffer(true)} className="w-full relative group overflow-hidden bg-green-500 text-white py-6 rounded-[2rem] font-black text-2xl shadow-[0_10px_40px_-10px_rgba(34,197,94,0.6)] hover:scale-[1.02] active:scale-[0.98] transition-all flex flex-col items-center leading-none gap-1">
+                            <span className="flex items-center gap-2">ATIVAR PLANO COMPLETO <ArrowRight size={28} /></span>
+                            <span className="text-[10px] opacity-80 font-black tracking-[0.2em] uppercase">R$ 49,90 • PROMOÇÃO DE DEZEMBRO</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+  }
+
+  if (isGenerating) {
+    return (
+        <div className="min-h-screen bg-paper flex flex-col items-center justify-center p-8 relative overflow-hidden">
+            <div className="relative z-10 text-center w-full max-w-sm">
+                <div className="w-24 h-24 mx-auto mb-8 relative flex items-center justify-center">
+                    <div className="absolute inset-0 border-t-4 border-orange rounded-full animate-spin"></div>
+                    <BookOpen className="text-orange" size={40} />
+                </div>
+                <h2 className="text-3xl font-serif font-black text-ink mb-2 animate-pulse">{loadingText}</h2>
+            </div>
+        </div>
+    )
+  }
+
+  if (showFeedback) {
+    return (
+        <div className="min-h-screen bg-stone-100 flex flex-col items-center justify-start text-center relative overflow-y-auto animate-fade-in px-4 py-12 md:py-20 no-scrollbar">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-stone-50 to-stone-200"></div>
+            <div className="relative z-10 max-w-2xl w-full flex flex-col items-center">
+                <div className="w-full bg-[#fdfcf0] shadow-2xl border-t-[30px] border-orange/5 rounded-sm relative px-8 py-12 md:px-16 md:py-20 animate-slide-up transform -rotate-[0.5deg]">
+                    <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')]"></div>
+                    <div className="mb-10 flex justify-center"><div className="p-5 bg-orange text-white rounded-full shadow-xl scale-110"><Sparkles size={32} /></div></div>
+                    <h4 className="text-orange font-black text-[10px] uppercase tracking-[0.4em] mb-10 border-b border-orange/10 pb-4 inline-block">{currentQ.feedbackTitle}</h4>
+                    <div className="text-ink font-serif text-xl leading-loose relative z-10">{typeof currentQ.feedback === 'function' ? currentQ.feedback(name, currentAnswer) : "Deus é fiel!"}</div>
+                    <div className="mt-12 pt-8 border-t border-stone-200/50 flex justify-between items-center opacity-40"><span className="text-[10px] font-black uppercase tracking-widest">Passo {currentQ.id} • Shalom</span><div className="flex gap-1">{[1,2,3].map(i => <div key={i} className="w-1.5 h-1.5 rounded-full bg-stone-300"></div>)}</div></div>
+                </div>
+                <button onClick={nextQuestion} className="mt-12 group bg-ink text-white px-20 py-7 rounded-[2rem] font-black text-2xl shadow-2xl hover:bg-orange hover:scale-105 active:scale-95 transition-all flex items-center gap-4 animate-slide-up uppercase tracking-widest">CONTINUAR <ArrowRight size={28} /></button>
+            </div>
+        </div>
+    );
+  }
+
   return (
-    <div className={`min-h-screen bg-paper dark:bg-black text-ink dark:text-white flex flex-col transition-opacity duration-500 ${animatingOut ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
-        <div className="fixed inset-0 pointer-events-none opacity-30 dark:opacity-20">
-            <div className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-gold/10 rounded-full blur-[100px]"></div>
-            <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-orange/10 rounded-full blur-[100px]"></div>
-        </div>
-        <div className="h-1.5 w-full bg-stone-100 dark:bg-stone-900 relative z-20">
-            <div className="h-full bg-gradient-to-r from-gold to-orange shadow-[0_0_10px_rgba(251,191,36,0.5)] transition-all duration-700 ease-out" style={{ width: `${progress}%` }}></div>
-        </div>
-        <div className="flex-1 flex flex-col items-center justify-center p-6 md:p-12 max-w-3xl mx-auto w-full relative z-10">
-            <div className="mb-10 opacity-50 grayscale hover:grayscale-0 transition-all duration-500"><ShalomLogo size="w-12 h-12" /></div>
-            <div className="mb-4 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-stone-100 dark:bg-stone-800 text-[10px] font-bold text-subtle uppercase tracking-widest">Pergunta {step + 1} de {questions.length}</div>
-            <h2 className="text-3xl md:text-5xl font-serif font-black text-center mb-12 leading-tight drop-shadow-sm">{currentQ.question}</h2>
+    <div className={`min-h-screen bg-paper text-ink flex flex-col transition-opacity duration-500 ${animatingOut ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
+        <div className="h-3 w-full bg-stone-100 relative z-20"><div className="h-full bg-orange transition-all duration-700 ease-out" style={{ width: `${progressPercent}%` }}></div></div>
+        <div className="flex-1 flex flex-col items-center justify-start md:justify-center p-6 md:p-12 max-w-4xl mx-auto w-full relative z-10 pt-16 overflow-y-auto no-scrollbar">
+            <div className="mb-8 opacity-20"><ShalomLogo size="w-14 h-14" /></div>
+            {currentQ.image && <div className="w-full max-w-lg aspect-[16/9] rounded-[3rem] overflow-hidden shadow-2xl border-4 border-white mb-10 animate-slide-up"><img src={currentQ.image} className="w-full h-full object-cover" alt="Questão" /></div>}
+            <div className="mb-4 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-stone-100 text-[10px] font-black text-subtle uppercase tracking-[0.2em]">ETAPA {step + 1} DE {questions.length - 1}</div>
+            <h2 className="text-3xl md:text-5xl font-serif font-black text-center mb-12 leading-tight text-ink max-w-2xl">{currentQ.question.replace('[nome]', name)}</h2>
             {currentQ.type === 'text' && (
-                <div className="w-full max-w-md space-y-6">
-                    <input type="text" value={inputText} onChange={(e) => setInputText(e.target.value)} placeholder="Digite aqui..." className="w-full bg-transparent border-b-2 border-stone-200 dark:border-stone-800 text-3xl md:text-4xl py-4 text-center font-bold outline-none focus:border-gold transition-colors placeholder-stone-300 dark:placeholder-stone-700" autoFocus onKeyDown={(e) => e.key === 'Enter' && handleAnswer(inputText)} />
-                    <button onClick={() => handleAnswer(inputText)} disabled={!inputText.trim()} className="w-full py-5 bg-ink dark:bg-white text-white dark:text-ink rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3">Continuar <ArrowRight size={20} /></button>
+                <div className="w-full max-w-md space-y-8 animate-slide-up">
+                    <input type="text" value={inputText} onChange={(e) => setInputText(e.target.value)} placeholder="Escreva seu nome..." className="w-full bg-transparent border-b-4 border-stone-200 text-4xl md:text-5xl py-4 text-center font-black outline-none focus:border-orange transition-colors placeholder:text-stone-200" autoFocus onKeyDown={(e) => e.key === 'Enter' && handleAnswer(inputText)} />
+                    <button onClick={() => handleAnswer(inputText)} disabled={!inputText.trim()} className="w-full py-6 bg-ink text-white rounded-[2rem] font-black text-xl shadow-2xl hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-3 uppercase tracking-widest">Continuar <ArrowRight size={24} /></button>
                 </div>
             )}
             {currentQ.type === 'choice' && currentQ.options && (
-                <div className="w-full max-w-lg grid gap-4">
+                <div className="w-full max-w-lg grid gap-4 animate-slide-up pb-10">
                     {currentQ.options.map((opt, idx) => (
-                        <button key={idx} onClick={() => handleAnswer(opt)} className="w-full p-6 text-left bg-white dark:bg-stone-900/50 backdrop-blur-sm border-2 border-stone-100 dark:border-stone-800 rounded-3xl font-bold text-lg md:text-xl shadow-sm hover:border-gold dark:hover:border-gold hover:bg-gold/5 dark:hover:bg-gold/10 hover:-translate-y-1 transition-all group flex items-center justify-between">
-                            <span className="text-stone-700 dark:text-stone-200 group-hover:text-ink dark:group-hover:text-white transition-colors">{opt}</span>
-                            <div className="w-6 h-6 rounded-full border-2 border-stone-200 dark:border-stone-700 group-hover:border-gold group-hover:bg-gold transition-colors relative flex items-center justify-center"><div className="w-2 h-2 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div></div>
+                        <button key={idx} onClick={() => handleAnswer(opt)} className="w-full p-6 md:p-8 text-left bg-white border-2 border-stone-100 rounded-[2.5rem] font-black text-lg md:text-xl shadow-soft hover:border-orange hover:bg-orange/5 hover:-translate-y-1 transition-all group flex items-center justify-between">
+                            <span className="text-stone-700 group-hover:text-ink transition-colors">{opt}</span>
+                            <div className="w-8 h-8 rounded-full border-2 border-stone-200 group-hover:border-orange group-hover:bg-orange transition-colors flex items-center justify-center"><ChevronRight size={18} className="text-transparent group-hover:text-white" /></div>
                         </button>
                     ))}
                 </div>
