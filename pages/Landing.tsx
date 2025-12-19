@@ -168,15 +168,14 @@ const Landing: React.FC = () => {
                       <UserMinus size={12} /> Um alerta para sua alma
                   </div>
                   <h2 className="text-4xl md:text-6xl font-serif font-bold mb-8 leading-tight">
-                     Você já parou para pensar em como <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold to-orange">Jesus se sente?</span>
+                     Você já parou para pensar em como <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold to-orange">Deus se sente?</span>
                   </h2>
                   <div className="space-y-6 text-lg md:text-xl font-serif text-stone-300 leading-relaxed border-l-2 border-white/20 pl-6">
                      <p>O dia amanhece. Você pega o celular.</p>
                      <p>Vê notícias, responde mensagens, trabalha, ri de memes, vê séries.</p>
                      <p>O dia termina. O cansaço bate. Você dorme.</p>
                      <p>E Ele ficou lá... <strong className="text-white">esperando.</strong></p>
-                     <p>Imagine um amor tão grande que deu a própria vida… e ainda assim espera pacientemente por você todos os dias. Jesus não está com raiva de você. Ele continua te chamando, mesmo no silêncio.</p>
-                     <p className="text-white">Jesus não está com raiva de você. <span className="underline decoration-orange decoration-2 underline-offset-4">Ele está triste.</span></p>
+                     <p>Imagine um amor tão grande que deu a própria vida… e ainda assim espera pacientemente por você todos os dias. Ele continua te chamando com amor, mesmo no silêncio.</p>
                      <p>Ele vê sua ansiedade crescendo porque você tenta carregar o mundo sozinho, enquanto Ele está a uma oração de distância querendo carregar o fardo por você.</p>
                      
                      {/* ADDED VERSE BOX */}
@@ -211,7 +210,7 @@ const Landing: React.FC = () => {
 
                     <p>A pressão no trabalho aumenta, <br/>mas o salário não.</p>
 
-                    <p>Seus filhos estão expostos a coisas que você <span className="bg-red-50 dark:bg-red-900/20 px-1 font-bold">nunca imaginou</span>. <br/>O casamento, que deveria ser abrigo, virou tension.</p>
+                    <p>Seus filhos estão expostos a coisas que você <span className="bg-red-50 dark:bg-red-900/20 px-1 font-bold">nunca imaginou</span>. <br/>O casamento, que deveria ser abrigo, virou tensão.</p>
 
                     <p>Você sorri na igreja… <br/><span className="italic">mas chora escondido no banheiro.</span></p>
 
@@ -237,7 +236,7 @@ const Landing: React.FC = () => {
 
                     <p>Você tenta orar, <br/>mas o <span className="font-bold">cansaço é tanto</span> que as palavras travam na garganta.</p>
 
-                    <p>Não porque você deixou de crer. <br/>But because you are trying to <span className="text-gold-dark dark:text-gold font-bold">carry everything alone.</span></p>
+                    <p>Não porque você deixou de crer. <br/>Mas porque você está tentando <span className="text-gold-dark dark:text-gold font-bold">carregar tudo sozinho.</span></p>
 
                     <p>A verdade é que, com tanta correria, <br/>a distância entre você e Deus não acontece de uma vez…<br/>Ela cresce aos poucos.</p>
 
@@ -245,11 +244,11 @@ const Landing: React.FC = () => {
 
                     <p className="font-bold text-ink dark:text-white">O mundo grita. <br/><span className="text-gold">A fé sussurra.</span></p>
 
-                    <p>E você vai apenas sobrevivendo… <br/>quando the plan of God was always to see you <span className="font-bold text-green-600 dark:text-green-400">living in peace</span>.</p>
+                    <p>E você vai apenas sobrevivendo… <br/>quando o plano de Deus sempre foi ver você <span className="font-bold text-green-600 dark:text-green-400">vivendo em paz</span>.</p>
 
                     <p className="font-bold text-2xl">Mas e se…</p>
 
-                    <p>👉 Deus pudesse te lembrar <span className="font-bold">todos os dias</span> que Ele está ali? <br/>👉 E se, no momento em que o medo batesse, uma palavra de consolo chegasse até você? <br/>👉 E se, quando a dúvida surgisse, a <span className="text-gold font-bold">Palavra certa</span> te mostrowe o caminho?</p>
+                    <p>👉 Deus pudesse te lembrar <span className="font-bold">todos os dias</span> que Ele está ali? <br/>👉 E se, no momento em que o medo batesse, uma palavra de consolo chegasse até você? <br/>👉 E se, quando a dúvida surgisse, a <span className="text-gold font-bold">Palavra certa</span> te mostrasse o caminho?</p>
 
                     <p><span className="font-black text-ink dark:text-white bg-gold/20 px-2 py-1 rounded">Foi por isso que nasceu Shalom.</span></p>
 
@@ -261,7 +260,7 @@ const Landing: React.FC = () => {
 
                     <ul className="space-y-4 text-lg list-none p-0">
                       <li className="flex items-start gap-2">✨ Uma oração pela manhã, para <span className="font-bold">começar firme</span></li>
-                      <li className="flex items-start gap-2">⚡ Uma mensagem no meio do dia, para <span className="font-bold">renovar as forças</span></li>
+                      <li className="flex items-start gap-2">⚡ Uma message no meio do dia, para <span className="font-bold">renovar as forças</span></li>
                       <li className="flex items-start gap-2">🌙 E uma oração à noite, para <span className="font-bold">devolver a paz</span> ao coração</li>
                     </ul>
 
@@ -297,7 +296,7 @@ const Landing: React.FC = () => {
 
                     <p>Neste início, estamos liberando um <span className="text-gold font-bold">plano especial</span> para quem sente que esse chamado é agora.</p>
 
-                    <p>Because the truth is simple:</p>
+                    <p>Porque a verdade é simples:</p>
 
                     <p className="text-2xl font-bold">Deus não te abandonou. <br/>Ele está aqui. <br/><span className="bg-gold text-ink px-2">Ele está contigo.</span></p>
 
@@ -326,7 +325,7 @@ const Landing: React.FC = () => {
                     </h2>
                     <div className="space-y-6 text-xl text-stone-600 dark:text-stone-300 font-serif leading-relaxed border-l-2 border-stone-200 dark:border-stone-800 pl-6">
                         <p>Começa com um dia sem orar.</p>
-                        <p>Depois, a Bíblia fica fechada no domingo.</p>
+                        <p>Depois, a Bíblia fica fechada...</p>
                         <p>Logo, os problemas parecem gigantes e Deus parece distante.</p>
                         <p>Nós criamos o Shalom para <span className="bg-red-50 dark:bg-red-900/20 px-1 font-bold text-red-600 dark:text-red-400">salvar a sua fé</span> dessa rotina devoradora.</p>
                     </div>
@@ -384,11 +383,11 @@ const Landing: React.FC = () => {
                         A Bíblia deixa de ser um livro fechado.
                     </h2>
                     <div className="space-y-6 text-xl text-stone-600 dark:text-stone-300 font-serif leading-relaxed">
-                        <p>Mutilos tentam ler e param no terceiro dia.</p>
+                        <p>Muitos tentam ler e param no terceiro dia.</p>
                         <p>O texto parece difícil. O sono vem.</p>
                         <p>No <span className="font-bold text-gold-dark dark:text-gold">Shalom</span>, é diferente.</p>
-                        <p>Entregamos porções digeríveis.</p>
-                        <p>Com explicações que tocam sua vida hoje.</p>
+                        <p>Ensinamos cada passagem da Bíblia de forma simples.</p>
+                        <p>Com citações da Bíblia que tocam sua vida hoje.</p>
                         <p>Não é sobre ler muito. É sobre ler e ser transformado.</p>
                     </div>
                 </div>
@@ -402,7 +401,7 @@ const Landing: React.FC = () => {
                           <HeartHandshake size={12} /> Aliança Blindada
                       </div>
                       <h3 className="font-serif font-bold text-3xl md:text-5xl text-ink dark:text-white leading-tight">
-                          Seu casamento precisa de um third elo.
+                          Seu casamento precisa de um terceiro elo.
                       </h3>
                       <div className="font-serif text-lg md:text-xl text-stone-600 dark:text-stone-300 leading-loose space-y-6">
                           <p>As lutas diárias desgastam o amor.</p>
