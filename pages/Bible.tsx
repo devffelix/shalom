@@ -252,9 +252,9 @@ const Bible: React.FC = () => {
   return (
     <div className="h-full flex flex-col relative book-perspective">
       {showToast && (
-        <div className={`absolute top-24 left-1/2 -translate-x-1/2 z-[60] text-white px-8 py-4 rounded-full shadow-2xl animate-slide-up flex items-center gap-3 scale-125 ${toastType === 'badge' ? 'bg-gradient-to-r from-gold to-orange' : toastType === 'xp' ? 'bg-green-600' : 'bg-ink'}`}>
-          {toastType === 'badge' ? <Award size={24} fill="currentColor" /> : <Crown size={22} fill="currentColor"/>}
-          <span className="text-xl font-black whitespace-nowrap tracking-tight">{showToast}</span>
+        <div className={`absolute top-24 left-1/2 -translate-x-1/2 z-[60] text-white px-12 py-6 rounded-full shadow-2xl animate-slide-up flex items-center gap-5 scale-150 border-4 border-white/20 ${toastType === 'badge' ? 'bg-gradient-to-r from-gold to-orange' : toastType === 'xp' ? 'bg-green-600' : 'bg-ink'}`}>
+          {toastType === 'badge' ? <Award size={36} fill="currentColor" /> : <Crown size={32} fill="currentColor"/>}
+          <span className="text-4xl font-black whitespace-nowrap tracking-tighter">{showToast}</span>
         </div>
       )}
 

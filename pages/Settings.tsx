@@ -232,22 +232,22 @@ const Settings: React.FC = () => {
          {/* Stats Row */}
          <div className="grid grid-cols-3 gap-4">
              <div className="bg-gradient-to-br from-gold to-orange p-6 rounded-[2.5rem] text-white shadow-lg relative overflow-hidden">
-                <div className="absolute -right-4 -bottom-4 opacity-20"><Crown size={80} /></div>
+                <div className="absolute -right-4 -bottom-4 opacity-20"><Crown size={120} /></div>
                 <span className="text-xs font-black uppercase opacity-80 tracking-widest">Nível</span>
-                <div className="text-5xl font-black tracking-tighter my-1">{stats.level}</div>
-                <div className="text-xs font-bold truncate opacity-90">{stats.title}</div>
+                <div className="text-8xl font-black tracking-tighter my-2 leading-none">{stats.level}</div>
+                <div className="text-sm font-bold truncate opacity-90">{stats.title}</div>
              </div>
              
              <div className="bg-surface dark:bg-stone-900 p-6 rounded-[2.5rem] border border-stone-100 dark:border-stone-800 shadow-sm relative overflow-hidden">
-                <div className="absolute -right-4 -bottom-4 text-stone-100 dark:text-stone-800"><Zap size={80} /></div>
+                <div className="absolute -right-4 -bottom-4 text-stone-100 dark:text-stone-800"><Zap size={100} /></div>
                 <span className="text-xs font-black text-subtle uppercase tracking-widest">XP Total</span>
-                <div className="text-4xl font-black text-ink dark:text-white my-1 tracking-tighter">{stats.xp}</div>
+                <div className="text-6xl font-black text-ink dark:text-white my-2 tracking-tighter leading-none">{stats.xp}</div>
              </div>
 
              <div className="bg-surface dark:bg-stone-900 p-6 rounded-[2.5rem] border border-stone-100 dark:border-stone-800 shadow-sm relative overflow-hidden">
-                <div className="absolute -right-4 -bottom-4 text-stone-100 dark:text-stone-800"><Award size={80} /></div>
+                <div className="absolute -right-4 -bottom-4 text-stone-100 dark:text-stone-800"><Award size={100} /></div>
                 <span className="text-xs font-black text-subtle uppercase tracking-widest">Emblemas</span>
-                <div className="text-4xl font-black text-ink dark:text-white my-1 tracking-tighter">{badges.filter(b => b.earned).length}<span className="text-lg text-stone-400 font-bold">/{badges.length}</span></div>
+                <div className="text-6xl font-black text-ink dark:text-white my-2 tracking-tighter leading-none">{badges.filter(b => b.earned).length}<span className="text-2xl text-stone-400 font-bold">/{badges.length}</span></div>
              </div>
          </div>
 

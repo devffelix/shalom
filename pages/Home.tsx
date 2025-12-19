@@ -249,14 +249,14 @@ const Home: React.FC = () => {
                 {timeGreeting}, <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-orange to-gold">{userName}</span>.
                 </h2>
              </div>
-             <div className="bg-surface dark:bg-stone-800 p-3 pr-5 rounded-full shadow-soft flex items-center gap-3 border border-stone-100 dark:border-stone-700 animate-slide-up scale-110">
-                 <div className="w-12 h-12 bg-orange/10 rounded-full flex items-center justify-center text-orange relative">
-                     <Flame size={24} fill="currentColor" className="animate-pulse" />
-                     <div className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full border-2 border-white dark:border-stone-800"></div>
+             <div className="bg-surface dark:bg-stone-800 p-4 pr-6 rounded-full shadow-soft flex items-center gap-4 border border-stone-100 dark:border-stone-700 animate-slide-up scale-110">
+                 <div className="w-14 h-14 bg-orange/10 rounded-full flex items-center justify-center text-orange relative">
+                     <Flame size={32} fill="currentColor" className="animate-pulse" />
+                     <div className="absolute top-0 right-0 w-4 h-4 bg-red-500 rounded-full border-2 border-white dark:border-stone-800"></div>
                  </div>
                  <div className="flex flex-col">
                      <span className="text-[10px] font-bold text-subtle uppercase">Ofensiva</span>
-                     <span className="text-2xl font-black text-ink dark:text-white leading-none">{progress?.streak || 0} Dias</span>
+                     <span className="text-4xl font-black text-ink dark:text-white leading-none tracking-tighter">{progress?.streak || 0} Dias</span>
                  </div>
              </div>
         </div>
@@ -266,7 +266,7 @@ const Home: React.FC = () => {
                 <Crown size={20} fill="currentColor" />
              </div>
              <div className="flex-1">
-                 <div className="flex justify-between text-xs font-black uppercase mb-1.5 text-ink dark:text-white tracking-wider">
+                 <div className="flex justify-between text-sm font-black uppercase mb-1.5 text-ink dark:text-white tracking-wider">
                      <span>Nível {levelData.currentLevel}</span>
                      <span className="text-orange">{levelData.currentTitle}</span>
                  </div>
@@ -381,18 +381,18 @@ const Home: React.FC = () => {
 
       <div className="bg-surface dark:bg-stone-900 p-8 rounded-[2.5rem] shadow-card border border-stone-100 dark:border-stone-800 flex items-center gap-8 relative overflow-hidden group">
          <div className="absolute right-0 top-0 h-full w-24 bg-gradient-to-l from-orange/5 to-transparent pointer-events-none"></div>
-         <div className="w-20 h-20 rounded-2xl bg-orange/10 flex items-center justify-center flex-shrink-0 text-orange border border-orange/10 shadow-sm"><ScrollText size={40} /></div>
+         <div className="w-24 h-24 rounded-2xl bg-orange/10 flex items-center justify-center flex-shrink-0 text-orange border border-orange/10 shadow-sm"><ScrollText size={48} /></div>
          <div className="flex-1 min-w-0">
-            <div className="flex justify-between items-end mb-4">
-                <h3 className="font-black text-ink dark:text-white text-xl">Meta Diária</h3>
-                <span className="text-lg font-black text-orange bg-orange/10 px-3 py-1 rounded-xl uppercase tracking-tighter">{dailyCount} de {dailyGoal}</span>
+            <div className="flex justify-between items-center mb-5">
+                <h3 className="font-black text-ink dark:text-white text-2xl uppercase tracking-tighter">Meta Diária</h3>
+                <span className="text-3xl font-black text-orange bg-orange/10 px-4 py-2 rounded-2xl uppercase tracking-tighter">{dailyCount} de {dailyGoal}</span>
             </div>
-            <div className="h-5 w-full bg-stone-100 dark:bg-stone-800 rounded-full overflow-hidden shadow-inner border border-stone-200 dark:border-stone-700">
+            <div className="h-6 w-full bg-stone-100 dark:bg-stone-800 rounded-full overflow-hidden shadow-inner border border-stone-200 dark:border-stone-700">
                 <div className="h-full bg-gradient-to-r from-orange via-gold to-orange rounded-full transition-all duration-1000 ease-out relative" style={{ width: `${dailyProgressPercent}%` }}>
                    {dailyCount >= dailyGoal && <div className="absolute inset-0 bg-white/30 animate-[shimmer_2s_infinite]"></div>}
                 </div>
             </div>
-            {dailyCount >= dailyGoal && <div className="mt-4 text-sm font-black text-green-600 flex items-center gap-1.5 animate-fade-in bg-green-50 dark:bg-green-900/20 px-4 py-2 rounded-2xl w-fit shadow-sm"><CheckCircle2 size={16} /> Meta alcançada! +50 XP Bônus.</div>}
+            {dailyCount >= dailyGoal && <div className="mt-5 text-base font-black text-green-600 flex items-center gap-2 animate-fade-in bg-green-50 dark:bg-green-900/20 px-5 py-3 rounded-2xl w-fit shadow-sm"><CheckCircle2 size={20} /> Meta alcançada! +50 XP Bônus.</div>}
          </div>
       </div>
 

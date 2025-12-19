@@ -148,11 +148,11 @@ const Challenges: React.FC = () => {
       <div className="animate-fade-in space-y-6 pb-20 relative">
         {showToast && (
             <div className={`
-                fixed top-20 left-1/2 -translate-x-1/2 z-50 text-white px-6 py-3 rounded-full shadow-2xl animate-fade-in flex items-center gap-2
+                fixed top-24 left-1/2 -translate-x-1/2 z-50 text-white px-10 py-5 rounded-full shadow-2xl animate-fade-in flex items-center gap-4 border-4 border-white/20 scale-125
                 ${toastType === 'badge' ? 'bg-gradient-to-r from-gold to-orange' : 'bg-ink'}
             `}>
-                {toastType === 'badge' ? <Award size={18} fill="currentColor" /> : <Crown size={16} className="text-gold"/>}
-                <span className="text-sm font-bold">{showToast}</span>
+                {toastType === 'badge' ? <Award size={24} fill="currentColor" /> : <Crown size={24} className="text-gold" fill="currentColor"/>}
+                <span className="text-3xl font-black tracking-tighter">{showToast}</span>
             </div>
         )}
 
