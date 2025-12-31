@@ -1,0 +1,7 @@
+{
+  "name": "Copy of of Shalom2 - Jornada Espiritual",
+  "description": "Um companheiro diário para leitura da Bíblia, orações personalizadas e reflexões espirituais.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
