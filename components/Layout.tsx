@@ -9,8 +9,8 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
-export const ShalomLogo: React.FC<{ size?: string }> = ({ size = "w-8 h-8" }) => (
-  <div className={`${size} bg-gradient-to-br from-gold to-orange rounded-lg flex items-center justify-center shadow-lg`}>
+export const ShalomLogo: React.FC<{ size?: string; className?: string }> = ({ size = "w-8 h-8", className = "" }) => (
+  <div className={`${size} bg-gradient-to-br from-gold to-orange rounded-lg flex items-center justify-center shadow-lg ${className}`}>
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white w-[60%] h-[60%]">
       <path d="M12 2C12 2 14 5 16 6C18 7 21 6 21 6L20 12C20 12 21 15 18 17C15 19 10 19 10 19L6 22L8 17C8 17 5 15 5 12C5 9 8 7 8 7L12 2Z" fill="currentColor" fillOpacity="0.2" strokeLinecap="round" strokeLinejoin="round"/>
       <path d="M12 2C12 2 14 5 16 6C18 7 21 6 21 6L20 12C20 12 21 15 18 17C15 19 10 19 10 19L6 22L8 17C8 17 5 15 5 12C5 9 8 7 8 7L12 2Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"/>
