@@ -3,12 +3,14 @@ import React, { useState, useEffect } from 'react';
 import { UserGoals } from '../types';
 import { INITIAL_GOALS, VIRTUES, INITIAL_CHALLENGES } from '../constants';
 import { Target, Clock, Zap, Anchor, HeartHandshake, Shield, Hourglass, Brain, Sword, CheckCircle2, Crown, Save, Flame, BookOpen, ChevronRight, Compass } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const IconMap: Record<string, any> = {
   Anchor, HeartHandshake, Shield, Hourglass, Brain, Sword
 };
 
 const Trails: React.FC = () => {
+  const { t } = useLanguage();
   const [goals, setGoals] = useState<UserGoals>(INITIAL_GOALS);
   const [isSaving, setIsSaving] = useState(false);
   const [showSavedToast, setShowSavedToast] = useState(false);
@@ -42,8 +44,6 @@ const Trails: React.FC = () => {
     setGoals(prev => ({ ...prev, targetJourneyId: id }));
   };
 
-  const selectedVirtue = VIRTUES.find(v => v.id === goals.focusVirtue) || VIRTUES[0];
-
   return (
     <div className="space-y-8 pb-32 animate-fade-in">
       
@@ -54,11 +54,11 @@ const Trails: React.FC = () => {
                 <Compass size={24} />
             </div>
             <h2 className="text-3xl font-serif font-black text-ink dark:text-white">
-                Minha Trilha
+                {t.trails.title}
             </h2>
          </div>
          <p className="text-subtle text-base max-w-sm leading-relaxed ml-1">
-            Defina o norte da sua bússola espiritual e ajuste seus hábitos diários.
+            {t.trails.subtitle}
          </p>
       </div>
 
@@ -66,10 +66,10 @@ const Trails: React.FC = () => {
       <section>
           <div className="px-2 mb-4 flex justify-between items-end">
               <h3 className="text-lg font-bold font-serif flex items-center gap-2 text-ink dark:text-white">
-                 <Crown className="text-orange" size={20} fill="currentColor" /> Virtude Foco
+                 <Crown className="text-orange" size={20} fill="currentColor" /> {t.trails.focusVirtue}
               </h3>
               <span className="text-[10px] font-bold bg-orange/10 text-orange uppercase tracking-wider px-3 py-1 rounded-full">
-                 Intenção do Mês
+                 {t.trails.monthIntent}
               </span>
           </div>
 
@@ -77,6 +77,7 @@ const Trails: React.FC = () => {
               {VIRTUES.map((virtue) => {
                   const Icon = IconMap[virtue.icon];
                   const isSelected = goals.focusVirtue === virtue.id;
+                  const translatedVirtue = t.virtues[virtue.id as keyof typeof t.virtues];
                   
                   return (
                       <div 
@@ -98,10 +99,10 @@ const Trails: React.FC = () => {
                           
                           <div>
                               <h4 className={`font-bold text-lg leading-none mb-2 ${isSelected ? 'text-white' : 'text-ink dark:text-white'}`}>
-                                  {virtue.name}
+                                  {translatedVirtue.name}
                               </h4>
                               <p className={`text-[10px] font-medium leading-tight ${isSelected ? 'text-white/90' : 'text-subtle'}`}>
-                                  {virtue.description}
+                                  {translatedVirtue.desc}
                               </p>
                           </div>
                           
@@ -119,7 +120,7 @@ const Trails: React.FC = () => {
       {/* SECTION 2: HABITS CONTROL CENTER */}
       <section className="px-2">
           <h3 className="text-lg font-bold font-serif mb-4 flex items-center gap-2 text-ink dark:text-white">
-              <Flame className="text-red-500" size={20} fill="currentColor" /> Ritmo Diário
+              <Flame className="text-red-500" size={20} fill="currentColor" /> {t.trails.dailyRhythm}
           </h3>
 
           <div className="grid md:grid-cols-2 gap-4">
@@ -133,7 +134,7 @@ const Trails: React.FC = () => {
                       </div>
                       <div className="text-right">
                           <span className="block text-4xl font-black text-ink dark:text-white leading-none">{goals.dailyChapters}</span>
-                          <span className="text-[10px] font-bold text-subtle uppercase tracking-wider">Capítulos</span>
+                          <span className="text-[10px] font-bold text-subtle uppercase tracking-wider">{t.trails.chapters}</span>
                       </div>
                   </div>
 
@@ -147,8 +148,8 @@ const Trails: React.FC = () => {
                       className="w-full h-1.5 bg-stone-200 dark:bg-stone-800 rounded-lg appearance-none cursor-pointer accent-gold relative z-10"
                   />
                   <div className="flex justify-between mt-2 text-[10px] font-bold text-subtle uppercase">
-                      <span>Leve</span>
-                      <span>Intenso</span>
+                      <span>{t.trails.light}</span>
+                      <span>{t.trails.intense}</span>
                   </div>
               </div>
 
@@ -162,7 +163,7 @@ const Trails: React.FC = () => {
                       </div>
                       <div className="text-right">
                           <span className="block text-4xl font-black text-ink dark:text-white leading-none">{goals.dailyStudyMinutes}</span>
-                          <span className="text-[10px] font-bold text-subtle uppercase tracking-wider">Minutos</span>
+                          <span className="text-[10px] font-bold text-subtle uppercase tracking-wider">{t.trails.minutes}</span>
                       </div>
                   </div>
 
@@ -176,8 +177,8 @@ const Trails: React.FC = () => {
                       className="w-full h-1.5 bg-stone-200 dark:bg-stone-800 rounded-lg appearance-none cursor-pointer accent-blue-500 relative z-10"
                   />
                   <div className="flex justify-between mt-2 text-[10px] font-bold text-subtle uppercase">
-                      <span>Rápido</span>
-                      <span>Profundo</span>
+                      <span>{t.trails.quick}</span>
+                      <span>{t.trails.deep}</span>
                   </div>
               </div>
           </div>
@@ -186,12 +187,14 @@ const Trails: React.FC = () => {
       {/* SECTION 3: TARGET JOURNEY */}
       <section className="px-2">
           <h3 className="text-lg font-bold font-serif mb-4 flex items-center gap-2 text-ink dark:text-white">
-              <Zap className="text-purple-500" size={20} fill="currentColor" /> Próximo Alvo
+              <Zap className="text-purple-500" size={20} fill="currentColor" /> {t.trails.nextTarget}
           </h3>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {INITIAL_CHALLENGES.map((challenge) => {
                   const isSelected = goals.targetJourneyId === challenge.id;
+                  const translatedChallenge = t.challenges[challenge.id as keyof typeof t.challenges];
+
                   return (
                       <div 
                         key={challenge.id}
@@ -213,8 +216,8 @@ const Trails: React.FC = () => {
                                  {isSelected && <div className="w-1.5 h-1.5 bg-ink rounded-full"></div>}
                               </div>
                               <div>
-                                <span className={`block font-bold text-sm md:text-base leading-tight ${isSelected ? 'text-white dark:text-ink' : 'text-ink dark:text-white'}`}>{challenge.title}</span>
-                                <span className={`text-[10px] font-medium uppercase tracking-wide ${isSelected ? 'text-white/60 dark:text-ink/60' : 'text-subtle'}`}>{challenge.days} Dias</span>
+                                <span className={`block font-bold text-sm md:text-base leading-tight ${isSelected ? 'text-white dark:text-ink' : 'text-ink dark:text-white'}`}>{translatedChallenge.title}</span>
+                                <span className={`text-[10px] font-medium uppercase tracking-wide ${isSelected ? 'text-white/60 dark:text-ink/60' : 'text-subtle'}`}>{challenge.days} {t.trails.days}</span>
                               </div>
                           </div>
                           
@@ -239,12 +242,12 @@ const Trails: React.FC = () => {
             >
                 {showSavedToast ? (
                     <>
-                        <CheckCircle2 size={24} /> Salvo com Sucesso!
+                        <CheckCircle2 size={24} /> {t.trails.savedSuccess}
                     </>
                 ) : (
                     <>
                         {isSaving ? <span className="animate-spin">⏳</span> : <Save size={20} />}
-                        Salvar Minhas Metas
+                        {isSaving ? t.trails.saving : t.trails.saveGoals}
                     </>
                 )}
             </button>

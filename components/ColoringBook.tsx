@@ -1,6 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { X, Save, RefreshCw, Check, Palette, Undo, Loader2 } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 // Tipagem para as partes do desenho SVG (Legado/Compatibilidade)
 export interface IllustrationPart {
@@ -41,6 +42,7 @@ const hexToRgb = (hex: string) => {
 };
 
 const ColoringBook: React.FC<ColoringBookProps> = ({ illustration, imageUrl, title, onClose }) => {
+  const { t } = useLanguage();
   const [selectedColor, setSelectedColor] = useState<string>('#3b82f6');
   
   // Estado SVG
@@ -218,7 +220,7 @@ const ColoringBook: React.FC<ColoringBookProps> = ({ illustration, imageUrl, tit
   };
 
   const handleReset = () => {
-    if (window.confirm('Quer começar tudo de novo?')) {
+    if (window.confirm(t.kids.coloring.reset)) {
       if (imageUrl && canvasRef.current && history.length > 0) {
           const ctx = canvasRef.current.getContext('2d');
           if (ctx) ctx.putImageData(history[0], 0, 0);
@@ -283,8 +285,8 @@ const ColoringBook: React.FC<ColoringBookProps> = ({ illustration, imageUrl, tit
             <X size={28} />
           </button>
           <div className="flex flex-col">
-             <span className="text-[10px] font-bold text-pink-500 uppercase tracking-widest">Colorindo</span>
-             <h3 className="font-black text-xl text-stone-700 leading-none truncate max-w-[150px]">{illustration?.title || title || "Desenho Mágico"}</h3>
+             <span className="text-[10px] font-bold text-pink-500 uppercase tracking-widest">{t.kids.coloring.coloringTitle}</span>
+             <h3 className="font-black text-xl text-stone-700 leading-none truncate max-w-[150px]">{illustration?.title || title || t.kids.coloring.magicCreator}</h3>
           </div>
         </div>
         
@@ -298,7 +300,7 @@ const ColoringBook: React.FC<ColoringBookProps> = ({ illustration, imageUrl, tit
             <RefreshCw size={24} />
           </button>
           <button onClick={handleSave} className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl font-bold shadow-md transition-transform active:scale-95 border-b-4 border-green-700 active:border-b-0 active:translate-y-1">
-            <Save size={20} /> <span className="hidden md:inline">Salvar</span>
+            <Save size={20} /> <span className="hidden md:inline">{t.kids.coloring.save}</span>
           </button>
         </div>
       </div>

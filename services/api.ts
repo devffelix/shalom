@@ -12,12 +12,19 @@ const fetchWithRetry = async (url: string, retries = 3): Promise<Response> => {
     try {
       const response = await fetch(url);
       if (response.ok) return response;
+      // If 404, do not retry as it's a permanent client error (invalid reference)
+      if (response.status === 404) {
+         throw new Error(`API Error: 404 Not Found - ${url}`);
+      }
       if (response.status < 500 && response.status !== 429) {
         throw new Error(`API Error: ${response.status} ${response.statusText}`);
       }
       throw new Error(`Server Error: ${response.status}`);
     } catch (err) {
       const isNetworkError = err instanceof TypeError && err.message === 'Failed to fetch';
+      // Don't retry 404s
+      if (err instanceof Error && err.message.includes('404')) throw err;
+      
       if (i === retries - 1) throw err;
       const delay = isNetworkError ? 2000 : 1000 * Math.pow(2, i);
       await wait(delay); 
@@ -26,10 +33,29 @@ const fetchWithRetry = async (url: string, retries = 3): Promise<Response> => {
   throw new Error('Failed to fetch after retries');
 };
 
-export const fetchChapter = async (book: string, chapter: number): Promise<BibleApiResponse> => {
+const getTranslationId = (lang: string): string => {
+  switch (lang) {
+    case 'pt': return 'almeida';
+    case 'es': return 'rvr'; // Reina Valera
+    case 'en': return 'web'; // World English Bible (Public Domain, easier to read than KJV)
+    default: return 'almeida';
+  }
+};
+
+export const fetchChapter = async (book: string, chapter: number, lang: string = 'pt'): Promise<BibleApiResponse> => {
   try {
-    const formattedBook = book.trim().replace(/\s+/g, '+');
-    const url = `${BIBLE_API_BASE}/${formattedBook}+${chapter}?translation=almeida`;
+    // Handle specific book name mapping for API compatibility
+    let apiBook = book;
+    if (apiBook === 'Song of Solomon') apiBook = 'Song of Songs';
+
+    // Construct reference string naturally then encode
+    const reference = `${apiBook} ${chapter}`;
+    // Use encodeURIComponent to handle spaces and special chars correctly (e.g. "1 Samuel 1" -> "1%20Samuel%201")
+    const formattedRef = encodeURIComponent(reference);
+    
+    const translation = getTranslationId(lang);
+    const url = `${BIBLE_API_BASE}/${formattedRef}?translation=${translation}`;
+    
     const response = await fetchWithRetry(url);
     return await response.json();
   } catch (error) {
@@ -38,16 +64,18 @@ export const fetchChapter = async (book: string, chapter: number): Promise<Bible
   }
 };
 
-export const fetchVerse = async (reference: string): Promise<BibleApiResponse> => {
+export const fetchVerse = async (reference: string, lang: string = 'pt'): Promise<BibleApiResponse> => {
   try {
-    const formattedRef = reference.trim().replace(/\s+/g, '+');
-    const url = `${BIBLE_API_BASE}/${formattedRef}?translation=almeida`;
+    const formattedRef = encodeURIComponent(reference.trim());
+    const translation = getTranslationId(lang);
+    const url = `${BIBLE_API_BASE}/${formattedRef}?translation=${translation}`;
     const response = await fetchWithRetry(url);
     return await response.json();
   } catch (error) {
     console.warn("Verse fetch failed, using fallback data.");
     
     // Attempt to find the requested reference in local fallback data
+    // Note: Fallback data is currently only in PT. For a real app, we would need fallback for all langs.
     const fallbackText = FALLBACK_VERSES_DATA[reference];
     
     if (fallbackText) {
@@ -56,7 +84,7 @@ export const fetchVerse = async (reference: string): Promise<BibleApiResponse> =
             text: fallbackText,
             verses: [],
             translation_id: 'offline',
-            translation_name: 'Offline (Almeida)',
+            translation_name: 'Offline (Backup)',
             translation_note: 'Modo Offline Ativado'
         };
     }
@@ -69,7 +97,7 @@ export const fetchVerse = async (reference: string): Promise<BibleApiResponse> =
         text: FALLBACK_VERSES_DATA[randomKey],
         verses: [],
         translation_id: 'offline',
-        translation_name: 'Offline (Almeida)',
+        translation_name: 'Offline (Backup)',
         translation_note: 'Modo Offline Ativado'
     };
   }
@@ -131,14 +159,14 @@ export const suggestSongs = async (query: string): Promise<SongSuggestion[]> => 
   );
 };
 
-export const generateDailyChallengeContent = async (theme: string, day: number): Promise<ChallengeDayContent> => {
-  if (theme === 'Ansiedade' || theme === 'Detox de Ansiedade') { if (ANXIETY_DETOX_DAYS[day]) return ANXIETY_DETOX_DAYS[day]; }
-  if (theme === 'Gratidão' || theme === 'Gratidão Profunda') { if (GRATITUDE_JOURNEY_DAYS[day]) return GRATITUDE_JOURNEY_DAYS[day]; }
-  if (theme === 'Sabedoria' || theme === 'Sabedoria de Provérbios') { if (PROVERBS_JOURNEY_DAYS[day]) return PROVERBS_JOURNEY_DAYS[day]; }
-  if (theme === 'Cura Divina' || theme === 'Milagre da Cura') { if (HEALING_JOURNEY_DAYS[day]) return HEALING_JOURNEY_DAYS[day]; }
-  if (theme === 'Provisão Financeira e Emprego' || theme === 'Portas Abertas') { if (OPEN_DOORS_JOURNEY_DAYS[day]) return OPEN_DOORS_JOURNEY_DAYS[day]; }
-  if (theme === 'Amor, Perdão e Casamento' || theme === 'Restauração de Vínculos') { if (RESTORATION_JOURNEY_DAYS[day]) return RESTORATION_JOURNEY_DAYS[day]; }
-  if (theme === 'Fé para Milagres Urgentes' || theme === 'Causas Impossíveis') { if (IMPOSSIBLE_CAUSES_JOURNEY_DAYS[day]) return IMPOSSIBLE_CAUSES_JOURNEY_DAYS[day]; }
+export const generateDailyChallengeContent = async (challengeId: string, day: number): Promise<ChallengeDayContent> => {
+  if (challengeId === 'anxiety-detox') { if (ANXIETY_DETOX_DAYS[day]) return ANXIETY_DETOX_DAYS[day]; }
+  if (challengeId === 'gratitude-journey') { if (GRATITUDE_JOURNEY_DAYS[day]) return GRATITUDE_JOURNEY_DAYS[day]; }
+  if (challengeId === 'proverbs-wisdom') { if (PROVERBS_JOURNEY_DAYS[day]) return PROVERBS_JOURNEY_DAYS[day]; }
+  if (challengeId === 'healing-miracle') { if (HEALING_JOURNEY_DAYS[day]) return HEALING_JOURNEY_DAYS[day]; }
+  if (challengeId === 'open-doors') { if (OPEN_DOORS_JOURNEY_DAYS[day]) return OPEN_DOORS_JOURNEY_DAYS[day]; }
+  if (challengeId === 'restoration') { if (RESTORATION_JOURNEY_DAYS[day]) return RESTORATION_JOURNEY_DAYS[day]; }
+  if (challengeId === 'impossible-causes') { if (IMPOSSIBLE_CAUSES_JOURNEY_DAYS[day]) return IMPOSSIBLE_CAUSES_JOURNEY_DAYS[day]; }
 
   return { verse: "Salmos 23:1", thought: "O Senhor é o meu pastor.", action: "Tire 5 minutos para agradecer.", reflection: "Conteúdo completo indisponível." };
 }

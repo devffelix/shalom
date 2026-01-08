@@ -6,9 +6,11 @@ import { addXp, checkAndUnlockBibleBadge, recordStudySession } from '../services
 import { ChevronLeft, ChevronRight, CheckCircle, X, BookOpen, Loader2, Type, Minus, Plus, Highlighter, Bookmark, RefreshCw, Crown, Award, Play, Pause, Square, Timer, GripHorizontal, Minimize2, Maximize2, MessageCircle } from 'lucide-react';
 import { UserProgress, BibleApiResponse, Note } from '../types';
 import { useLocation } from 'react-router-dom';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Bible: React.FC = () => {
   const location = useLocation();
+  const { language } = useLanguage();
   const [selectedBookIndex, setSelectedBookIndex] = useState(0);
   const [selectedChapter, setSelectedChapter] = useState(1);
   const [targetVerse, setTargetVerse] = useState<number | null>(null);
@@ -125,7 +127,7 @@ const Bible: React.FC = () => {
     loadChapter();
     checkIfRead();
     updateLastReadLocation();
-  }, [selectedBookIndex, selectedChapter]);
+  }, [selectedBookIndex, selectedChapter, language]); // Added language dep
 
   useEffect(() => {
     if (content && targetVerse && !loading) {
@@ -159,7 +161,8 @@ const Bible: React.FC = () => {
     setError(false);
     try {
       const apiBookName = currentBook.englishName || currentBook.name;
-      const data = await fetchChapter(apiBookName, selectedChapter);
+      // Pass language to API
+      const data = await fetchChapter(apiBookName, selectedChapter, language);
       setContent(data);
       if (contentRef.current) contentRef.current.scrollTop = 0;
     } catch (e) { setError(true); setContent(null); } finally {

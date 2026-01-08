@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Palette, Camera, Brain, ArrowLeft, Star, CheckCircle2, Download, RefreshCw, XCircle, Heart, Smile, Sparkles, Music, Sun, Wand2, BookOpen, Crown, CloudRain, Shield, Waves, Gift, Zap, Play, Loader2, Image as ImageIcon, Rocket, Cloud } from 'lucide-react';
 import ColoringBook, { VectorIllustration } from '../components/ColoringBook';
 import { GoogleGenAI } from "@google/genai";
+import { useLanguage } from '../contexts/LanguageContext';
 
 // --- STYLES & FONTS ---
 const FontStyles = () => (
@@ -38,153 +39,28 @@ const FontStyles = () => (
   `}</style>
 );
 
-// --- DRAWING PRESETS ---
-const DRAWING_IDEAS = [
-  { id: 'lion', title: 'Daniel e o Leão', icon: '🦁', prompt: 'Daniel na cova dos leões, leão amigável e fofo, estilo desenho infantil, traços grossos, preto e branco para colorir' },
-  { id: 'whale', title: 'Jonas e a Baleia', icon: '🐳', prompt: 'Uma baleia grande e sorridente no mar engolindo Jonas, estilo desenho infantil fofo, traços grossos, preto e branco' },
-  { id: 'ark', title: 'Arca de Noé', icon: '🚢', prompt: 'A arca de Noé navegando com girafas e elefantes aparecendo, arco-íris, estilo desenho infantil, traços grossos, preto e branco' },
-  { id: 'shepherd', title: 'O Bom Pastor', icon: '🐑', prompt: 'Jesus como um pastor cuidando de ovelhinhas fofas no campo, estilo desenho infantil, traços grossos, preto e branco' },
-  { id: 'david', title: 'Davi e Golias', icon: '🪨', prompt: 'O pequeno Davi com uma pedra e o gigante Golias com cara de bravo mas fofo, estilo desenho infantil, traços grossos, preto e branco' },
-  { id: 'angel', title: 'Anjo da Guarda', icon: '👼', prompt: 'Um anjo da guarda fofo voando no céu com nuvens, estilo desenho infantil, traços grossos, preto e branco' },
-  { id: 'creation', title: 'A Criação', icon: '🌍', prompt: 'O mundo sendo criado com sol, lua, árvores e animais felizes, estilo desenho infantil, traços grossos, preto e branco' },
-  { id: 'nativity', title: 'O Natal', icon: '⭐', prompt: 'Maria, José e o bebê Jesus na manjedoura com uma estrela brilhante, estilo desenho infantil, traços grossos, preto e branco' },
-];
-
-// --- QUIZ DATA ---
+// --- INTERFACES ---
 interface QuizTheme {
   id: string;
   title: string;
-  icon: any; // Lucide Icon
+  icon: any; 
   color: string;
   gradient: string;
   questions: { q: string; options: string[]; a: string }[];
 }
 
-const KIDS_QUIZ_THEMES: QuizTheme[] = [
-  {
-    id: 'creation',
-    title: 'A Criação do Mundo',
-    icon: Sun,
-    color: 'text-yellow-500',
-    gradient: 'from-yellow-400 to-orange-400',
-    questions: [
-      { q: "Quem criou o céu e a terra?", options: ["Noé", "Deus", "Adão"], a: "Deus" },
-      { q: "O que Deus criou no primeiro dia?", options: ["Os animais", "A Luz", "As plantas"], a: "A Luz" },
-      { q: "Quem foi o primeiro homem?", options: ["Moisés", "Pedro", "Adão"], a: "Adão" },
-      { q: "Em quantos dias Deus fez o mundo?", options: ["6 dias", "10 dias", "30 dias"], a: "6 dias" },
-    ]
-  },
-  {
-    id: 'noah',
-    title: 'A Arca de Noé',
-    icon: CloudRain,
-    color: 'text-blue-500',
-    gradient: 'from-blue-400 to-cyan-400',
-    questions: [
-      { q: "O que Noé construiu?", options: ["Uma casa", "Uma Arca", "Um templo"], a: "Uma Arca" },
-      { q: "Quantos animais de cada tipo entraram na arca?", options: ["Um casal (2)", "Dez", "Cinquenta"], a: "Um casal (2)" },
-      { q: "O que apareceu no céu depois da chuva?", options: ["Um avião", "Um Arco-Íris", "Uma estrela"], a: "Um Arco-Íris" },
-      { q: "O que Noé usou para ver se a terra estava seca?", options: ["Um corvo", "Uma pomba", "Um papagaio"], a: "Uma pomba" },
-    ]
-  },
-  {
-    id: 'david',
-    title: 'Davi e o Gigante',
-    icon: Shield,
-    color: 'text-orange-500',
-    gradient: 'from-orange-400 to-red-400',
-    questions: [
-      { q: "Qual era o nome do gigante?", options: ["Golias", "Sansão", "Saul"], a: "Golias" },
-      { q: "O que Davi usou para vencer o gigante?", options: ["Uma espada", "Uma pedra e funda", "Um arco e flecha"], a: "Uma pedra e funda" },
-      { q: "Davi cuidava de quais animais?", options: ["Leões", "Ovelhas", "Cavalos"], a: "Ovelhas" },
-      { q: "Quem ajudou Davi a vencer?", options: ["O Rei", "Deus", "Seus irmãos"], a: "Deus" },
-    ]
-  },
-  {
-    id: 'jonah',
-    title: 'Jonas e o Peixe',
-    icon: Waves,
-    color: 'text-teal-500',
-    gradient: 'from-teal-400 to-emerald-400',
-    questions: [
-      { q: "Quem engoliu Jonas?", options: ["Um tubarão", "Um grande peixe", "Uma baleia azul"], a: "Um grande peixe" },
-      { q: "Jonas fugiu para não ir para qual cidade?", options: ["Nínive", "Jerusalém", "Belém"], a: "Nínive" },
-      { q: "Quantos dias Jonas ficou na barriga do peixe?", options: ["1 dia", "3 dias", "7 dias"], a: "3 dias" },
-    ]
-  }
-];
-
-// --- FRAMES CONFIG ---
 type FrameTheme = 'bubbles' | 'sparkles' | 'music' | 'nature' | 'hero' | 'love';
 
 interface FrameConfig {
   id: number;
   label: string;
-  colors: string[]; // Gradient colors
+  colors: string[]; 
   text: string;
   icon: string;
   theme: FrameTheme;
-  filter: string; // CSS Filter for video
+  filter: string; 
 }
 
-const FRAMES: FrameConfig[] = [
-  { 
-    id: 1, 
-    label: "Herói da Fé", 
-    colors: ["#00c6ff", "#0072ff"], 
-    text: "JESUS É MEU HERÓI", 
-    icon: "🦸‍♂️", 
-    theme: 'hero',
-    filter: 'contrast(1.1) saturate(1.2)' 
-  },
-  { 
-    id: 2, 
-    label: "Pequeno Adorador", 
-    colors: ["#FFD700", "#ff9a00"], 
-    text: "PEQUENO ADORADOR", 
-    icon: "🎵", 
-    theme: 'music',
-    filter: 'sepia(0.2) brightness(1.1)' 
-  },
-  { 
-    id: 3, 
-    label: "Princesa do Senhor", 
-    colors: ["#ff9a9e", "#ff6a88"], 
-    text: "AMADA DO PAI", 
-    icon: "👑", 
-    theme: 'sparkles',
-    filter: 'saturate(1.1) brightness(1.05)'
-  },
-  { 
-    id: 4, 
-    label: "Criação de Deus", 
-    colors: ["#56ab2f", "#a8e063"], 
-    text: "OBRA PRIMA DE DEUS", 
-    icon: "🌿", 
-    theme: 'nature',
-    filter: 'contrast(1.05) brightness(1.1)' 
-  },
-  { 
-    id: 5, 
-    label: "Alegria do Senhor", 
-    colors: ["#FF8008", "#FFC837"], 
-    text: "A ALEGRIA É MINHA FORÇA", 
-    icon: "😄", 
-    theme: 'bubbles',
-    filter: 'saturate(1.4)' 
-  },
-  { 
-    id: 6, 
-    label: "Amor de Jesus", 
-    colors: ["#DA22FF", "#9733EE"], 
-    text: "JESUS ME AMA", 
-    icon: "❤️", 
-    theme: 'love',
-    filter: 'contrast(1.1)' 
-  }
-];
-
-// --- EFFECTS CONFIG ---
 type EffectType = 'sparkles' | 'confetti' | 'amen' | 'angel' | 'hearts';
 
 interface EffectConfig {
@@ -192,14 +68,6 @@ interface EffectConfig {
   label: string;
   icon: string;
 }
-
-const EFFECTS: EffectConfig[] = [
-  { id: 'sparkles', label: 'Brilho', icon: '✨' },
-  { id: 'confetti', label: 'Confete', icon: '🎉' },
-  { id: 'amen', label: 'Amém!', icon: '🙏' },
-  { id: 'angel', label: 'Asinhas', icon: '👼' },
-  { id: 'hearts', label: 'Amor', icon: '💖' },
-];
 
 // --- HELPERS ---
 const drawRoundedRect = (ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number) => {
@@ -277,13 +145,34 @@ const drawTextSticker = (ctx: CanvasRenderingContext2D, text: string, x: number,
 
 // --- PHOTO BOOTH COMPONENT ---
 const PhotoBooth: React.FC<{ onBack: () => void }> = ({ onBack }) => {
+  const { t } = useLanguage();
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [activeFrame, setActiveFrame] = useState(FRAMES[0]);
   const [selectedEffects, setSelectedEffects] = useState<EffectType[]>([]);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [photoTaken, setPhotoTaken] = useState<string | null>(null);
   const [permissionError, setPermissionError] = useState(false);
+
+  // Reconstruct FRAMES from translations
+  const FRAMES: FrameConfig[] = [
+    { id: 1, label: t.kids.camera.frames[0].label, colors: ["#00c6ff", "#0072ff"], text: t.kids.camera.frames[0].text, icon: "🦸‍♂️", theme: 'hero', filter: 'contrast(1.1) saturate(1.2)' },
+    { id: 2, label: t.kids.camera.frames[1].label, colors: ["#FFD700", "#ff9a00"], text: t.kids.camera.frames[1].text, icon: "🎵", theme: 'music', filter: 'sepia(0.2) brightness(1.1)' },
+    { id: 3, label: t.kids.camera.frames[2].label, colors: ["#ff9a9e", "#ff6a88"], text: t.kids.camera.frames[2].text, icon: "👑", theme: 'sparkles', filter: 'saturate(1.1) brightness(1.05)'},
+    { id: 4, label: t.kids.camera.frames[3].label, colors: ["#56ab2f", "#a8e063"], text: t.kids.camera.frames[3].text, icon: "🌿", theme: 'nature', filter: 'contrast(1.05) brightness(1.1)' },
+    { id: 5, label: t.kids.camera.frames[4].label, colors: ["#FF8008", "#FFC837"], text: t.kids.camera.frames[4].text, icon: "😄", theme: 'bubbles', filter: 'saturate(1.4)' },
+    { id: 6, label: t.kids.camera.frames[5].label, colors: ["#DA22FF", "#9733EE"], text: t.kids.camera.frames[5].text, icon: "❤️", theme: 'love', filter: 'contrast(1.1)' }
+  ];
+
+  // Reconstruct EFFECTS from translations
+  const EFFECTS: EffectConfig[] = [
+    { id: 'sparkles', label: t.kids.camera.effects.sparkles, icon: '✨' },
+    { id: 'confetti', label: t.kids.camera.effects.confetti, icon: '🎉' },
+    { id: 'amen', label: t.kids.camera.effects.amen, icon: '🙏' },
+    { id: 'angel', label: t.kids.camera.effects.angel, icon: '👼' },
+    { id: 'hearts', label: t.kids.camera.effects.hearts, icon: '💖' },
+  ];
+
+  const [activeFrame, setActiveFrame] = useState(FRAMES[0]);
 
   useEffect(() => {
     startCamera();
@@ -359,7 +248,7 @@ const PhotoBooth: React.FC<{ onBack: () => void }> = ({ onBack }) => {
           }
       }
       if (selectedEffects.includes('amen')) {
-          drawTextSticker(ctx, "AMÉM!", w * 0.8, h * 0.75, "#FFD700", 100, -10);
+          drawTextSticker(ctx, t.kids.camera.effects.amen, w * 0.8, h * 0.75, "#FFD700", 100, -10);
       }
       if (selectedEffects.includes('angel')) {
           ctx.beginPath();
@@ -457,7 +346,7 @@ const PhotoBooth: React.FC<{ onBack: () => void }> = ({ onBack }) => {
       <FontStyles />
       <div className="flex justify-between items-center mb-4">
         <button onClick={onBack} className="p-2 bg-white rounded-full shadow-md"><ArrowLeft size={24} className="text-pink-500"/></button>
-        <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-600 drop-shadow-sm">Cabine Divertida</h2>
+        <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-600 drop-shadow-sm">{t.kids.camera.title}</h2>
         <div className="w-10"></div>
       </div>
 
@@ -467,9 +356,9 @@ const PhotoBooth: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             {permissionError ? (
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-stone-900 text-white p-6 text-center">
                     <XCircle size={48} className="text-red-500 mb-4" />
-                    <h3 className="text-xl font-bold mb-2">Ops! Sem câmera.</h3>
-                    <p className="text-stone-400">Precisamos da sua permissão para usar a câmera. Verifique as configurações do navegador.</p>
-                    <button onClick={startCamera} className="mt-6 px-6 py-3 bg-blue-500 rounded-full font-bold">Tentar Novamente</button>
+                    <h3 className="text-xl font-bold mb-2">{t.kids.camera.noCamera}</h3>
+                    <p className="text-stone-400">{t.kids.camera.permission}</p>
+                    <button onClick={startCamera} className="mt-6 px-6 py-3 bg-blue-500 rounded-full font-bold">{t.kids.camera.retry}</button>
                 </div>
             ) : (
                 <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover transform -scale-x-100 transition-all duration-300" style={{ filter: activeFrame.filter }} />
@@ -504,7 +393,7 @@ const PhotoBooth: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                )}
                {selectedEffects.includes('amen') && (
                    <div className="absolute bottom-32 right-8 transform -rotate-6">
-                       <span className="font-black text-4xl text-yellow-400 drop-shadow-[0_2px_0_rgba(0,0,0,0.5)] text-stroke">AMÉM!</span>
+                       <span className="font-black text-4xl text-yellow-400 drop-shadow-[0_2px_0_rgba(0,0,0,0.5)] text-stroke">{t.kids.camera.effects.amen}</span>
                    </div>
                )}
                {selectedEffects.includes('hearts') && (
@@ -574,16 +463,16 @@ const PhotoBooth: React.FC<{ onBack: () => void }> = ({ onBack }) => {
            </div>
            
            <button onClick={takePhoto} className="w-full py-4 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-3xl font-black text-2xl shadow-xl shadow-pink-500/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 animate-pulse border-4 border-white/20">
-              <Camera size={32} fill="currentColor" /> TIRAR FOTO!
+              <Camera size={32} fill="currentColor" /> {t.kids.camera.takePhoto}
            </button>
         </div>
       ) : (
         <div className="mt-6 flex flex-col gap-3">
            <button onClick={downloadPhoto} className="w-full py-4 bg-green-500 hover:bg-green-600 text-white rounded-3xl font-black text-xl shadow-lg border-b-8 border-green-700 active:border-b-0 active:translate-y-2 transition-all flex items-center justify-center gap-2">
-              <Download size={24} /> SALVAR FOTO
+              <Download size={24} /> {t.kids.camera.save}
            </button>
            <button onClick={() => setPhotoTaken(null)} className="w-full py-4 bg-white text-stone-500 rounded-3xl font-bold shadow-sm border-2 border-stone-200 flex items-center justify-center gap-2 hover:bg-stone-50">
-              <RefreshCw size={20} /> Tirar Outra
+              <RefreshCw size={20} /> {t.kids.camera.retake}
            </button>
         </div>
       )}
@@ -593,11 +482,35 @@ const PhotoBooth: React.FC<{ onBack: () => void }> = ({ onBack }) => {
 
 // --- KIDS QUIZ COMPONENT ---
 const KidsQuiz: React.FC<{ onBack: () => void }> = ({ onBack }) => {
+  const { t } = useLanguage();
   const [activeTheme, setActiveTheme] = useState<QuizTheme | null>(null);
   const [index, setIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [finished, setFinished] = useState(false);
   const [feedback, setFeedback] = useState<'correct' | 'wrong' | null>(null);
+
+  // Reconstruct Themes using Translations
+  // Icons mapping for Quiz Themes
+  const QUIZ_ICONS: Record<string, any> = {
+    'creation': Sun,
+    'noah': CloudRain,
+    'david': Shield,
+    'jonah': Waves
+  };
+
+  const QUIZ_STYLES: Record<string, {color: string, gradient: string}> = {
+    'creation': { color: 'text-yellow-500', gradient: 'from-yellow-400 to-orange-400' },
+    'noah': { color: 'text-blue-500', gradient: 'from-blue-400 to-cyan-400' },
+    'david': { color: 'text-orange-500', gradient: 'from-orange-400 to-red-400' },
+    'jonah': { color: 'text-teal-500', gradient: 'from-teal-400 to-emerald-400' }
+  };
+
+  const KIDS_QUIZ_THEMES: QuizTheme[] = t.kids.quiz.themes.map(theme => ({
+    ...theme,
+    icon: QUIZ_ICONS[theme.id],
+    color: QUIZ_STYLES[theme.id].color,
+    gradient: QUIZ_STYLES[theme.id].gradient
+  }));
 
   const handleAnswer = (option: string) => {
     if (feedback || !activeTheme) return;
@@ -630,7 +543,7 @@ const KidsQuiz: React.FC<{ onBack: () => void }> = ({ onBack }) => {
           <div className="h-full flex flex-col animate-fade-in font-kids pb-20">
               <div className="flex items-center gap-4 mb-6">
                   <button onClick={onBack} className="p-3 bg-white rounded-full shadow-md"><ArrowLeft size={24} className="text-blue-500"/></button>
-                  <h2 className="text-3xl font-black text-blue-500 text-stroke-sm">Escolha a História</h2>
+                  <h2 className="text-3xl font-black text-blue-500 text-stroke-sm">{t.kids.quiz.title}</h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 overflow-y-auto pb-4 no-scrollbar p-2">
                   {KIDS_QUIZ_THEMES.map((theme) => (
@@ -649,7 +562,7 @@ const KidsQuiz: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                                   <h3 className="font-black text-2xl md:text-3xl text-white leading-none drop-shadow-md pr-4">{theme.title}</h3>
                                   <div className="flex items-center gap-2">
                                       <div className="bg-white/20 px-3 py-1 rounded-full backdrop-blur-sm border border-white/20">
-                                          <span className="text-xs font-bold text-white uppercase tracking-wider">{theme.questions.length} Perguntas</span>
+                                          <span className="text-xs font-bold text-white uppercase tracking-wider">{theme.questions.length} {t.kids.quiz.questionsCount}</span>
                                       </div>
                                       <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md">
                                           <Play size={14} className={`fill-current ${theme.color.replace('text-', 'text-')}`} />
@@ -671,14 +584,14 @@ const KidsQuiz: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     return (
       <div className="flex flex-col items-center justify-center h-full text-center animate-slide-up bg-white rounded-[3rem] p-8 shadow-xl font-kids">
          <Star size={100} className="text-yellow-400 fill-yellow-400 mb-6 animate-spin-slow drop-shadow-lg" />
-         <h2 className="text-5xl font-black text-blue-500 mb-2 text-stroke-sm">Parabéns!</h2>
-         <p className="text-xl text-stone-500 mb-8 font-bold">Você acertou {score} de {activeTheme.questions.length}!</p>
+         <h2 className="text-5xl font-black text-blue-500 mb-2 text-stroke-sm">{t.kids.quiz.congrats}</h2>
+         <p className="text-xl text-stone-500 mb-8 font-bold">{t.kids.quiz.correct.replace('{score}', score.toString()).replace('{total}', activeTheme.questions.length.toString())}</p>
          <div className="flex flex-col w-full gap-3">
              <button onClick={handleRestart} className="w-full py-4 bg-green-500 text-white rounded-3xl font-black text-xl shadow-lg border-b-8 border-green-700 active:border-b-0 active:translate-y-2 transition-all flex items-center justify-center gap-2">
-                <RefreshCw size={24} /> JOGAR OUTRO
+                <RefreshCw size={24} /> {t.kids.quiz.playAgain}
              </button>
              <button onClick={onBack} className="w-full py-4 bg-blue-500 text-white rounded-3xl font-black text-xl shadow-lg border-b-8 border-blue-700 active:border-b-0 active:translate-y-2 transition-all">
-                SAIR
+                {t.kids.quiz.exit}
              </button>
          </div>
       </div>
@@ -692,7 +605,7 @@ const KidsQuiz: React.FC<{ onBack: () => void }> = ({ onBack }) => {
        <div className="flex justify-between items-center mb-6">
           <button onClick={() => setActiveTheme(null)} className="p-3 bg-white rounded-full shadow-md hover:scale-110 transition-transform"><ArrowLeft size={28} className="text-blue-500"/></button>
           <div className="bg-blue-100 text-blue-600 px-6 py-2 rounded-full font-black text-sm border-2 border-blue-200">
-             PERGUNTA {index + 1}/{activeTheme.questions.length}
+             {t.kids.quiz.question} {index + 1}/{activeTheme.questions.length}
           </div>
           <div className="w-12"></div>
        </div>
@@ -724,10 +637,22 @@ const KidsQuiz: React.FC<{ onBack: () => void }> = ({ onBack }) => {
 // --- MAIN KIDS ZONE COMPONENT ---
 
 export const KidsZone: React.FC = () => {
+  const { t } = useLanguage();
   const [mode, setMode] = useState<'menu' | 'coloring' | 'quiz' | 'camera'>('menu');
   const [coloringImage, setColoringImage] = useState<{ type: 'svg' | 'image', data: any, title: string } | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [prompt, setPrompt] = useState('');
+
+  // Drawing Ideas with Icons map
+  const IDEA_ICONS: Record<string, string> = {
+    'lion': '🦁', 'whale': '🐳', 'ark': '🚢', 'shepherd': '🐑',
+    'david': '🪨', 'angel': '👼', 'creation': '🌍', 'nativity': '⭐'
+  };
+
+  const DRAWING_IDEAS = t.kids.coloring.ideas.map(idea => ({
+    ...idea,
+    icon: IDEA_ICONS[idea.id]
+  }));
 
   const handleGenerateImage = async (customPrompt?: string) => {
     const textToUse = customPrompt || prompt;
@@ -738,9 +663,11 @@ export const KidsZone: React.FC = () => {
     
     try {
         const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+        const systemPrompt = t.kids.coloring.aiPrompt.replace('{prompt}', textToUse);
+        
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash-image',
-            contents: `Crie um desenho para colorir infantil, preto e branco, traços grossos, fundo branco puro, estilo cartoon fofo sobre: ${textToUse}. A imagem deve ser simples, perfeita para crianças pintarem.`,
+            contents: systemPrompt,
             config: {
                 temperature: 0.7
             }
@@ -764,7 +691,7 @@ export const KidsZone: React.FC = () => {
 
     } catch (e) {
         console.error(e);
-        alert("Erro ao criar desenho mágico. Tente novamente.");
+        alert(t.kids.coloring.error);
     } finally {
         setIsGenerating(false);
     }
@@ -799,7 +726,7 @@ export const KidsZone: React.FC = () => {
         <FontStyles />
         <div className="flex items-center gap-4 mb-6">
            <button onClick={() => setMode('menu')} className="p-3 bg-white rounded-full shadow-md"><ArrowLeft size={24} className="text-purple-500"/></button>
-           <h2 className="text-3xl font-black text-purple-500">Escolha o Desenho</h2>
+           <h2 className="text-3xl font-black text-purple-500">{t.kids.coloring.title}</h2>
         </div>
 
         {/* AI GENERATOR - ENHANCED VISUAL */}
@@ -813,10 +740,10 @@ export const KidsZone: React.FC = () => {
             <div className="relative z-10">
                 <h3 className="font-black text-3xl mb-3 flex items-center gap-3 drop-shadow-md">
                     <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm"><Wand2 className="text-yellow-300" size={32} /></div>
-                    Criador Mágico
+                    {t.kids.coloring.magicCreator}
                 </h3>
                 <p className="text-base font-bold text-white/90 mb-6 leading-tight max-w-sm">
-                    Imagine qualquer coisa (um dinossauro, uma princesa, um avião) e a mágica acontece!
+                    {t.kids.coloring.magicDesc}
                 </p>
                 
                 <div className="flex gap-3 bg-white/10 p-2 rounded-[1.5rem] backdrop-blur-md border border-white/20">
@@ -824,7 +751,7 @@ export const KidsZone: React.FC = () => {
                         type="text" 
                         value={prompt}
                         onChange={(e) => setPrompt(e.target.value)}
-                        placeholder="Ex: Leão jogando bola..." 
+                        placeholder={t.kids.coloring.placeholder}
                         className="flex-1 rounded-2xl px-6 py-4 bg-white text-purple-900 font-black outline-none placeholder:text-purple-300 shadow-inner text-lg"
                     />
                     <button 
@@ -839,7 +766,7 @@ export const KidsZone: React.FC = () => {
         </div>
 
         <h3 className="font-black text-2xl text-stone-600 mb-6 px-4 flex items-center gap-2">
-            <Palette className="text-pink-500" /> Ideias Prontas
+            <Palette className="text-pink-500" /> {t.kids.coloring.readyIdeas}
         </h3>
         
         {/* PRESET GALLERY GRID */}
@@ -883,12 +810,12 @@ export const KidsZone: React.FC = () => {
         {/* Header */}
         <div className="text-center mb-8 mt-4">
            <div className="inline-flex items-center gap-2 bg-white px-6 py-2 rounded-full shadow-lg mb-4 border-2 border-blue-200 transform hover:-rotate-1 transition-transform cursor-default">
-              <span className="text-xl">👋 Olá, Pequeno Artista!</span>
+              <span className="text-xl">{t.kids.menu.hello}</span>
            </div>
            <h1 className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 drop-shadow-sm leading-tight text-stroke-sm pb-2">
-              Kids Zone
+              {t.kids.menu.title}
            </h1>
-           <p className="text-blue-400 font-bold mt-2 text-lg">Seu playground de fé e diversão!</p>
+           <p className="text-blue-400 font-bold mt-2 text-lg">{t.kids.menu.subtitle}</p>
         </div>
 
         {/* Main Grid */}
@@ -904,18 +831,18 @@ export const KidsZone: React.FC = () => {
               
               <div className="flex flex-col items-start justify-center h-full z-10">
                  <div className="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-white text-[10px] font-black uppercase tracking-widest mb-3 border border-white/20 flex items-center gap-1">
-                    <Sparkles size={10} /> Criador Mágico
+                    <Sparkles size={10} /> {t.kids.menu.coloring.tag}
                  </div>
-                 <h3 className="text-4xl font-black text-white mb-1 drop-shadow-md text-left leading-none">Pintar<br/>& Criar</h3>
+                 <h3 className="text-4xl font-black text-white mb-1 drop-shadow-md text-left leading-none" dangerouslySetInnerHTML={{__html: t.kids.menu.coloring.title.replace('&', '<br/>&')}}></h3>
                  <p className="text-white/80 font-bold text-sm mt-2 flex items-center gap-1">
-                    Use a IA para desenhar <ArrowLeft size={14} className="rotate-180" />
+                    {t.kids.menu.coloring.subtitle} <ArrowLeft size={14} className="rotate-180" />
                  </p>
               </div>
 
               <div className="w-28 h-28 bg-white/20 rounded-full flex items-center justify-center text-white border-4 border-white/30 shadow-inner group-hover:rotate-12 transition-transform relative">
                  <Palette size={56} className="drop-shadow-lg" />
                  <div className="absolute -top-2 -right-2 bg-yellow-400 text-purple-900 text-xs font-black px-3 py-1 rounded-full border-2 border-white shadow-lg animate-bounce">
-                    NOVO!
+                    {t.kids.menu.coloring.new}
                  </div>
               </div>
            </button>
@@ -930,7 +857,7 @@ export const KidsZone: React.FC = () => {
                  <Brain size={32} />
               </div>
               <div className="text-center z-10">
-                 <h3 className="text-lg font-black text-white leading-tight drop-shadow-sm">Quiz<br/>Bíblico</h3>
+                 <h3 className="text-lg font-black text-white leading-tight drop-shadow-sm" dangerouslySetInnerHTML={{__html: t.kids.menu.quiz.title.replace(' ', '<br/>')}}></h3>
               </div>
            </button>
 
@@ -944,7 +871,7 @@ export const KidsZone: React.FC = () => {
                  <Camera size={32} />
               </div>
               <div className="text-center z-10">
-                 <h3 className="text-lg font-black text-white leading-tight drop-shadow-sm">Foto<br/>Divertida</h3>
+                 <h3 className="text-lg font-black text-white leading-tight drop-shadow-sm" dangerouslySetInnerHTML={{__html: t.kids.menu.camera.title.replace(' ', '<br/>')}}></h3>
               </div>
            </button>
         </div>
@@ -952,7 +879,7 @@ export const KidsZone: React.FC = () => {
         {/* Decorative Footer */}
         <div className="mt-8 flex justify-center opacity-60">
             <p className="text-blue-300 font-bold text-xs uppercase tracking-widest flex items-center gap-2">
-                <Rocket size={14} /> Explore o Reino
+                <Rocket size={14} /> {t.kids.menu.explore}
             </p>
         </div>
       </div>

@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from '../components/Layout';
@@ -14,6 +15,7 @@ import AdminDashboard from './AdminDashboard';
 import BibleTriviaPage from './BibleTriviaPage';
 import { UserProgress } from '../types';
 import { AudioProvider } from '../contexts/AudioContext';
+import { LanguageProvider } from '../contexts/LanguageContext';
 
 const INITIAL_PROGRESS: UserProgress = {
   readChapters: [],
@@ -105,25 +107,27 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <AudioProvider>
-      <Router>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<Landing />} />
-            <Route path="/quiz" element={<Quiz />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/app" element={<Home />} />
-            <Route path="/bible" element={<Bible />} />
-            <Route path="/worship" element={<Worship />} />
-            <Route path="/challenges" element={<Challenges />} />
-            <Route path="/kids" element={<KidsZone />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/trails" element={<Trails />} />
-            <Route path="/trivia" element={<BibleTriviaPage />} />
-          </Routes>
-        </Layout>
-      </Router>
-    </AudioProvider>
+    <LanguageProvider>
+      <AudioProvider>
+        <Router>
+          <Layout>
+            <Routes>
+              <Route path="/" element={<Landing />} />
+              <Route path="/quiz" element={<Quiz />} />
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/app" element={<Home />} />
+              <Route path="/bible" element={<Bible />} />
+              <Route path="/worship" element={<Worship />} />
+              <Route path="/challenges" element={<Challenges />} />
+              <Route path="/kids" element={<KidsZone />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/trails" element={<Trails />} />
+              <Route path="/trivia" element={<BibleTriviaPage />} />
+            </Routes>
+          </Layout>
+        </Router>
+      </AudioProvider>
+    </LanguageProvider>
   );
 };
 

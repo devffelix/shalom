@@ -1,10 +1,12 @@
+
 import React, { useState, useEffect } from 'react';
-import { suggestSongs } from '../services/api';
 import { SongSuggestion } from '../types';
 import { useAudio } from '../contexts/AudioContext';
-import { Music, Search, Sparkles, Play, Pause, AlertCircle, Volume2, VolumeX, BarChart3, SkipBack, SkipForward } from 'lucide-react';
+import { Music, Search, Play, Pause, AlertCircle, Volume2, VolumeX, BarChart3, SkipBack, SkipForward, Sparkles } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Worship: React.FC = () => {
+  const { t } = useLanguage();
   const [topic, setTopic] = useState('');
   const [songs, setSongs] = useState<SongSuggestion[]>([]);
   const [loading, setLoading] = useState(false);
@@ -12,15 +14,27 @@ const Worship: React.FC = () => {
   // Global Audio Context
   const { currentSong, isPlaying, playSong, togglePlay, progress, duration, seek, volume, setVolume } = useAudio();
 
-  // Initial load of all songs
+  // Initial load of all songs (now from translations)
   useEffect(() => {
     handleSearch('');
-  }, []);
+  }, [t]); // Reload when language changes
 
-  const handleSearch = async (query: string) => {
+  const handleSearch = (query: string) => {
     setLoading(true);
-    const results = await suggestSongs(query);
-    setSongs(results);
+    // Filter local translated songs instead of calling API which had hardcoded data
+    const allSongs = t.songsList || []; 
+    
+    if (!query || query.trim() === '') {
+        setSongs(allSongs);
+    } else {
+        const lowerQuery = query.toLowerCase();
+        const results = allSongs.filter(song => 
+            song.title.toLowerCase().includes(lowerQuery) || 
+            song.artist.toLowerCase().includes(lowerQuery) ||
+            song.reason.toLowerCase().includes(lowerQuery)
+        );
+        setSongs(results);
+    }
     setLoading(false);
   };
 
@@ -39,9 +53,9 @@ const Worship: React.FC = () => {
           <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center mb-6 text-gold backdrop-blur-md">
             <Music size={24} />
           </div>
-          <h2 className="text-3xl font-serif font-bold mb-2">Louvor & Adoração</h2>
+          <h2 className="text-3xl font-serif font-bold mb-2">{t.worship.title}</h2>
           <p className="text-stone-300 max-w-sm">
-            Músicas selecionadas para edificar sua fé.
+            {t.worship.subtitle}
           </p>
         </div>
       </div>
@@ -50,7 +64,7 @@ const Worship: React.FC = () => {
       <div className="relative">
         <input 
           type="text" 
-          placeholder="Buscar música ou artista..."
+          placeholder={t.worship.searchPlaceholder}
           className="w-full p-6 pl-14 bg-surface dark:bg-stone-800 rounded-[2rem] shadow-soft border-2 border-transparent focus:border-gold outline-none text-lg font-medium text-ink dark:text-white placeholder-stone-400 transition-all"
           value={topic}
           onChange={(e) => {
@@ -83,7 +97,7 @@ const Worship: React.FC = () => {
                     {/* Playing Indicator Badge */}
                     {isPlaying && (
                        <div className="absolute -bottom-2 -right-2 bg-green-500 text-white text-[10px] font-bold px-2 py-1 rounded-full border-2 border-surface dark:border-ink flex items-center gap-1 shadow-lg">
-                          <BarChart3 size={10} className="animate-pulse" /> TOCANDO
+                          <BarChart3 size={10} className="animate-pulse" /> {t.worship.playing}
                        </div>
                     )}
                  </div>
@@ -174,7 +188,7 @@ const Worship: React.FC = () => {
 
       {/* Results List */}
       <div className="space-y-4 pb-20">
-        <h3 className="text-lg font-bold text-ink dark:text-white px-2 mb-4 font-serif">Biblioteca de Músicas</h3>
+        <h3 className="text-lg font-bold text-ink dark:text-white px-2 mb-4 font-serif">{t.worship.libraryTitle}</h3>
         {songs.map((song) => (
           <div key={song.id} className={`
              group rounded-[2rem] border transition-all duration-300 overflow-hidden relative cursor-pointer
@@ -211,7 +225,7 @@ const Worship: React.FC = () => {
                     
                     {!song.audioUrl && (
                         <div className="flex items-center gap-1 text-red-400 text-[10px] mt-2 font-bold uppercase tracking-wider">
-                            <AlertCircle size={10} /> Áudio não disponível
+                            <AlertCircle size={10} /> {t.worship.noAudio}
                         </div>
                     )}
                 </div>
@@ -219,7 +233,7 @@ const Worship: React.FC = () => {
                 {/* Playing Status Text */}
                 {currentSong?.id === song.id && (
                     <div className="hidden md:block px-4 py-1.5 bg-gold/10 text-gold rounded-full text-xs font-bold border border-gold/20">
-                        {isPlaying ? 'TOCANDO' : 'PAUSADO'}
+                        {isPlaying ? t.worship.playing : t.worship.paused}
                     </div>
                 )}
              </div>
@@ -241,14 +255,14 @@ const Worship: React.FC = () => {
              <div className="w-20 h-20 bg-stone-100 dark:bg-stone-800 rounded-full flex items-center justify-center mx-auto mb-4 text-stone-300">
                 <Sparkles size={32} />
              </div>
-             <p className="text-subtle font-serif">Nenhum louvor encontrado.</p>
+             <p className="text-subtle font-serif">{t.worship.noResults}</p>
           </div>
         )}
 
         {loading && (
            <div className="flex flex-col items-center justify-center py-20 gap-4 opacity-60">
               <div className="w-10 h-10 border-4 border-gold border-t-transparent rounded-full animate-spin"></div>
-              <p className="text-sm text-brown font-medium">Carregando...</p>
+              <p className="text-sm text-brown font-medium">{t.worship.loading}</p>
            </div>
         )}
       </div>

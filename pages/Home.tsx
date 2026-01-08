@@ -1,10 +1,12 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Sun, Battery, Heart, CloudRain, Zap, Book, ArrowRight, X, Sparkles, Bookmark, Trash2, Share2, Music, Calendar, HelpCircle, Frown, Loader2, Download, RefreshCw, MessageCircle, Crown, ScrollText, CheckCircle2, Flame, Target, ChevronRight, HeartHandshake, Trophy, Brain } from 'lucide-react';
 import { generatePrayer, fetchVerse } from '../services/api';
-import { calculateLevel, getUserXp } from '../services/gamification';
+import { calculateLevel } from '../services/gamification';
 import { Mood, UserProgress, Note, LevelData } from '../types';
 import { TOTAL_CHAPTERS, POPULAR_VERSES } from '../constants';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const MOOD_IMAGES: Record<string, string> = {
   [Mood.Anxious]: "https://images.unsplash.com/photo-1457139621581-298d1801c832?q=80&w=1103&auto=format&fit=crop", 
@@ -31,7 +33,7 @@ const LANDSCAPE_IMAGES = [
   "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1000&auto=format&fit=crop"
 ];
 
-const MoodCard: React.FC<{ mood: Mood; icon: React.ReactNode; active: boolean; onClick: () => void }> = ({ mood, icon, active, onClick }) => (
+const MoodCard: React.FC<{ label: string; imageKey: Mood; icon: React.ReactNode; active: boolean; onClick: () => void }> = ({ label, imageKey, icon, active, onClick }) => (
   <button 
     onClick={onClick}
     className={`
@@ -40,8 +42,8 @@ const MoodCard: React.FC<{ mood: Mood; icon: React.ReactNode; active: boolean; o
     `}
   >
     <img 
-      src={MOOD_IMAGES[mood]} 
-      alt={mood} 
+      src={MOOD_IMAGES[imageKey]} 
+      alt={label} 
       className={`absolute inset-0 w-full h-full object-cover transition-transform duration-700 ${active ? 'scale-110' : 'group-hover:scale-110'}`}
     />
     <div className={`absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 transition-opacity duration-300 ${active ? 'opacity-90' : 'opacity-70'}`}></div>
@@ -50,7 +52,7 @@ const MoodCard: React.FC<{ mood: Mood; icon: React.ReactNode; active: boolean; o
     </div>
     <div className="absolute bottom-3 left-0 right-0 text-center">
       <span className={`block font-sans font-bold text-xs md:text-sm tracking-wide transition-colors ${active ? 'text-gold' : 'text-white'}`}>
-        {mood}
+        {label}
       </span>
     </div>
   </button>
@@ -58,6 +60,7 @@ const MoodCard: React.FC<{ mood: Mood; icon: React.ReactNode; active: boolean; o
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
+  const { t, language } = useLanguage();
   const [verse, setVerse] = useState<{ text: string; ref: string } | null>(null);
   const [selectedMood, setSelectedMood] = useState<Mood | null>(null);
   const [heroImage, setHeroImage] = useState<string>(LANDSCAPE_IMAGES[0]);
@@ -74,12 +77,12 @@ const Home: React.FC = () => {
 
   const today = new Date();
   const dateOptions: Intl.DateTimeFormatOptions = { weekday: 'long', day: 'numeric', month: 'long' };
-  const dateString = today.toLocaleDateString('pt-BR', dateOptions);
+  const dateString = today.toLocaleDateString(language === 'en' ? 'en-US' : (language === 'es' ? 'es-ES' : 'pt-BR'), dateOptions);
   
   const hour = today.getHours();
-  let timeGreeting = 'Bom dia';
-  if (hour >= 12 && hour < 18) timeGreeting = 'Boa tarde';
-  if (hour >= 18) timeGreeting = 'Boa noite';
+  let timeGreeting = t.home.greetingMorning;
+  if (hour >= 12 && hour < 18) timeGreeting = t.home.greetingAfternoon;
+  if (hour >= 18) timeGreeting = t.home.greetingEvening;
 
   useEffect(() => {
     const saved = localStorage.getItem('lumina_progress');
@@ -95,7 +98,7 @@ const Home: React.FC = () => {
     const savedName = localStorage.getItem('lumina_username');
     if (savedName) setUserName(savedName);
     handleRefreshVerse();
-  }, []);
+  }, [language]); // Refresh when language changes
 
   const handleRefreshVerse = async (e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
@@ -106,11 +109,14 @@ const Home: React.FC = () => {
       const targetRef = (verse && verse.ref === randomRef) 
           ? POPULAR_VERSES[(randomIndex + 1) % POPULAR_VERSES.length] 
           : randomRef;
-      const v = await fetchVerse(targetRef);
+      
+      // Pass language to API
+      const v = await fetchVerse(targetRef, language);
       setVerse({ text: v.text, ref: v.reference });
       const randomImgIndex = Math.floor(Math.random() * LANDSCAPE_IMAGES.length);
       setHeroImage(LANDSCAPE_IMAGES[randomImgIndex]);
     } catch (e) {
+      // Fallback text should ideally be localized too, but for safety keeping a generic one
       setVerse({ text: "O Senhor é o meu pastor, nada me faltará.", ref: "Psalms 23:1" });
     } finally {
       setIsLoadingVerse(false);
@@ -120,7 +126,7 @@ const Home: React.FC = () => {
   const handleMoodSelect = async (mood: Mood) => {
     setSelectedMood(mood);
     setIsLoadingPrayer(true);
-    const prayer = await generatePrayer(mood);
+    const prayer = await generatePrayer(mood); 
     setAiPrayer(prayer);
     setIsLoadingPrayer(false);
   };
@@ -231,7 +237,7 @@ const Home: React.FC = () => {
   const dailyProgressPercent = Math.min((dailyCount / dailyGoal) * 100, 100);
 
   return (
-    <div className="space-y-6 animate-fade-in pb-4 relative">
+    <div className="space-y-6 animate-fade-in pb-32 md:pb-4 relative">
       <div className="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none -z-10">
          <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-orange/5 rounded-full blur-[100px]"></div>
          <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-gold/5 rounded-full blur-[100px]"></div>
@@ -239,7 +245,7 @@ const Home: React.FC = () => {
 
       <div className="flex flex-col gap-1 px-2 pt-2 relative">
         <div className="flex justify-between items-start">
-             <div>
+             <div className="flex-1">
                 <div className="flex items-center gap-2 text-subtle mb-1">
                 <Calendar size={12} className="text-orange" />
                 <p className="text-[10px] font-bold uppercase tracking-widest">{dateString}</p>
@@ -248,14 +254,16 @@ const Home: React.FC = () => {
                 {timeGreeting}, <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-orange to-gold">{userName}</span>.
                 </h2>
              </div>
-             <div className="bg-surface dark:bg-stone-800 p-4 pr-6 rounded-full shadow-soft flex items-center gap-4 border border-stone-100 dark:border-stone-700 animate-slide-up scale-110">
-                 <div className="w-14 h-14 bg-orange/10 rounded-full flex items-center justify-center text-orange relative">
-                     <Flame size={32} fill="currentColor" className="animate-pulse" />
-                     <div className="absolute top-0 right-0 w-4 h-4 bg-red-500 rounded-full border-2 border-white dark:border-stone-800"></div>
+             
+             {/* Compact Streak Block */}
+             <div className="bg-surface dark:bg-stone-800 p-2 pr-4 md:p-3 md:pr-6 rounded-full shadow-soft flex items-center gap-3 border border-stone-100 dark:border-stone-700 animate-slide-up ml-2">
+                 <div className="w-10 h-10 md:w-12 md:h-12 bg-orange/10 rounded-full flex items-center justify-center text-orange relative shrink-0">
+                     <Flame size={20} className="md:w-6 md:h-6 animate-pulse" fill="currentColor" />
+                     <div className="absolute top-0 right-0 w-2.5 h-2.5 md:w-3 md:h-3 bg-red-500 rounded-full border-2 border-white dark:border-stone-800"></div>
                  </div>
                  <div className="flex flex-col">
-                     <span className="text-[10px] font-bold text-subtle uppercase">Ofensiva</span>
-                     <span className="text-4xl font-black text-ink dark:text-white leading-none tracking-tighter">{progress?.streak || 0} Dias</span>
+                     <span className="text-[9px] md:text-[10px] font-bold text-subtle uppercase leading-none mb-0.5">{t.home.streak}</span>
+                     <span className="text-lg md:text-2xl font-black text-ink dark:text-white leading-none tracking-tight">{progress?.streak || 0} {t.home.days}</span>
                  </div>
              </div>
         </div>
@@ -266,7 +274,7 @@ const Home: React.FC = () => {
              </div>
              <div className="flex-1">
                  <div className="flex justify-between text-sm font-black uppercase mb-1.5 text-ink dark:text-white tracking-wider">
-                     <span>Nível {levelData.currentLevel}</span>
+                     <span>{t.home.level} {levelData.currentLevel}</span>
                      <span className="text-orange">{levelData.currentTitle}</span>
                  </div>
                  <div className="w-full h-3 bg-stone-200 dark:bg-stone-800 rounded-full overflow-hidden shadow-inner">
@@ -288,7 +296,7 @@ const Home: React.FC = () => {
         <div className="relative z-10 flex flex-col items-center justify-between flex-1 text-center px-6 py-8">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 shadow-lg mb-4">
              <Sparkles size={12} className="text-gold animate-pulse" />
-             <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/90">Palavra do Dia</span>
+             <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/90">{t.home.wordOfDay}</span>
           </div>
           {verse && !isLoadingVerse ? (
             <div className="flex-1 flex flex-col justify-center w-full max-w-2xl animate-fade-in my-2">
@@ -305,10 +313,10 @@ const Home: React.FC = () => {
           )}
           <div className="flex gap-3 w-full max-w-sm justify-center mt-6">
             <button onClick={handleReadChapter} className="flex-1 flex items-center justify-center gap-2 py-4 px-4 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-2xl text-white text-xs font-bold transition-all border border-white/10 active:scale-95 shadow-lg">
-               <Book size={16} /> Ler Capítulo
+               <Book size={16} /> {t.home.readChapter}
             </button>
             <button onClick={handleShareVerse} className="flex-1 flex items-center justify-center gap-2 py-4 px-4 bg-white text-ink hover:bg-stone-100 rounded-2xl text-xs font-bold transition-all shadow-xl active:scale-95">
-               <Share2 size={16} /> Compartilhar
+               <Share2 size={16} /> {t.home.share}
             </button>
           </div>
         </div>
@@ -320,11 +328,11 @@ const Home: React.FC = () => {
               <div className="flex flex-col justify-between h-full relative z-10">
                  <div className="flex justify-between items-start mb-4">
                      <div className="w-12 h-12 bg-orange/10 text-orange rounded-2xl flex items-center justify-center"><Book size={24} /></div>
-                     <div className="bg-paper dark:bg-stone-900 px-3 py-1 rounded-full text-[10px] font-bold text-subtle border border-stone-200 dark:border-stone-700 uppercase">Bíblia</div>
+                     <div className="bg-paper dark:bg-stone-900 px-3 py-1 rounded-full text-[10px] font-bold text-subtle border border-stone-200 dark:border-stone-700 uppercase">{t.nav.bible}</div>
                  </div>
                  <div>
                      <h4 className="font-serif font-bold text-xl text-ink dark:text-white mb-1 group-hover:text-orange transition-colors">Continuar Leitura</h4>
-                     <p className="text-xs text-subtle mb-4">Você leu {percentage}% das escrituras.</p>
+                     <p className="text-xs text-subtle mb-4">{percentage}% concluído</p>
                      <div className="w-full h-2 bg-stone-100 dark:bg-stone-700 rounded-full overflow-hidden">
                         <div className="h-full bg-gradient-to-r from-orange to-red-500 rounded-full transition-all duration-1000" style={{ width: `${percentage}%` }}></div>
                      </div>
@@ -340,7 +348,7 @@ const Home: React.FC = () => {
                           <Music size={24} className="text-gold" />
                       </div>
                       <div>
-                          <h4 className="font-bold text-lg">Louvor</h4>
+                          <h4 className="font-bold text-lg">{t.nav.worship}</h4>
                           <p className="text-xs text-stone-400">Atmosfera de Adoração</p>
                       </div>
                   </div>
@@ -350,7 +358,7 @@ const Home: React.FC = () => {
           <div onClick={() => navigate('/trails')} className="col-span-1 bg-gradient-to-br from-gold to-orange text-white rounded-[2.5rem] p-6 shadow-lg shadow-orange/20 relative overflow-hidden group cursor-pointer flex flex-col justify-between h-40 md:h-auto">
               <div className="absolute top-0 right-0 p-4 opacity-10 transform scale-150 group-hover:rotate-12 transition-transform"><Target size={60} /></div>
               <div className="w-10 h-10 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm"><Target size={20} /></div>
-              <div><h4 className="font-bold text-lg leading-none mb-1">Metas</h4><p className="text-[10px] text-white/80 font-medium">Foco Diário</p></div>
+              <div><h4 className="font-bold text-lg leading-none mb-1">{t.nav.goals}</h4><p className="text-[10px] text-white/80 font-medium">Foco Diário</p></div>
           </div>
           {/* Card Especial de WhatsApp/Desabafo */}
           <div onClick={() => {
@@ -365,33 +373,35 @@ const Home: React.FC = () => {
 
       <div className="-mx-4 md:mx-0 py-4">
         <div className="flex justify-between items-end px-6 md:px-2 mb-4">
-           <div><h3 className="text-xl font-bold text-ink dark:text-white font-serif flex items-center gap-2"><Heart className="text-red-500" size={20} fill="currentColor" /> Como está seu coração?</h3></div>
+           <div><h3 className="text-xl font-bold text-ink dark:text-white font-serif flex items-center gap-2"><Heart className="text-red-500" size={20} fill="currentColor" /> {t.home.moodTitle}</h3></div>
         </div>
         <div className="flex gap-4 overflow-x-auto pb-8 px-6 md:px-2 no-scrollbar snap-x items-center">
-          <div className="snap-start"><MoodCard mood={Mood.Anxious} icon={<Zap />} active={selectedMood === Mood.Anxious} onClick={() => handleMoodSelect(Mood.Anxious)} /></div>
-          <div className="snap-start"><MoodCard mood={Mood.Tired} icon={<Battery />} active={selectedMood === Mood.Tired} onClick={() => handleMoodSelect(Mood.Tired)} /></div>
-          <div className="snap-start"><MoodCard mood={Mood.Happy} icon={<Sun />} active={selectedMood === Mood.Happy} onClick={() => handleMoodSelect(Mood.Happy)} /></div>
-          <div className="snap-start"><MoodCard mood={Mood.Sad} icon={<CloudRain />} active={selectedMood === Mood.Sad} onClick={() => handleMoodSelect(Mood.Sad)} /></div>
-          <div className="snap-start"><MoodCard mood={Mood.Thankful} icon={<Heart />} active={selectedMood === Mood.Thankful} onClick={() => handleMoodSelect(Mood.Thankful)} /></div>
-          <div className="snap-start"><MoodCard mood={Mood.Confused} icon={<HelpCircle />} active={selectedMood === Mood.Confused} onClick={() => handleMoodSelect(Mood.Confused)} /></div>
-          <div className="snap-start"><MoodCard mood={Mood.Angry} icon={<Frown />} active={selectedMood === Mood.Angry} onClick={() => handleMoodSelect(Mood.Angry)} /></div>
+          <div className="snap-start"><MoodCard label={t.moods.Anxious} imageKey={Mood.Anxious} icon={<Zap />} active={selectedMood === Mood.Anxious} onClick={() => handleMoodSelect(Mood.Anxious)} /></div>
+          <div className="snap-start"><MoodCard label={t.moods.Tired} imageKey={Mood.Tired} icon={<Battery />} active={selectedMood === Mood.Tired} onClick={() => handleMoodSelect(Mood.Tired)} /></div>
+          <div className="snap-start"><MoodCard label={t.moods.Happy} imageKey={Mood.Happy} icon={<Sun />} active={selectedMood === Mood.Happy} onClick={() => handleMoodSelect(Mood.Happy)} /></div>
+          <div className="snap-start"><MoodCard label={t.moods.Sad} imageKey={Mood.Sad} icon={<CloudRain />} active={selectedMood === Mood.Sad} onClick={() => handleMoodSelect(Mood.Sad)} /></div>
+          <div className="snap-start"><MoodCard label={t.moods.Thankful} imageKey={Mood.Thankful} icon={<Heart />} active={selectedMood === Mood.Thankful} onClick={() => handleMoodSelect(Mood.Thankful)} /></div>
+          <div className="snap-start"><MoodCard label={t.moods.Confused} imageKey={Mood.Confused} icon={<HelpCircle />} active={selectedMood === Mood.Confused} onClick={() => handleMoodSelect(Mood.Confused)} /></div>
+          <div className="snap-start"><MoodCard label={t.moods.Angry} imageKey={Mood.Angry} icon={<Frown />} active={selectedMood === Mood.Angry} onClick={() => handleMoodSelect(Mood.Angry)} /></div>
         </div>
       </div>
 
-      <div className="bg-surface dark:bg-stone-900 p-8 rounded-[2.5rem] shadow-card border border-stone-100 dark:border-stone-800 flex items-center gap-8 relative overflow-hidden group">
+      <div className="bg-surface dark:bg-stone-900 p-5 md:p-8 rounded-[2.5rem] shadow-card border border-stone-100 dark:border-stone-800 flex items-center gap-4 md:gap-8 relative overflow-hidden group">
          <div className="absolute right-0 top-0 h-full w-24 bg-gradient-to-l from-orange/5 to-transparent pointer-events-none"></div>
-         <div className="w-24 h-24 rounded-2xl bg-orange/10 flex items-center justify-center flex-shrink-0 text-orange border border-orange/10 shadow-sm"><ScrollText size={48} /></div>
+         <div className="w-16 h-16 md:w-24 md:h-24 rounded-2xl bg-orange/10 flex items-center justify-center flex-shrink-0 text-orange border border-orange/10 shadow-sm">
+            <ScrollText size={32} className="md:w-12 md:h-12" />
+         </div>
          <div className="flex-1 min-w-0">
-            <div className="flex justify-between items-center mb-5">
-                <h3 className="font-black text-ink dark:text-white text-2xl uppercase tracking-tighter">Meta Diária</h3>
-                <span className="text-3xl font-black text-orange bg-orange/10 px-4 py-2 rounded-2xl uppercase tracking-tighter">{dailyCount} de {dailyGoal}</span>
+            <div className="flex justify-between items-center mb-3 md:mb-5">
+                <h3 className="font-black text-ink dark:text-white text-lg md:text-2xl uppercase tracking-tighter">{t.home.dailyGoal}</h3>
+                <span className="text-xl md:text-3xl font-black text-orange bg-orange/10 px-3 py-1.5 md:px-4 md:py-2 rounded-2xl uppercase tracking-tighter">{dailyCount} / {dailyGoal}</span>
             </div>
-            <div className="h-6 w-full bg-stone-100 dark:bg-stone-800 rounded-full overflow-hidden shadow-inner border border-stone-200 dark:border-stone-700">
+            <div className="h-4 md:h-6 w-full bg-stone-100 dark:bg-stone-800 rounded-full overflow-hidden shadow-inner border border-stone-200 dark:border-stone-700">
                 <div className="h-full bg-gradient-to-r from-orange via-gold to-orange rounded-full transition-all duration-1000 ease-out relative" style={{ width: `${dailyProgressPercent}%` }}>
                    {dailyCount >= dailyGoal && <div className="absolute inset-0 bg-white/30 animate-[shimmer_2s_infinite]"></div>}
                 </div>
             </div>
-            {dailyCount >= dailyGoal && <div className="mt-5 text-base font-black text-green-600 flex items-center gap-2 animate-fade-in bg-green-50 dark:bg-green-900/20 px-5 py-3 rounded-2xl w-fit shadow-sm"><CheckCircle2 size={20} /> Meta alcançada! +50 XP Bônus.</div>}
+            {dailyCount >= dailyGoal && <div className="mt-5 text-base font-black text-green-600 flex items-center gap-2 animate-fade-in bg-green-50 dark:bg-green-900/20 px-5 py-3 rounded-2xl w-fit shadow-sm"><CheckCircle2 size={20} /> {t.home.goalReached} +50 XP</div>}
          </div>
       </div>
 
@@ -410,13 +420,13 @@ const Home: React.FC = () => {
                     <Trophy size={12} className="text-yellow-300" /> Game Show
                 </div>
                 <h3 className="text-3xl font-serif font-black text-white leading-tight mb-2">
-                    Desafio Bíblico
+                    {t.home.bibleChallenge}
                 </h3>
                 <p className="text-white/80 font-medium text-sm leading-relaxed max-w-xs">
                     Teste seus conhecimentos em temas como: Vida de Jesus, Antigo Testamento e muito mais.
                 </p>
                 <div className="mt-6 flex items-center gap-2 text-white font-bold text-sm group-hover:gap-4 transition-all">
-                    Jogar Agora <ArrowRight size={18} />
+                    {t.home.playNow} <ArrowRight size={18} />
                 </div>
             </div>
             <div className="w-24 h-24 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-md border border-white/20 shadow-lg group-hover:scale-110 transition-transform">
@@ -428,8 +438,8 @@ const Home: React.FC = () => {
       {notes.length > 0 && (
         <div className="pt-4 animate-fade-in">
           <div className="flex justify-between items-end px-2 mb-5">
-            <h3 className="text-xl font-bold text-ink dark:text-white font-serif flex items-center gap-2"><Bookmark className="text-gold" size={20} fill="currentColor" /> Minhas Anotações</h3>
-            <button onClick={() => setShowAllNotes(!showAllNotes)} className="text-xs font-bold text-subtle hover:text-ink transition-colors uppercase tracking-wider bg-surface dark:bg-stone-800 px-3 py-1 rounded-full border border-stone-200 dark:border-stone-700">{showAllNotes ? 'Ver menos' : 'Ver todas'}</button>
+            <h3 className="text-xl font-bold text-ink dark:text-white font-serif flex items-center gap-2"><Bookmark className="text-gold" size={20} fill="currentColor" /> {t.home.notes}</h3>
+            <button onClick={() => setShowAllNotes(!showAllNotes)} className="text-xs font-bold text-subtle hover:text-ink transition-colors uppercase tracking-wider bg-surface dark:bg-stone-800 px-3 py-1 rounded-full border border-stone-200 dark:border-stone-700">{showAllNotes ? t.home.viewLess : t.home.viewAll}</button>
           </div>
           <div className="grid gap-4">
             {notes.slice(0, showAllNotes ? undefined : 2).map((note) => (
@@ -438,7 +448,7 @@ const Home: React.FC = () => {
                  <div className="flex items-center gap-2 mb-3"><span className="text-xs font-bold text-gold uppercase tracking-wider bg-gold/10 px-2 py-1 rounded-md">{note.reference}</span></div>
                  <p className="font-serif text-ink dark:text-stone-200 italic leading-relaxed text-lg mb-6">"{note.text}"</p>
                  <div className="flex items-center justify-between">
-                    <button onClick={() => handleStudyVerse(note)} className="flex items-center gap-2 text-xs font-bold text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-3 py-2 rounded-xl hover:bg-green-100 dark:hover:bg-green-900/40 transition-colors"><MessageCircle size={14} /> Perguntar ao Guia</button>
+                    <button onClick={() => handleStudyVerse(note)} className="flex items-center gap-2 text-xs font-bold text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-3 py-2 rounded-xl hover:bg-green-100 dark:hover:bg-green-900/40 transition-colors"><MessageCircle size={14} /> {t.home.askGuide}</button>
                     <span className="text-[10px] font-bold text-stone-300 uppercase tracking-widest bg-paper dark:bg-stone-900 px-2 py-1 rounded">{new Date(note.date).toLocaleDateString()}</span>
                  </div>
               </div>
@@ -466,7 +476,7 @@ const Home: React.FC = () => {
                 </div>
                 <div className="px-8 pb-8 -mt-16 relative z-10">
                     <div className="flex justify-center mb-6"><div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-surface dark:bg-stone-800 text-gold shadow-2xl border-4 border-paper dark:border-stone-900"><Heart size={40} fill="currentColor" /></div></div>
-                    <div className="text-center mb-8"><h3 className="text-2xl font-serif font-bold text-ink dark:text-white leading-tight">Oração para<br/><span className="text-gold text-3xl">{selectedMood}</span></h3></div>
+                    <div className="text-center mb-8"><h3 className="text-2xl font-serif font-bold text-ink dark:text-white leading-tight">{t.home.prayerFor}<br/><span className="text-gold text-3xl">{selectedMood}</span></h3></div>
                     {isLoadingPrayer && !aiPrayer ? (
                     <div className="space-y-4 py-4"><div className="h-4 bg-stone-200 dark:bg-stone-800 rounded w-3/4 mx-auto animate-pulse"></div><div className="h-4 bg-stone-200 dark:bg-stone-800 rounded w-full animate-pulse"></div><div className="h-4 bg-stone-200 dark:bg-stone-800 rounded w-5/6 mx-auto animate-pulse"></div><div className="h-4 bg-stone-200 dark:bg-stone-800 rounded w-2/3 mx-auto animate-pulse"></div></div>
                     ) : (
@@ -480,11 +490,11 @@ const Home: React.FC = () => {
             <button onClick={() => setSelectedMood(null)} className="absolute top-4 right-4 p-2 bg-black/20 backdrop-blur-md rounded-full text-white hover:bg-black/40 border border-white/10 z-50"><X size={20} /></button>
             <div className="px-8 pb-8 pt-0 flex flex-col gap-3">
                  <div className="flex gap-3">
-                    <button onClick={handleDownloadImage} disabled={isLoadingPrayer} className="flex-1 bg-surface dark:bg-stone-800 text-ink dark:text-white py-4 rounded-2xl font-bold text-sm shadow-md border border-stone-200 dark:border-stone-700 hover:bg-stone-50 dark:hover:bg-stone-700 transition-all flex items-center justify-center gap-2"><Download size={18} /> Salvar</button>
-                    <button onClick={handleAmen} disabled={isAmenAnimating} className={`flex-[2] bg-ink dark:bg-gold text-white dark:text-stone-900 py-4 rounded-2xl font-bold text-lg shadow-xl hover:bg-stone-800 dark:hover:bg-orange transition-all active:scale-[0.98] ${isAmenAnimating ? 'scale-95 opacity-80' : ''}`}>{isAmenAnimating ? 'Amém! 🙏' : 'Amém'}</button>
+                    <button onClick={handleDownloadImage} disabled={isLoadingPrayer} className="flex-1 bg-surface dark:bg-stone-800 text-ink dark:text-white py-4 rounded-2xl font-bold text-sm shadow-md border border-stone-200 dark:border-stone-700 hover:bg-stone-50 dark:hover:bg-stone-700 transition-all flex items-center justify-center gap-2"><Download size={18} /> {t.home.saveImage}</button>
+                    <button onClick={handleAmen} disabled={isAmenAnimating} className={`flex-[2] bg-ink dark:bg-gold text-white dark:text-stone-900 py-4 rounded-2xl font-bold text-lg shadow-xl hover:bg-stone-800 dark:hover:bg-orange transition-all active:scale-[0.98] ${isAmenAnimating ? 'scale-95 opacity-80' : ''}`}>{isAmenAnimating ? `${t.home.amen}! 🙏` : t.home.amen}</button>
                  </div>
                  {/* Novo Botão de Desabafo Contextual no Modal */}
-                 <button onClick={handleTalkToGuide} className="w-full bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 py-4 rounded-2xl font-bold text-sm border border-green-200 dark:border-green-800 flex items-center justify-center gap-2 hover:bg-green-100 transition-all"><MessageCircle size={18} /> Preciso desabafar com alguém</button>
+                 <button onClick={handleTalkToGuide} className="w-full bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 py-4 rounded-2xl font-bold text-sm border border-green-200 dark:border-green-800 flex items-center justify-center gap-2 hover:bg-green-100 transition-all"><MessageCircle size={18} /> {t.home.vent}</button>
             </div>
           </div>
         </div>

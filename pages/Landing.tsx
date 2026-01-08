@@ -1,18 +1,21 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// Fix: Import missing Settings icon from lucide-react
-import { BookOpen, Music, Zap, Sparkles, Star, ChevronRight, Shield, Heart, Mail, X, Loader2, ArrowRight, Check, CreditCard, HelpCircle, Lock, MessageCircle, Home, Battery, Sun, Share2, Book, Palette, MessageSquare, Bell, WifiOff, AlertTriangle, Coffee, Headphones, Smartphone, TrendingUp, XCircle, AlertOctagon, CheckCircle2, ChevronDown, ChevronUp, Gift, AlertCircle, Baby, HeartHandshake, ArrowDown, Download, Cloud, Moon, Info, Quote, Flame, Clock, Play, UserMinus, Monitor, Tablet, Search, MoreVertical, Menu, Settings } from 'lucide-react';
+import { BookOpen, Music, Zap, Sparkles, Star, ChevronRight, Shield, Heart, Mail, X, Loader2, ArrowRight, Check, CreditCard, HelpCircle, Lock, MessageCircle, Home, Battery, Sun, Share2, Book, Palette, MessageSquare, Bell, WifiOff, AlertTriangle, Coffee, Headphones, Smartphone, TrendingUp, XCircle, AlertOctagon, CheckCircle2, ChevronDown, ChevronUp, Gift, AlertCircle, Baby, HeartHandshake, ArrowDown, Download, Cloud, Moon, Info, Quote, Flame, Clock, Play, UserMinus, Monitor, Tablet, Search, MoreVertical, Menu, Settings, Globe, ShieldCheck } from 'lucide-react';
 import { ShalomLogo } from '../components/Layout';
 import { checkSubscription } from '../services/supabase';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Landing: React.FC = () => {
   const navigate = useNavigate();
+  const { t, language, setLanguage } = useLanguage();
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState(''); 
   const [selectedPlan, setSelectedPlan] = useState<'monthly' | 'yearly'>('yearly');
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+  const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
 
   const handleStart = () => {
     const savedEmail = localStorage.getItem('lumina_email');
@@ -36,7 +39,7 @@ const Landing: React.FC = () => {
     }
 
     if (!email.trim() || !email.includes('@')) {
-      setLoginError("Por favor, insira um e-mail válido.");
+      setLoginError(t.landing.errorEmail);
       return;
     }
 
@@ -50,28 +53,23 @@ const Landing: React.FC = () => {
             setShowEmailModal(false);
             navigate('/app');
         } else {
-            setLoginError("Assinatura não encontrada para este e-mail.");
+            setLoginError(t.landing.errorNoSub);
             
             setTimeout(() => {
                 setShowEmailModal(false);
                 const el = document.getElementById('pricing');
                 el?.scrollIntoView({ behavior: 'smooth' });
-                alert("E-mail não encontrado na base de assinantes. Por favor, escolha um plano para começar.");
+                alert(t.landing.errorNoSub);
             }, 1500);
         }
     } catch (error) {
-        setLoginError("Erro de conexão. Tente novamente.");
+        setLoginError(t.landing.errorConnection);
     } finally {
         setIsLoading(false);
     }
   };
 
-  const faqs = [
-    { q: "O que é o Shalom?", a: "O Shalom é o seu companheiro espiritual diário. Ele une a sabedoria milenar da Bíblia com a conveniência do WhatsApp e de um app moderno, enviando orações personalizadas, reflexões profundas e louvores selecionados para manter sua fé ativa todos os dias, em qualquer lugar." },
-    { q: "Preciso pagar algo a mais pelas conversas no WhatsApp?", a: "Não! O plano anual cobre o acesso ilimitado ao Guia Espiritual e todas as funcionalidades do app." },
-    { q: "Funciona no iPhone e Android?", a: "Sim, o Shalom é um Web App compatível com todos os celulares modernos, tablets e computadores." },
-    { q: "Como cancelo se não gostar?", a: "Direto pelo app ou enviando um e-mail para nosso suporte. É simples, rápido e sem burocracia." }
-  ];
+  const faqs = t.landing.faqList || [];
 
   return (
     <div className="min-h-screen bg-paper dark:bg-black text-ink dark:text-white font-sans selection:bg-gold/30">
@@ -80,9 +78,24 @@ const Landing: React.FC = () => {
       <nav className="fixed top-0 left-0 right-0 z-40 px-6 py-4 flex justify-between items-center backdrop-blur-xl bg-paper/70 dark:bg-black/70 border-b border-stone-200/50 dark:border-white/5 transition-all duration-300">
         <div className="flex items-center gap-2">
           <ShalomLogo />
-          <span className="font-serif font-bold text-xl tracking-tight hidden md:block">Shalom</span>
+          <span className="font-serif font-bold text-xl tracking-tight hidden md:block">{t.common.appName}</span>
         </div>
         <div className="flex items-center gap-4">
+          
+          {/* Language Switcher */}
+          <div className="relative">
+            <button onClick={() => setIsLangMenuOpen(!isLangMenuOpen)} className="flex items-center gap-1 text-sm font-bold text-subtle hover:text-ink dark:hover:text-white transition-colors">
+                <Globe size={16} /> <span className="uppercase">{language}</span>
+            </button>
+            {isLangMenuOpen && (
+                <div className="absolute top-10 right-0 bg-white dark:bg-stone-900 shadow-xl rounded-xl border border-stone-100 dark:border-stone-800 p-2 flex flex-col gap-1 w-24 animate-slide-up">
+                    <button onClick={() => { setLanguage('pt'); setIsLangMenuOpen(false); }} className={`px-3 py-2 text-sm text-left rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 ${language === 'pt' ? 'font-bold text-orange' : 'text-stone-500'}`}>Português</button>
+                    <button onClick={() => { setLanguage('en'); setIsLangMenuOpen(false); }} className={`px-3 py-2 text-sm text-left rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 ${language === 'en' ? 'font-bold text-orange' : 'text-stone-500'}`}>English</button>
+                    <button onClick={() => { setLanguage('es'); setIsLangMenuOpen(false); }} className={`px-3 py-2 text-sm text-left rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 ${language === 'es' ? 'font-bold text-orange' : 'text-stone-500'}`}>Español</button>
+                </div>
+            )}
+          </div>
+
           <button 
             onClick={() => {
                 const el = document.getElementById('pricing');
@@ -90,13 +103,13 @@ const Landing: React.FC = () => {
             }}
             className="text-sm font-bold text-subtle hover:text-ink dark:hover:text-white transition-colors hidden md:block"
           >
-            Planos
+            {t.landing.ctaPlans}
           </button>
           <button 
             onClick={handleStart}
             className="px-6 py-2.5 rounded-full bg-ink dark:bg-white text-white dark:text-ink font-bold text-sm hover:scale-105 active:scale-95 transition-all shadow-lg hover:shadow-xl"
           >
-            Entrar
+            {t.landing.login}
           </button>
         </div>
       </nav>
@@ -114,13 +127,13 @@ const Landing: React.FC = () => {
           
           <div className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-white/60 dark:bg-white/10 backdrop-blur-xl border border-stone-200 dark:border-white/10 shadow-lg mb-10 hover:scale-105 transition-transform cursor-default animate-slide-up ring-1 ring-white/20">
              <span className="text-xs md:text-sm font-bold uppercase tracking-widest text-ink/90 dark:text-white/90">
-                Você nunca mais vai caminhar sozinho.
+                {t.landing.slogan1}
              </span>
           </div>
           
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-black leading-[1.05] mb-10 tracking-tighter text-ink dark:text-white drop-shadow-sm max-w-6xl">
-            Seu tempo com Deus, <span className="text-transparent bg-clip-text bg-gradient-to-br from-gold via-orange to-gold-dark relative inline-block">
-              todos os dias
+            {t.landing.heroTitle} <span className="text-transparent bg-clip-text bg-gradient-to-br from-gold via-orange to-gold-dark relative inline-block">
+              {t.landing.heroSubtitle}
               <svg className="absolute w-full h-3 -bottom-1 left-0 text-orange opacity-40" viewBox="0 0 100 10" preserveAspectRatio="none">
                  <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" />
               </svg>
@@ -128,7 +141,7 @@ const Landing: React.FC = () => {
           </h1>
           
           <p className="text-xl md:text-2xl text-subtle max-w-4xl mx-auto mb-12 leading-relaxed font-medium">
-            Um guia espiritual no WhatsApp que fortalece sua fé, te lembra da Palavra e te acompanha nas batalhas diárias.
+            {t.landing.heroDesc}
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-5 w-full">
@@ -137,7 +150,7 @@ const Landing: React.FC = () => {
               className="group relative w-full sm:w-auto px-12 py-6 bg-ink dark:bg-white text-white dark:text-ink rounded-3xl font-black text-xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.4)] dark:shadow-[0_0_50px_-12px_rgba(255,255,255,0.4)] hover:shadow-2xl hover:scale-[1.03] active:scale-[0.98] transition-all flex items-center justify-center gap-4 overflow-hidden"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
-              <span>Começar Agora</span>
+              <span>{t.landing.ctaStart}</span>
               <ArrowRight size={24} className="group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
@@ -146,7 +159,7 @@ const Landing: React.FC = () => {
           <div className="mt-16 animate-float-up" style={{ animationDelay: '0.5s' }}>
              <div className="inline-block px-8 py-4 rounded-2xl bg-white/80 dark:bg-stone-900/80 backdrop-blur-md border border-stone-200 dark:border-stone-800 shadow-xl transform rotate-1 hover:rotate-0 transition-transform cursor-default">
                 <p className="font-serif italic text-lg text-ink dark:text-white">
-                   "Deus presente todos os dias na palma da sua mão"
+                   {t.landing.sloganFloat}
                 </p>
              </div>
           </div>
@@ -171,26 +184,23 @@ const Landing: React.FC = () => {
 
                <div className="relative z-10 p-10 md:p-20 max-w-3xl">
                   <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 border border-white/20 text-white rounded-full text-xs font-bold uppercase tracking-widest mb-6">
-                      <UserMinus size={12} /> Um alerta para sua alma
+                      <UserMinus size={12} /> {t.landing.alertSoul}
                   </div>
                   <h2 className="text-4xl md:text-6xl font-serif font-bold mb-8 leading-tight">
-                     Você já parou para pensar em como <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold to-orange">Deus se sente?</span>
+                     {t.landing.godFeelsTitle}
                   </h2>
                   <div className="space-y-6 text-lg md:text-xl font-serif text-stone-300 leading-relaxed border-l-2 border-white/20 pl-6">
-                     <p>O dia amanhece. Você pega o celular.</p>
-                     <p>Vê notícias, responde mensagens, trabalha, ri de memes, vê séries.</p>
-                     <p>O dia termina. O cansaço bate. Você dorme.</p>
-                     <p>E Ele ficou lá... <strong className="text-white">esperando.</strong></p>
-                     <p>Imagine um amor tão grande que deu a própria vida… e ainda assim espera pacientemente por você todos os dias. Ele continua te chamando com amor, mesmo no silêncio.</p>
-                     <p>Ele vê sua ansiedade crescendo porque você tenta carregar o mundo sozinho, enquanto Ele está a uma oração de distância querendo carregar o fardo por você.</p>
+                     {t.landing.godFeelsText.map((text, i) => (
+                        <p key={i}>{text}</p>
+                     ))}
                      
                      {/* ADDED VERSE BOX */}
                      <div className="mt-8 bg-white/5 border-l-4 border-gold p-6 rounded-r-2xl backdrop-blur-sm animate-fade-in group">
                         <Sparkles size={16} className="text-gold mb-3 opacity-50 group-hover:opacity-100 transition-opacity" />
                         <p className="font-serif italic text-white text-xl leading-relaxed m-0">
-                          "A Bíblia diz que Ele está à porta e bate. Não para acusar, mas para entrar e ceiar com você."
+                          {t.landing.godFeelsVerse}
                         </p>
-                        <p className="mt-3 text-gold font-bold text-xs uppercase tracking-[0.2em] opacity-80">Apocalipse 3:20</p>
+                        <p className="mt-3 text-gold font-bold text-xs uppercase tracking-[0.2em] opacity-80">{t.landing.godFeelsRef}</p>
                      </div>
                   </div>
                </div>
@@ -200,122 +210,118 @@ const Landing: React.FC = () => {
             <div className="flex justify-center mb-24 relative z-10">
                 <div className="px-8 py-4 rounded-xl bg-gradient-to-r from-gold/20 to-orange/20 border border-gold/30 backdrop-blur-sm shadow-lg transform -rotate-2 hover:rotate-0 transition-all duration-500">
                     <p className="font-serif font-bold text-xl text-ink dark:text-white flex items-center gap-3">
-                        <Sparkles size={20} className="text-gold" /> "A fé que te acompanha" <Sparkles size={20} className="text-gold" />
+                        <Sparkles size={20} className="text-gold" /> {t.landing.sloganFaith} <Sparkles size={20} className="text-gold" />
                     </p>
                 </div>
             </div>
 
-            {/* NEW SECTION: OPEN LETTER (REWRITTEN COPY) */}
+            {/* NEW SECTION: OPEN LETTER */}
             <div className="max-w-2xl mx-auto mb-32 text-center md:text-left animate-fade-in">
                 <div className="border-l-4 border-gold pl-6 py-3 mb-10 bg-stone-50 dark:bg-stone-900/50 rounded-r-xl inline-block shadow-sm">
-                    <p className="font-bold text-ink dark:text-white text-xl md:text-2xl italic font-serif m-0">Caros irmãos e irmãs…</p>
+                    <p className="font-bold text-ink dark:text-white text-xl md:text-2xl italic font-serif m-0">{t.landing.letterTitle}</p>
                 </div>
 
                 <div className="font-serif text-xl md:text-2xl text-stone-600 dark:text-stone-300 leading-relaxed space-y-10">
-                    <p><span className="font-bold text-ink dark:text-white">O mundo está ficando pesado demais.</span></p>
+                    <p><span className="font-bold text-ink dark:text-white">{t.landing.letterP1}</span></p>
 
-                    <p>A pressão no trabalho aumenta, <br/>mas o salário não.</p>
+                    <p>{t.landing.letterP2}</p>
 
-                    <p>Seus filhos estão expostos a coisas que você <span className="bg-red-50 dark:bg-red-900/20 px-1 font-bold">nunca imaginou</span>. <br/>O casamento, que deveria ser abrigo, virou tensão.</p>
+                    <p>{t.landing.letterP3}</p>
 
-                    <p>Você sorri na igreja… <br/><span className="italic">mas chora escondido no banheiro.</span></p>
+                    <p>{t.landing.letterP4}</p>
 
-                    <p className="font-bold text-orange text-2xl">E a pior sensação de todas:</p>
+                    <p className="font-bold text-orange text-2xl">{t.landing.letterWorstFeeling}</p>
 
-                    <p>Mesmo acreditando em Deus, <br/><span className="bg-gold/10 dark:bg-gold/5 px-2 py-1 rounded border-l-2 border-gold font-bold">às vezes você se sente sozinho.</span></p>
+                    <p>{t.landing.letterAlone}</p>
 
-                    <p>A ansiedade aperta. <br/>A oração não sai. <br/>E a paz… <span className="underline decoration-red-400">simplesmente não vem.</span></p>
+                    <p>{t.landing.letterPain}</p>
 
-                    <p>Se isso já aconteceu com você, deixe-me dizer algo importante:</p>
+                    <p>👉 {t.landing.letterNotWeakness}</p>
 
-                    <p>👉 Isso <span className="font-bold text-ink dark:text-white">não é fraqueza</span>. <br/>👉 Isso é a vida real de quem ainda está lutando.</p>
+                    <p>{t.landing.letterFear}</p>
 
-                    <p>Você não está apenas cansado. <br/><span className="text-red-600 dark:text-red-400 font-black text-3xl">Você está com medo.</span></p>
+                    <p>{t.landing.letterFearList}</p>
 
-                    <p>Medo do futuro. <br/>Medo de falhar. <br/>Medo de não ser suficiente.</p>
+                    <p className="text-center italic text-2xl md:text-3xl py-6 text-subtle">{t.landing.letterWhatIf}</p>
 
-                    <p>Cada notícia ruim no celular acelera o coração. <br/>Você vê famílias que pareciam firmes desmoronando do dia para a noite.</p>
+                    <p>{t.landing.letterSolitude}</p>
 
-                    <p className="text-center italic text-2xl md:text-3xl py-6 text-subtle">“E se o próximo for eu?”</p>
+                    <p>{t.landing.letterTiredness}</p>
 
-                    <p>A solidão bate à porta do quarto, <br/>mesmo com a casa cheia de gente.</p>
+                    <p>{t.landing.letterCarryAlone}</p>
 
-                    <p>Você tenta orar, <br/>mas o <span className="font-bold">cansaço é tanto</span> que as palavras travam na garganta.</p>
+                    <p>{t.landing.letterDistance}</p>
 
-                    <p>Não porque você deixou de crer. <br/>Mas porque você está tentando <span className="text-gold-dark dark:text-gold font-bold">carregar tudo sozinho.</span></p>
+                    {t.landing.letterLacks.map((item, i) => (
+                        <p key={i}><span className="bg-stone-100 dark:bg-stone-800 px-1">{item}</span></p>
+                    ))}
 
-                    <p>A verdade é que, com tanta correria, <br/>a distância entre você e Deus não acontece de uma vez…<br/>Ela cresce aos poucos.</p>
+                    <p className="font-bold text-ink dark:text-white">{t.landing.letterWorldScreams}</p>
 
-                    <p>Você quer orar, mas <span className="bg-stone-100 dark:bg-stone-800 px-1">falta tempo</span>. <br/>Quer ler a Bíblia, mas <span className="bg-stone-100 dark:bg-stone-800 px-1">falta constância</span>. <br/>Quer ouvir Deus, mas <span className="bg-stone-100 dark:bg-stone-800 px-1">falta silêncio</span>.</p>
+                    <p>{t.landing.letterSurvival}</p>
 
-                    <p className="font-bold text-ink dark:text-white">O mundo grita. <br/><span className="text-gold">A fé sussurra.</span></p>
+                    <p className="font-bold text-2xl">{t.landing.letterButIf}</p>
 
-                    <p>E você vai apenas sobrevivendo… <br/>quando o plano de Deus sempre foi ver você <span className="font-bold text-green-600 dark:text-green-400">vivendo em paz</span>.</p>
+                    {t.landing.letterWhatIfList.map((item, i) => (
+                        <p key={i}>👉 {item}</p>
+                    ))}
 
-                    <p className="font-bold text-2xl">Mas e se…</p>
+                    <p><span className="font-black text-ink dark:text-white bg-gold/20 px-2 py-1 rounded">{t.landing.letterReason}</span></p>
 
-                    <p>👉 Deus pudesse te lembrar <span className="font-bold">todos os dias</span> que Ele está ali? <br/>👉 E se, no momento em que o medo batesse, uma palavra de consolo chegasse até você? <br/>👉 E se, quando a dúvida surgisse, a <span className="text-gold font-bold">Palavra certa</span> te mostrasse o caminho?</p>
+                    <p>{t.landing.letterNotSubstitute}</p>
 
-                    <p><span className="font-black text-ink dark:text-white bg-gold/20 px-2 py-1 rounded">Foi por isso que nasceu Shalom.</span></p>
+                    <p>{t.landing.letterWhere}</p>
 
-                    <p>Não como um substituto da fé. <br/>Mas como um <span className="italic underline underline-offset-4 decoration-gold decoration-2">guia diário</span> para te ajudar a caminhar com Deus, mesmo nos dias difíceis.</p>
-
-                    <p>…No seu <span className="text-green-500 font-bold">WhatsApp</span>. <br/>…No seu ritmo. <br/>...Na sua vida real.</p>
-
-                    <p className="font-bold text-ink dark:text-white">Shalom te acompanha todos os dias com:</p>
+                    <p className="font-bold text-ink dark:text-white">{t.landing.letterIncludes}</p>
 
                     <ul className="space-y-4 text-lg list-none p-0">
-                      <li className="flex items-start gap-2">✨ Uma oração pela manhã, para <span className="font-bold">começar firme</span></li>
-                      <li className="flex items-start gap-2">⚡ Uma message no meio do dia, para <span className="font-bold">renovar as forças</span></li>
-                      <li className="flex items-start gap-2">🌙 E uma oração à noite, para <span className="font-bold">devolver a paz</span> ao coração</li>
+                      {t.landing.letterFeatures.map((item, i) => (
+                          <li key={i} className="flex items-start gap-2">{item}</li>
+                      ))}
                     </ul>
 
-                    <p className="font-bold">Além disso:</p>
+                    <p className="font-bold">{t.landing.letterBonus}</p>
 
                     <p className="text-lg leading-relaxed">
-                        Palavra diária explicada de <span className="font-bold">forma simples</span>,<br/>
-                        desafios espirituais para fortalecer sua fé,<br/>
-                        louvores que acalmam a alma<br/>
-                        e uma resposta carinhosa sempre que você precisar falar.
+                        {t.landing.letterBonusDesc}
                     </p>
 
-                    <p>Tudo baseado <span className="underline font-bold">exclusivamente na Bíblia</span>. <br/>Nada inventado. <br/>Nada além da Palavra de Deus.</p>
+                    <p>{t.landing.letterBibleOnly}</p>
 
                     <p className="text-center font-bold border-y border-stone-200 dark:border-stone-800 py-6">
-                        Shalom não substitui Jesus. <br/><span className="text-gold text-2xl">Shalom te aproxima de Jesus.</span>
+                        {t.landing.letterJesus}
                     </p>
 
                     <p>Com o tempo, você vai perceber:</p>
 
                     <ul className="space-y-2 text-lg font-bold list-none p-0">
-                      <li className="flex items-center gap-2"><CheckCircle2 size={18} className="text-green-500" /> Vai orar mais</li>
-                      <li className="flex items-center gap-2"><CheckCircle2 size={18} className="text-green-500" /> Vai entender mais a Bíblia</li>
-                      <li className="flex items-center gap-2"><CheckCircle2 size={18} className="text-green-500" /> Vai ter direção para as batalhas</li>
-                      <li className="flex items-center gap-2"><CheckCircle2 size={18} className="text-green-500" /> Vai sentir paz onde antes havia medo</li>
+                      {t.landing.letterResults.map((item, i) => (
+                          <li key={i} className="flex items-center gap-2"><CheckCircle2 size={18} className="text-green-500" /> {item}</li>
+                      ))}
                     </ul>
 
-                    <p><span className="bg-ink text-white dark:bg-white dark:text-ink px-4 py-2 rounded-full font-bold">Sua vida espiritual vai sair do automático.</span></p>
+                    <p><span className="bg-ink text-white dark:bg-white dark:text-ink px-4 py-2 rounded-full font-bold">{t.landing.letterAutoExit}</span></p>
 
-                    <p>Se você está sentindo, agora mesmo, que Deus está te chamando para mais perto… <span className="font-bold">não ignore isso.</span></p>
+                    <p>{t.landing.letterCall}</p>
 
-                    <p>👉 Ative o Shalom no seu WhatsApp hoje <br/>👉 Receba a primeira oração ainda hoje <br/>👉 Comece a caminhar acompanhado, <span className="font-bold">todos os dias</span></p>
+                    {t.landing.letterAction.map((item, i) => (
+                        <p key={i}>{item}</p>
+                    ))}
 
-                    <p>Neste início, estamos liberando um <span className="text-gold font-bold">plano especial</span> para quem sente que esse chamado é agora.</p>
+                    <p>{t.landing.letterSpecial}</p>
 
-                    <p>Porque a verdade é simples:</p>
+                    <p>{t.landing.letterTruth}</p>
 
-                    <p className="text-2xl font-bold">Deus não te abandonou. <br/>Ele está aqui. <br/><span className="bg-gold text-ink px-2">Ele está contigo.</span></p>
+                    <p className="text-2xl font-bold">{t.landing.letterGodHere}</p>
 
-                    <p>E agora… <br/>Ele vai caminhar com você, todos os dias.</p>
-
-                    <p className="text-3xl font-serif font-black pt-10">Shalom. <br/><span className="text-gold">A paz que fala com você.</span></p>
+                    <p className="text-3xl font-serif font-black pt-10">{t.landing.letterFinal}</p>
                 </div>
             </div>
 
             {/* 1. THE PROBLEM (Text + Visual Split) */}
             <div className="grid md:grid-cols-2 gap-12 items-center mb-32 relative">
                 
-                {/* Visual Decoration Slogan - "O mundo grita..." */}
+                {/* Visual Decoration Slogan */}
                 <div className="hidden md:block absolute top-0 right-0 transform translate-x-10 -translate-y-10 z-20">
                     <div className="bg-white dark:bg-stone-800 p-4 rounded-lg shadow-xl border border-stone-100 dark:border-stone-700 rotate-6">
                         <p className="font-serif text-sm font-bold text-red-500">"O mundo grita..."</p>
@@ -324,16 +330,15 @@ const Landing: React.FC = () => {
 
                 <div className="space-y-8 order-2 md:order-1">
                     <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-100 dark:bg-red-900/20 text-red-600 rounded-full text-xs font-bold uppercase tracking-widest">
-                        <AlertTriangle size={12} /> O Perigo do Esfriamento
+                        <AlertTriangle size={12} /> {t.landing.problemAlert}
                     </div>
                     <h2 className="font-serif font-bold text-4xl md:text-5xl text-ink dark:text-white leading-tight">
-                        A fé não morre de uma vez. Ela esfria aos poucos.
+                        {t.landing.problemTitle}
                     </h2>
                     <div className="space-y-6 text-xl text-stone-600 dark:text-stone-300 font-serif leading-relaxed border-l-2 border-stone-200 dark:border-stone-800 pl-6">
-                        <p>Começa com um dia sem orar.</p>
-                        <p>Depois, a Bíblia fica fechada...</p>
-                        <p>Logo, os problemas parecem gigantes e Deus parece distante.</p>
-                        <p>Nós criamos o Shalom para <span className="bg-red-50 dark:bg-red-900/20 px-1 font-bold text-red-600 dark:text-red-400">salvar a sua fé</span> dessa rotina devoradora.</p>
+                        {t.landing.problemDesc.map((item, i) => (
+                            <p key={i}>{item}</p>
+                        ))}
                     </div>
                 </div>
                 
@@ -349,7 +354,7 @@ const Landing: React.FC = () => {
                         <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
                             <div className="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20 text-center">
                                 <Flame size={48} className="text-white mx-auto mb-2 animate-pulse" />
-                                <p className="text-white font-bold uppercase tracking-widest text-sm">Reacenda a Chama</p>
+                                <p className="text-white font-bold uppercase tracking-widest text-sm">{t.landing.rekindle}</p>
                             </div>
                         </div>
                     </div>
@@ -383,18 +388,15 @@ const Landing: React.FC = () => {
                 {/* Text Copy */}
                 <div className="space-y-8 order-2">
                     <div className="inline-flex items-center gap-2 px-3 py-1 bg-gold/10 text-gold-dark dark:text-gold rounded-full text-xs font-bold uppercase tracking-widest">
-                        <BookOpen size={12} /> A Palavra Viva
+                        <BookOpen size={12} /> {t.landing.solutionTag}
                     </div>
                     <h2 className="font-serif font-bold text-4xl md:text-5xl text-ink dark:text-white leading-tight">
-                        A Bíblia deixa de ser um livro fechado.
+                        {t.landing.solutionTitle}
                     </h2>
                     <div className="space-y-6 text-xl text-stone-600 dark:text-stone-300 font-serif leading-relaxed">
-                        <p>Muitos tentam ler e param no terceiro dia.</p>
-                        <p>O texto parece difícil. O sono vem.</p>
-                        <p>No <span className="font-bold text-gold-dark dark:text-gold">Shalom</span>, é diferente.</p>
-                        <p>Ensinamos cada passagem da Bíblia de forma simples.</p>
-                        <p>Com citações da Bíblia que tocam sua vida hoje.</p>
-                        <p>Não é sobre ler muito. É sobre ler e ser transformado.</p>
+                        {t.landing.solutionDesc.map((item, i) => (
+                            <p key={i}>{item}</p>
+                        ))}
                     </div>
                 </div>
             </div>
@@ -404,17 +406,16 @@ const Landing: React.FC = () => {
                <div className="grid md:grid-cols-2 gap-12 items-center relative z-10">
                   <div className="space-y-8">
                       <div className="inline-flex items-center gap-2 px-3 py-1 bg-white dark:bg-white/10 text-orange rounded-full text-xs font-bold uppercase tracking-widest shadow-sm">
-                          <HeartHandshake size={12} /> Aliança Blindada
+                          <HeartHandshake size={12} /> {t.landing.marriageTag}
                       </div>
                       <h3 className="font-serif font-bold text-3xl md:text-5xl text-ink dark:text-white leading-tight">
-                          Seu casamento precisa de um terceiro elo.
+                          {t.landing.marriageTitle}
                       </h3>
                       <div className="font-serif text-lg md:text-xl text-stone-600 dark:text-stone-300 leading-loose space-y-6">
-                          <p>As lutas diárias desgastam o amor.</p>
-                          <p>Pequenas brigas viram grandes silêncios.</p>
-                          <p>O segredo para reverter isso não é apenas diálogo, <br/>é <span className="font-bold text-ink dark:text-white">oração conjunta</span>.</p>
-                          <p>O Shalom envia devocionais para casais que <br/>quebram o orgulho e unem os corações diante de Deus.</p>
-                          <p className="italic font-medium text-orange">"O cordão de três dobras não se rompe facilmente."</p>
+                          {t.landing.marriageDesc.map((item, i) => (
+                              <p key={i}>{item}</p>
+                          ))}
+                          <p className="italic font-medium text-orange">{t.landing.marriageQuote}</p>
                       </div>
                   </div>
                   
@@ -438,7 +439,7 @@ const Landing: React.FC = () => {
             {/* SLOGAN 3: NEAR FAMILY/WORSHIP */}
             <div className="flex justify-end pr-10 -mt-10 mb-10 relative z-20">
                 <div className="bg-white dark:bg-stone-800 p-5 rounded-2xl shadow-xl border-2 border-gold/20 transform rotate-3 hover:rotate-0 transition-all duration-300 max-w-xs text-center">
-                    <p className="font-serif italic text-lg text-ink dark:text-white">"Oração que te alcança onde você estiver"</p>
+                    <p className="font-serif italic text-lg text-ink dark:text-white">{t.landing.sloganPrayer}</p>
                 </div>
             </div>
 
@@ -478,18 +479,17 @@ const Landing: React.FC = () => {
                   {/* Text Column */}
                   <div className="order-1 md:order-2 space-y-8">
                       <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-100 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 rounded-full text-xs font-bold uppercase tracking-widest">
-                          <Home size={12} /> Proteção do Lar
+                          <Home size={12} /> {t.landing.familyTag}
                       </div>
                       <h3 className="font-serif font-bold text-3xl md:text-4xl text-ink dark:text-white leading-tight">
-                          Seus filhos veem você orando?
+                          {t.landing.familyTitle}
                       </h3>
                       <div className="font-serif text-lg md:text-xl text-stone-600 dark:text-stone-300 leading-loose space-y-6">
-                          <p>O mundo lá fora não tem misericórdia da sua família.</p>
-                          <p>Seus filhos são bombardeados por <br/>valores invertidos na escola e nas telas.</p>
-                          <p>Se você não ensinar a verdade em casa, <br/><strong className="text-red-500">o mundo ensinará a mentira lá fora.</strong></p>
-                          <p>O <span className="font-bold text-ink dark:text-white">Shalom</span> ajuda você a <br/>levantar um altar na sua sala.</p>
+                          {t.landing.familyDesc.map((item, i) => (
+                              <p key={i}>{item}</p>
+                          ))}
                           <p className="bg-indigo-50 dark:bg-indigo-900/10 p-4 rounded-2xl border-l-4 border-indigo-500 font-bold text-indigo-800 dark:text-indigo-200">
-                              Salve a fé da próxima geração. <br/>Comece hoje.
+                              {t.landing.familyCall}
                           </p>
                       </div>
                   </div>
@@ -503,7 +503,7 @@ const Landing: React.FC = () => {
                 <div className="absolute top-6 right-6 md:top-10 md:right-10 z-20 animate-float">
                     <div className="bg-white/10 backdrop-blur-md px-6 py-2 rounded-full border border-white/20">
                         <p className="font-bold text-sm text-gold tracking-wider uppercase flex items-center gap-2">
-                            <Music size={14} /> "A paz que fala com você"
+                            <Music size={14} /> {t.landing.worshipSlogan}
                         </p>
                     </div>
                 </div>
@@ -517,17 +517,17 @@ const Landing: React.FC = () => {
                 <div className="relative z-10 flex flex-col md:flex-row items-center gap-10">
                     <div className="flex-1 space-y-6">
                         <div className="inline-flex items-center gap-2 px-4 py-2 bg-gold/20 text-gold rounded-full text-xs font-bold uppercase tracking-widest border border-gold/30">
-                            <Music size={14} /> Atmosfera de Adoração
+                            <Music size={14} /> {t.landing.worshipTag}
                         </div>
                         <h3 className="font-serif font-bold text-3xl md:text-5xl leading-tight">
-                            A música certa quebra cadeias invisíveis.
+                            {t.landing.worshipTitle}
                         </h3>
                         <div className="space-y-4">
                             <p className="text-white text-xl leading-relaxed font-bold">
-                                Shalom cria 3 novos louvores todos os dias.
+                                {t.landing.worshipDesc}
                             </p>
                             <p className="text-stone-300 text-lg leading-relaxed max-w-md">
-                                Selecionamos aqueles que seu coração mais precisa para te conectar ao Céu em segundos.
+                                {t.landing.worshipSub}
                             </p>
                         </div>
                     </div>
@@ -554,7 +554,7 @@ const Landing: React.FC = () => {
             <div className="my-16 py-12 bg-stone-50 dark:bg-stone-900/50 border-y-2 border-stone-200 dark:border-stone-800 -mx-6 px-6 md:rounded-3xl md:mx-0">
                 <div className="max-w-xl mx-auto">
                     <h3 className="text-center font-serif font-black text-3xl text-ink dark:text-white mb-10 tracking-tight">
-                        Um Dia na Presença
+                        {t.landing.routineTitle}
                     </h3>
                     
                     <div className="space-y-10 relative">
@@ -568,10 +568,10 @@ const Landing: React.FC = () => {
                             </div>
                             <div className="bg-white dark:bg-stone-800 p-5 rounded-2xl shadow-sm border border-stone-100 dark:border-stone-700 flex-1">
                                 <h4 className="font-bold text-lg text-ink dark:text-white mb-1 flex items-center gap-2">
-                                    07:00 <span className="text-stone-300">|</span> O Maná Escondido
+                                    {t.landing.routineMorning}
                                 </h4>
                                 <p className="text-sm text-stone-600 dark:text-stone-400 leading-relaxed font-serif">
-                                    Antes que o caos do mundo comece, você recebe um versículo profético e uma direção clara. Sua mente é blindada antes de sair de casa.
+                                    {t.landing.routineMorningDesc}
                                 </p>
                             </div>
                         </div>
@@ -583,10 +583,10 @@ const Landing: React.FC = () => {
                             </div>
                             <div className="bg-white dark:bg-stone-800 p-5 rounded-2xl shadow-sm border border-stone-100 dark:border-stone-700 flex-1">
                                 <h4 className="font-bold text-lg text-ink dark:text-white mb-1 flex items-center gap-2">
-                                    14:00 <span className="text-stone-300">|</span> O Escudo da Fé
+                                    {t.landing.routineAfternoon}
                                 </h4>
                                 <p className="text-sm text-stone-600 dark:text-stone-400 leading-relaxed font-serif">
-                                    No auge do estresse do trabalho, quando a ansiedade bater, o Shalom te envia um louvor ou oração que acalma sua alma em 3 minutos.
+                                    {t.landing.routineAfternoonDesc}
                                 </p>
                             </div>
                         </div>
@@ -598,10 +598,10 @@ const Landing: React.FC = () => {
                             </div>
                             <div className="bg-white dark:bg-stone-800 p-5 rounded-2xl shadow-sm border border-stone-100 dark:border-stone-700 flex-1">
                                 <h4 className="font-bold text-lg text-ink dark:text-white mb-1 flex items-center gap-2">
-                                    22:00 <span className="text-stone-300">|</span> O Descanso da Alma
+                                    {t.landing.routineNight}
                                 </h4>
                                 <p className="text-sm text-stone-600 dark:text-stone-400 leading-relaxed font-serif">
-                                    Ao deitar, nada de notícias ruins. Uma reflexão de paz te ajuda a entregar os problemas a Deus e dormir o sono dos justos.
+                                    {t.landing.routineNightDesc}
                                 </p>
                             </div>
                         </div>
@@ -613,10 +613,10 @@ const Landing: React.FC = () => {
             <div className="my-24">
                 <div className="text-center mb-12">
                     <h3 className="font-serif font-black text-3xl md:text-4xl text-ink dark:text-white mb-4">
-                        Escolha sua Jornada
+                        {t.landing.journeysTitle}
                     </h3>
                     <p className="text-subtle max-w-lg mx-auto">
-                        Não importa qual batalha você esteja enfrentando, o Shalom tem um plano de 7 a 30 dias para guiar seus passos de volta à paz.
+                        {t.landing.journeysDesc}
                     </p>
                 </div>
 
@@ -629,8 +629,8 @@ const Landing: React.FC = () => {
                             <div className="mb-3 w-10 h-10 bg-orange rounded-full flex items-center justify-center">
                                 <Zap size={20} fill="currentColor" />
                             </div>
-                            <h4 className="font-bold text-2xl mb-2">Detox de Ansiedade</h4>
-                            <p className="text-stone-300 text-sm leading-relaxed">7 dias para trocar o medo pela paz absoluta de Deus através da entrega total.</p>
+                            <h4 className="font-bold text-2xl mb-2">{t.landing.journeyAnxiety}</h4>
+                            <p className="text-stone-300 text-sm leading-relaxed">{t.landing.journeyAnxietyDesc}</p>
                         </div>
                     </div>
 
@@ -642,8 +642,8 @@ const Landing: React.FC = () => {
                             <div className="mb-3 w-10 h-10 bg-gold rounded-full flex items-center justify-center text-ink">
                                 <Star size={20} fill="currentColor" />
                             </div>
-                            <h4 className="font-bold text-2xl mb-2">Sabedoria de Provérbios</h4>
-                            <p className="text-stone-300 text-sm leading-relaxed">31 dias mergulhando na fonte de sabedoria para decisões difíceis.</p>
+                            <h4 className="font-bold text-2xl mb-2">{t.landing.journeyWisdom}</h4>
+                            <p className="text-stone-300 text-sm leading-relaxed">{t.landing.journeyWisdomDesc}</p>
                         </div>
                     </div>
 
@@ -655,8 +655,8 @@ const Landing: React.FC = () => {
                             <div className="mb-3 w-10 h-10 bg-pink-500 rounded-full flex items-center justify-center">
                                 <Heart size={20} fill="currentColor" />
                             </div>
-                            <h4 className="font-bold text-2xl mb-2">Jornada da Gratidão</h4>
-                            <p className="text-stone-300 text-sm leading-relaxed">Transforme sua mente e coração descobrindo a alegria nas pequenas coisas.</p>
+                            <h4 className="font-bold text-2xl mb-2">{t.landing.journeyGratitude}</h4>
+                            <p className="text-stone-300 text-sm leading-relaxed">{t.landing.journeyGratitudeDesc}</p>
                         </div>
                     </div>
                 </div>
@@ -670,10 +670,10 @@ const Landing: React.FC = () => {
                         <div className="absolute bottom-0 left-0 w-32 h-32 bg-orange/10 rounded-full blur-3xl -ml-10 -mb-10"></div>
                         
                         <div className="relative z-10">
-                            <h3 className="font-serif font-bold text-2xl text-ink dark:text-white mb-4">Diferencial Único</h3>
+                            <h3 className="font-serif font-bold text-2xl text-ink dark:text-white mb-4">{t.landing.differentialTitle}</h3>
                             
                             <p className="text-lg md:text-xl leading-relaxed font-medium text-stone-600 dark:text-stone-300">
-                                É o único companheiro espiritual <span className="text-gold-dark dark:text-gold font-bold">disponível 24h</span>, pronto para orar, ensinar e manter a presença de Deus no seu dia.
+                                {t.landing.differentialDesc}
                             </p>
                         </div>
                     </div>
@@ -681,19 +681,16 @@ const Landing: React.FC = () => {
 
                 {/* Investment/Value */}
                 <div className="mt-16 mb-8 text-center bg-stone-50 dark:bg-stone-900 p-8 rounded-3xl border border-stone-200 dark:border-stone-800">
-                     <h3 className="font-serif font-bold text-2xl mb-6 text-ink dark:text-white">Um Investimento Eterno</h3>
+                     <h3 className="font-serif font-bold text-2xl mb-6 text-ink dark:text-white">{t.landing.investmentTitle}</h3>
                      <div className="space-y-4 text-lg text-stone-600 dark:text-stone-300 leading-relaxed">
-                        <p>Muitos de nós gastamos sem pensar com streamings, lanches e coisas que perecem.</p>
-                        <p>Mas hesitamos em investir no fortalecimento do nosso espírito.</p>
-                        <p>Shalom custa menos que uma pizza por ano.</p>
-                        <p>Mas o valor de ter sua mente blindada pela Palavra...</p>
-                        <p className="font-bold text-gold text-xl mt-4">Isso não tem preço.</p>
+                        {t.landing.investmentDesc.map((item, i) => (
+                            <p key={i}>{item}</p>
+                        ))}
                      </div>
                 </div>
 
                 <p className="text-2xl font-serif font-bold text-center mt-12 mb-12 text-ink dark:text-white">
-                    Shalom — a fé que te acompanha.<br/>
-                    <span className="text-gold">A paz que fala com você.</span>
+                    {t.landing.letterFinal}
                 </p>
 
             </article>
@@ -724,11 +721,11 @@ const Landing: React.FC = () => {
                     
                     <div className="text-center md:text-left">
                         <p className="text-xl md:text-2xl italic font-serif text-ink dark:text-stone-300 mb-4 leading-relaxed">
-                            "Eu estava à beira de um burnout. O Guia Espiritual no WhatsApp foi a voz de Deus nas minhas madrugadas de insônia. Não sei o que seria de mim sem essa ferramenta."
+                            {t.landing.testimonialQuote}
                         </p>
                         <div>
-                            <p className="font-bold text-lg text-ink dark:text-white">Juliana M.</p>
-                            <p className="text-sm text-subtle">Membro há 3 meses • São Paulo</p>
+                            <p className="font-bold text-lg text-ink dark:text-white">{t.landing.testimonialAuthor}</p>
+                            <p className="text-sm text-subtle">{t.landing.testimonialInfo}</p>
                         </div>
                     </div>
                 </div>
@@ -744,13 +741,13 @@ const Landing: React.FC = () => {
          <div className="max-w-6xl mx-auto mb-32 relative">
              <div className="text-center mb-24 px-6">
                 <div className="inline-flex items-center gap-2 text-gold font-bold text-xs uppercase tracking-widest mb-4">
-                    <Smartphone size={16} /> <Tablet size={16} /> <Monitor size={16} /> Presença constante em sua vida
+                    <Smartphone size={16} /> <Tablet size={16} /> <Monitor size={16} /> {t.landing.devicesTag}
                 </div>
                 <h3 className="text-3xl md:text-6xl font-serif font-black text-ink dark:text-white mb-6 leading-tight">
-                    Sua jornada de fé,<br/>em <span className="text-gold">qualquer lugar.</span>
+                    {t.landing.devicesTitle}
                 </h3>
                 <p className="text-subtle text-lg max-w-2xl mx-auto">
-                    Acompanhe seu progresso bíblico no PC, ouça louvores no Tablet e receba sua oração diária no celular. Tudo conectado.
+                    {t.landing.devicesDesc}
                 </p>
              </div>
 
@@ -773,14 +770,14 @@ const Landing: React.FC = () => {
                         <div className="w-64 bg-white dark:bg-[#1c1917] border-r border-stone-200 dark:border-stone-800 flex flex-col py-6">
                              <div className="px-6 mb-10 flex items-center gap-2">
                                 <ShalomLogo size="w-8 h-8" />
-                                <span className="font-serif font-black text-lg dark:text-white tracking-tighter">Shalom</span>
+                                <span className="font-serif font-black text-lg dark:text-white tracking-tighter">{t.common.appName}</span>
                              </div>
                              
                              <div className="px-3 space-y-1">
-                                <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-400 font-medium text-sm"><Home size={18} /> Início</div>
-                                <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-ink dark:bg-white text-white dark:text-ink font-bold text-sm shadow-lg"><BookOpen size={18} /> Bíblia</div>
-                                <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-400 font-medium text-sm"><Music size={18} /> Louvor</div>
-                                <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-400 font-medium text-sm"><Zap size={18} /> Jornada</div>
+                                <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-400 font-medium text-sm"><Home size={18} /> {t.nav.home}</div>
+                                <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-ink dark:bg-white text-white dark:text-ink font-bold text-sm shadow-lg"><BookOpen size={18} /> {t.nav.bible}</div>
+                                <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-400 font-medium text-sm"><Music size={18} /> {t.nav.worship}</div>
+                                <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-stone-400 font-medium text-sm"><Zap size={18} /> {t.nav.journey}</div>
                              </div>
 
                              <div className="mt-auto px-6">
@@ -840,7 +837,7 @@ const Landing: React.FC = () => {
                     <div className="h-full w-full bg-stone-900 p-8 flex flex-col">
                         <div className="flex items-center gap-2 mb-8">
                             <div className="w-8 h-8 bg-gold rounded-xl flex items-center justify-center text-ink"><Music size={16} /></div>
-                            <h4 className="text-white font-serif font-bold text-lg">Louvor</h4>
+                            <h4 className="text-white font-serif font-bold text-lg">{t.nav.worship}</h4>
                         </div>
                         <div className="relative aspect-square bg-stone-800 rounded-3xl mb-8 flex items-center justify-center overflow-hidden shadow-2xl group">
                             <img src="https://images.unsplash.com/photo-1483043012503-8a8849b4c949?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" className="absolute inset-0 w-full h-full object-cover opacity-40" />
@@ -864,7 +861,7 @@ const Landing: React.FC = () => {
                         
                         <div className="mt-4 flex justify-between items-center mb-6">
                             <div className="flex flex-col">
-                                <span className="text-[10px] font-black text-gold uppercase tracking-tighter">Bom dia,</span>
+                                <span className="text-[10px] font-black text-gold uppercase tracking-tighter">{t.home.greetingMorning},</span>
                                 <span className="text-sm font-serif font-black text-ink dark:text-white">Viajante</span>
                             </div>
                             <div className="w-8 h-8 rounded-full bg-orange/10 flex items-center justify-center text-orange"><Flame size={16} /></div>
@@ -880,19 +877,19 @@ const Landing: React.FC = () => {
                             </div>
                         </div>
 
-                        <p className="text-[10px] font-bold text-subtle uppercase tracking-widest mb-3">Como está seu coração?</p>
+                        <p className="text-[10px] font-bold text-subtle uppercase tracking-widest mb-3">{t.home.moodTitle}</p>
                         <div className="flex gap-2">
                              <div className="w-12 h-16 bg-stone-100 dark:bg-stone-900 rounded-2xl flex flex-col items-center justify-center gap-1 border-2 border-gold shadow-sm">
                                 <div className="p-1 bg-gold rounded-full text-ink"><Zap size={10} /></div>
-                                <span className="text-[8px] font-bold text-gold">Ansioso</span>
+                                <span className="text-[8px] font-bold text-gold">{t.moods.Anxious}</span>
                              </div>
                              <div className="w-12 h-16 bg-stone-100 dark:bg-stone-900 rounded-2xl flex flex-col items-center justify-center gap-1 opacity-40">
                                 <div className="p-1 bg-stone-700 rounded-full text-white"><Sun size={10} /></div>
-                                <span className="text-[8px] font-bold text-stone-500">Feliz</span>
+                                <span className="text-[8px] font-bold text-stone-500">{t.moods.Happy}</span>
                              </div>
                              <div className="w-12 h-16 bg-stone-100 dark:bg-stone-900 rounded-2xl flex flex-col items-center justify-center gap-1 opacity-40">
                                 <div className="p-1 bg-stone-700 rounded-full text-white"><Battery size={10} /></div>
-                                <span className="text-[8px] font-bold text-stone-500">Cansado</span>
+                                <span className="text-[8px] font-bold text-stone-500">{t.moods.Tired}</span>
                              </div>
                         </div>
 
@@ -912,11 +909,10 @@ const Landing: React.FC = () => {
             {/* Headlines */}
             <div className="text-center mb-10">
                 <h2 className="text-3xl md:text-5xl font-serif font-black mb-4 text-ink dark:text-white leading-tight">
-                    Quanto vale a paz da sua alma e a <br />
-                    <span className="text-gold">proteção da sua família?</span>
+                    {t.landing.pricingHeadline}
                 </h2>
                 <p className="text-lg text-subtle font-medium max-w-xl mx-auto">
-                    Provavelmente não tem preço. Mas hoje, nós tornamos isso acessível para todos.
+                    {t.landing.pricingSub}
                 </p>
             </div>
 
@@ -928,31 +924,29 @@ const Landing: React.FC = () => {
                     {/* Header Badge & Title */}
                     <div className="text-center mb-10">
                         <div className="inline-block bg-orange text-white text-[10px] md:text-xs font-bold px-6 py-2 rounded-full uppercase tracking-widest mb-6 shadow-lg shadow-orange/30">
-                            <Gift size={14} className="inline mr-1 mb-0.5" /> Oferta Exclusiva de Lançamento
+                            <Gift size={14} className="inline mr-1 mb-0.5" /> {t.landing.offerTag}
                         </div>
                         <h3 className="text-2xl md:text-3xl font-serif font-bold text-ink dark:text-white">
-                            Pacote Completo "Vida Cristã"
+                            {t.landing.packageTitle}
                         </h3>
                     </div>
 
                     {/* Features Grid */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-12">
-                       {[
-                         { icon: MessageCircle, label: "Guia Espiritual 24h" },
-                         { icon: Music, label: "Louvores Exclusivos" },
-                         { icon: Baby, label: "Kit Kids e Histórias" }, 
-                         { icon: Sparkles, label: "Reflexões Diárias" }
-                       ].map((feat, i) => (
-                           <div key={i} className="bg-stone-50 dark:bg-stone-800/50 p-3 rounded-xl flex flex-col items-center text-center gap-2 border border-stone-100 dark:border-stone-800">
-                               <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 flex items-center justify-center">
-                                   <feat.icon size={16} />
+                       {t.landing.features.map((feat, i) => {
+                           const Icon = [MessageCircle, Music, Baby, Sparkles][i];
+                           return (
+                               <div key={i} className="bg-stone-50 dark:bg-stone-800/50 p-3 rounded-xl flex flex-col items-center text-center gap-2 border border-stone-100 dark:border-stone-800">
+                                   <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 flex items-center justify-center">
+                                       <Icon size={16} />
+                                   </div>
+                                   <span className="text-xs font-bold text-subtle leading-tight">{feat.label}</span>
                                </div>
-                               <span className="text-xs font-bold text-subtle leading-tight">{feat.label}</span>
-                           </div>
-                       ))}
+                           )
+                       })}
                     </div>
 
-                    <p className="text-center text-xs font-bold text-subtle uppercase tracking-widest mb-4">Selecione seu plano:</p>
+                    <p className="text-center text-xs font-bold text-subtle uppercase tracking-widest mb-4">{t.landing.selectPlan}</p>
 
                     <div className="space-y-4">
                         {/* Monthly Option */}
@@ -965,11 +959,11 @@ const Landing: React.FC = () => {
                                     {selectedPlan === 'monthly' && <div className="w-2.5 h-2.5 bg-stone-600 rounded-full"></div>}
                                 </div>
                                 <div>
-                                    <h5 className="font-bold text-ink dark:text-white">Mensal</h5>
-                                    <p className="text-xs text-subtle">Flexibilidade total</p>
+                                    <h5 className="font-bold text-ink dark:text-white">{t.landing.monthly}</h5>
+                                    <p className="text-xs text-subtle">{t.landing.monthlyFlex}</p>
                                 </div>
                             </div>
-                            <span className="font-bold text-ink dark:text-white">R$ 9,90 <span className="text-xs font-normal text-subtle">/mês</span></span>
+                            <span className="font-bold text-ink dark:text-white">{t.landing.monthlyPrice} <span className="text-xs font-normal text-subtle">{t.landing.monthlySub}</span></span>
                         </div>
 
                         {/* Yearly Option (Highlighted) */}
@@ -979,7 +973,7 @@ const Landing: React.FC = () => {
                         >
                              {/* Badge */}
                              <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-green-100 text-green-700 text-sm font-black px-8 py-2.5 rounded-full uppercase tracking-widest border-2 border-green-200 shadow-md">
-                                92% Escolhem
+                                {t.landing.yearlySave}
                              </div>
 
                              <div className="flex items-center gap-4 w-full md:w-auto">
@@ -987,20 +981,20 @@ const Landing: React.FC = () => {
                                     <Check size={14} strokeWidth={4} />
                                 </div>
                                 <div className="text-left">
-                                    <h5 className="font-bold text-xl text-ink dark:text-white">Anual</h5>
-                                    <p className="text-xs text-red-400 line-through">De R$ 118,80</p>
-                                    <p className="text-sm font-bold text-green-600 dark:text-green-400">por apenas:</p>
+                                    <h5 className="font-bold text-xl text-ink dark:text-white">{t.landing.yearly}</h5>
+                                    <p className="text-xs text-red-400 line-through">{t.landing.yearlyOriginal}</p>
+                                    <p className="text-sm font-bold text-green-600 dark:text-green-400">{t.landing.yearlyOnly}</p>
                                 </div>
                              </div>
 
                              <div className="text-center md:text-right">
-                                 <span className="block text-4xl font-black text-ink dark:text-white tracking-tighter">49,90</span>
-                                 <span className="text-[10px] font-bold text-subtle uppercase tracking-wider block">Pagamento Único</span>
+                                 <span className="block text-4xl font-black text-ink dark:text-white tracking-tighter">{t.landing.yearlyPrice}</span>
+                                 <span className="text-[10px] font-bold text-subtle uppercase tracking-wider block">{t.landing.yearlyPayment}</span>
                              </div>
 
                              {/* Float Badge */}
                              <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-stone-900 text-white text-[10px] font-bold px-4 py-1.5 rounded-full shadow-lg flex items-center gap-1 whitespace-nowrap border border-white/10">
-                                <TrendingUp size={10} className="text-green-400" /> Menos que uma pizza por ano...
+                                <TrendingUp size={10} className="text-green-400" /> {t.landing.pizza}
                              </div>
                         </div>
                     </div>
@@ -1008,10 +1002,10 @@ const Landing: React.FC = () => {
                     {/* Yellow Warning Box */}
                     <div className="mt-10 mb-8 bg-yellow-50 dark:bg-yellow-900/10 border-2 border-yellow-200 dark:border-yellow-800/30 border-dashed rounded-2xl p-6 text-center">
                         <div className="flex items-center justify-center gap-2 mb-2 text-yellow-700 dark:text-yellow-500 font-bold text-sm uppercase tracking-widest">
-                            <AlertCircle size={16} /> Por que tão barato?
+                            <AlertCircle size={16} /> {t.landing.warningTitle}
                         </div>
                         <p className="text-sm text-yellow-800 dark:text-yellow-200/80 leading-relaxed font-medium">
-                            "Nossa missão é espalhar o Evangelho através da tecnologia. Porém, devido aos altos custos de IA, <span className="bg-yellow-200 dark:bg-yellow-800 text-yellow-900 dark:text-yellow-100 px-1 rounded">não conseguiremos manter este preço por muito tempo.</span> Se você fechar esta página, amanhã o valor pode ter voltado para <span className="underline decoration-red-500 text-red-600 dark:text-red-400 font-bold">R$ 97,00</span>."
+                            {t.landing.warningText}
                         </p>
                     </div>
 
@@ -1025,27 +1019,27 @@ const Landing: React.FC = () => {
                         }}
                         className="w-full py-5 bg-green-500 hover:bg-green-600 text-white rounded-2xl font-black text-xl shadow-[0_4px_0_rgb(21,128,61)] active:shadow-none active:translate-y-1 transition-all flex flex-col items-center leading-none gap-1"
                     >
-                        <span className="flex items-center gap-2">QUERO MEU ACESSO {selectedPlan === 'yearly' ? 'ANUAL' : 'MENSAL'} <ChevronRight strokeWidth={4} size={20} /></span>
-                        <span className="text-[10px] font-medium opacity-90 tracking-widest uppercase">Acesso imediato ao App e ao WhatsApp</span>
+                        <span className="flex items-center gap-2">{t.landing.ctaAccess} <ChevronRight strokeWidth={4} size={20} /></span>
+                        <span className="text-[10px] font-medium opacity-90 tracking-widest uppercase">{t.landing.ctaAccessSub}</span>
                     </button>
                     
                 </div>
             </div>
             
-            {/* Guarantee and FAQ below remain similar or are kept from previous implementation */}
+            {/* Guarantee and FAQ */}
             <div className="mt-16 max-w-2xl mx-auto text-center bg-stone-100 dark:bg-stone-900 p-8 rounded-3xl border border-stone-200 dark:border-stone-800">
                 <div className="w-16 h-16 bg-white dark:bg-stone-800 rounded-full flex items-center justify-center mx-auto mb-4 shadow-md text-gold">
-                    <Shield size={32} />
+                    <ShieldCheck size={32} />
                 </div>
-                <h3 className="text-xl font-bold text-ink dark:text-white mb-2">Garantia Incondicional de 7 Dias</h3>
+                <h3 className="text-xl font-bold text-ink dark:text-white mb-2">{t.landing.guaranteeTitle}</h3>
                 <p className="text-subtle text-sm">
-                    Entre, use o app, converse com o Guia. Se não sentir paz no seu coração, nós devolvemos 100% do seu dinheiro. Sem perguntas.
+                    {t.landing.guaranteeDesc}
                 </p>
             </div>
 
             {/* FAQ */}
             <div className="mt-16 max-w-2xl mx-auto">
-                <h3 className="text-lg font-bold text-center text-subtle uppercase tracking-widest mb-6">Dúvidas?</h3>
+                <h3 className="text-lg font-bold text-center text-subtle uppercase tracking-widest mb-6">{t.landing.faqTitle}</h3>
                 <div className="space-y-4">
                     {faqs.map((item, i) => (
                         <div key={i} className="border-b border-stone-200 dark:border-stone-800">
@@ -1073,14 +1067,14 @@ const Landing: React.FC = () => {
       <section className="py-12 px-6 pb-32 text-center">
         <div className="text-subtle text-sm flex flex-col items-center gap-2">
           <ShalomLogo size="w-6 h-6" />
-          <p>© {new Date().getFullYear()} Shalom App. Feito com fé.</p>
+          <p>{t.landing.copyright}</p>
           
           {/* Secret Button to Quiz */}
           <button 
             onClick={() => navigate('/quiz')}
             className="opacity-5 hover:opacity-100 transition-opacity duration-300 text-[10px] uppercase tracking-widest mt-4 p-2"
           >
-            Acessar Quiz Secreto
+            {t.landing.secretQuiz}
           </button>
         </div>
       </section>
@@ -1102,10 +1096,10 @@ const Landing: React.FC = () => {
               </div>
 
               <h3 className="text-2xl font-serif font-bold text-ink dark:text-white mb-2">
-                Acesse sua conta
+                {t.landing.loginTitle}
               </h3>
               <p className="text-subtle text-sm mb-8 leading-relaxed max-w-xs">
-                Para entrar, insira o e-mail utilizado na compra.
+                {t.landing.loginDesc}
               </p>
 
               <form onSubmit={handleSaveEmail} className="w-full space-y-4">
@@ -1113,7 +1107,7 @@ const Landing: React.FC = () => {
                    <div className="absolute inset-0 bg-gradient-to-r from-gold to-orange rounded-2xl opacity-0 group-focus-within:opacity-100 blur transition-opacity duration-300 -z-10"></div>
                    <input
                     type="email"
-                    placeholder="Seu e-mail de acesso"
+                    placeholder={t.landing.emailPlaceholder}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full p-4 bg-paper dark:bg-stone-950 rounded-2xl border-2 border-transparent outline-none text-ink dark:text-white font-medium placeholder:text-stone-400 focus:bg-white dark:focus:bg-stone-900 transition-all shadow-inner"
@@ -1135,13 +1129,13 @@ const Landing: React.FC = () => {
                   {isLoading ? (
                     <Loader2 className="animate-spin" />
                   ) : (
-                    <>Entrar <ArrowRight size={20} /></>
+                    <>{t.landing.login} <ArrowRight size={20} /></>
                   )}
                 </button>
               </form>
 
               <p className="mt-6 text-[10px] text-stone-400 uppercase tracking-widest flex items-center gap-1 justify-center">
-                <Lock size={10} /> Ambiente Seguro
+                <Lock size={10} /> {t.landing.secureEnvironment}
               </p>
             </div>
           </div>
