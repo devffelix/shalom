@@ -106,6 +106,8 @@ export interface Note {
   verse: number;
 }
 
+export type SfxType = 'correct' | 'wrong' | 'complete' | 'pageTurn' | 'navigation';
+
 export interface AudioContextType {
   currentSong: SongSuggestion | null;
   isPlaying: boolean;
@@ -117,6 +119,7 @@ export interface AudioContextType {
   seek: (time: number) => void;
   setVolume: (level: number) => void; // level 0 to 1
   closePlayer: () => void;
+  playSfx: (type: SfxType) => void;
 }
 
 export interface LevelData {

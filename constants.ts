@@ -311,6 +311,153 @@ export const TRIVIA_CATEGORIES: TriviaCategory[] = [
         explanation: "A visão dos ossos secos representava a restauração da casa de Israel."
       }
     ]
+  },
+  {
+    id: 'revelation',
+    title: 'Apocalipse',
+    description: 'Revelações sobre o fim dos tempos e a vitória final.',
+    icon: 'Sun',
+    gradient: 'from-slate-900 to-slate-700',
+    questions: [
+      {
+        id: 801,
+        question: "Quem escreveu o livro de Apocalipse?",
+        options: ["Pedro", "Paulo", "João", "Tiago"],
+        correctAnswer: "João",
+        reference: "Apocalipse 1:1",
+        explanation: "João recebeu a revelação de Jesus Cristo enquanto estava exilado na ilha de Patmos."
+      },
+      {
+        id: 802,
+        question: "Onde João estava quando recebeu as visões?",
+        options: ["Em Jerusalém", "Na Ilha de Patmos", "Em Roma", "No Deserto"],
+        correctAnswer: "Na Ilha de Patmos",
+        reference: "Apocalipse 1:9",
+        explanation: "Ele estava na ilha chamada Patmos, por causa da palavra de Deus e do testemunho de Jesus."
+      },
+      {
+        id: 803,
+        question: "Para quantas igrejas na Ásia foram enviadas cartas?",
+        options: ["3", "7", "12", "5"],
+        correctAnswer: "7",
+        reference: "Apocalipse 1:11",
+        explanation: "Éfeso, Esmirna, Pérgamo, Tiatira, Sardes, Filadélfia e Laodiceia."
+      },
+      {
+        id: 804,
+        question: "Como Jesus se autodenomina no final do livro?",
+        options: ["O Leão e o Cordeiro", "O Alfa e o Ômega", "O Rei dos Reis", "O Bom Pastor"],
+        correctAnswer: "O Alfa e o Ômega",
+        reference: "Apocalipse 22:13",
+        explanation: "Eu sou o Alfa e o Ômega, o princípio e o fim, o primeiro e o derradeiro."
+      },
+      {
+        id: 805,
+        question: "Qual animal representa Jesus como o vencedor digno de abrir o livro?",
+        options: ["A Águia", "O Leão", "O Touro", "O Cavalo Branco"],
+        correctAnswer: "O Leão",
+        reference: "Apocalipse 5:5",
+        explanation: "Eis que o Leão da tribo de Judá, a raiz de Davi, venceu para abrir o livro."
+      }
+    ]
+  },
+  {
+    id: 'kings',
+    title: 'Reis de Israel',
+    description: 'Ascensão, queda e glória da monarquia bíblica.',
+    icon: 'Crown',
+    gradient: 'from-yellow-600 to-yellow-800',
+    questions: [
+      {
+        id: 901,
+        question: "Quem foi o primeiro rei de Israel?",
+        options: ["Davi", "Saul", "Salomão", "Samuel"],
+        correctAnswer: "Saul",
+        reference: "1 Samuel 10",
+        explanation: "Saul foi ungido por Samuel como o primeiro rei, atendendo ao pedido do povo."
+      },
+      {
+        id: 902,
+        question: "Quem era conhecido como o homem segundo o coração de Deus?",
+        options: ["Salomão", "Davi", "Josias", "Ezequias"],
+        correctAnswer: "Davi",
+        reference: "Atos 13:22",
+        explanation: "Deus testificou de Davi: 'Achei a Davi... homem segundo o meu coração'."
+      },
+      {
+        id: 903,
+        question: "Qual rei construiu o primeiro Templo em Jerusalém?",
+        options: ["Davi", "Salomão", "Roboão", "Herodes"],
+        correctAnswer: "Salomão",
+        reference: "1 Reis 6",
+        explanation: "Davi preparou os materiais, mas foi seu filho Salomão quem edificou o templo."
+      },
+      {
+        id: 904,
+        question: "Qual rainha má perseguiu o profeta Elias?",
+        options: ["Vasti", "Jezabel", "Atalia", "Dalila"],
+        correctAnswer: "Jezabel",
+        reference: "1 Reis 19",
+        explanation: "Jezabel, esposa do rei Acabe, ameaçou matar Elias após o desafio no Monte Carmelo."
+      },
+      {
+        id: 905,
+        question: "Qual rei teve a vida prolongada em 15 anos após orar?",
+        options: ["Josafá", "Ezequias", "Manassés", "Uzias"],
+        correctAnswer: "Ezequias",
+        reference: "2 Reis 20:6",
+        explanation: "Deus ouviu a oração de Ezequias, viu suas lágrimas e acrescentou dias à sua vida."
+      }
+    ]
+  },
+  {
+    id: 'exodus',
+    title: 'O Êxodo',
+    description: 'A libertação do Egito e a jornada no deserto.',
+    icon: 'Mountain',
+    gradient: 'from-amber-600 to-orange-700',
+    questions: [
+      {
+        id: 1001,
+        question: "Quantas pragas Deus enviou ao Egito?",
+        options: ["7", "10", "12", "3"],
+        correctAnswer: "10",
+        reference: "Êxodo 7-12",
+        explanation: "Foram dez pragas, culminando na morte dos primogênitos, que levaram à libertação."
+      },
+      {
+        id: 1002,
+        question: "O que Deus usou para guiar o povo durante o dia?",
+        options: ["Uma coluna de fogo", "Uma estrela", "Uma coluna de nuvem", "Um anjo visível"],
+        correctAnswer: "Uma coluna de nuvem",
+        reference: "Êxodo 13:21",
+        explanation: "O Senhor ia adiante deles, de dia numa coluna de nuvem para os guiar."
+      },
+      {
+        id: 1003,
+        question: "Qual alimento Deus enviou do céu no deserto?",
+        options: ["Pão ázimo", "Maná", "Figos", "Trigo"],
+        correctAnswer: "Maná",
+        reference: "Êxodo 16",
+        explanation: "Eles chamaram o pão de 'maná'. Era branco como semente de coentro e tinha gosto de bolo de mel."
+      },
+      {
+        id: 1004,
+        question: "Quem foi escolhido para falar por Moisés ao Faraó?",
+        options: ["Josué", "Calebe", "Arão", "Hur"],
+        correctAnswer: "Arão",
+        reference: "Êxodo 4:14-16",
+        explanation: "Arão, irmão de Moisés, foi designado como seu porta-voz (profeta)."
+      },
+      {
+        id: 1005,
+        question: "Em qual monte Moisés recebeu os Dez Mandamentos?",
+        options: ["Monte das Oliveiras", "Monte Sinai", "Monte Carmelo", "Monte Moriá"],
+        correctAnswer: "Monte Sinai",
+        reference: "Êxodo 19-20",
+        explanation: "Também conhecido como Horebe, foi onde Deus entregou as tábuas da lei."
+      }
+    ]
   }
 ];
 
