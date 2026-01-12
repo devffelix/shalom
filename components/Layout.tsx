@@ -1,9 +1,11 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Home, BookOpen, Music, Zap, Settings, Target, MessageCircle, Baby } from 'lucide-react';
+import { Home, BookOpen, Music, Zap, Settings, Target, MessageCircle, Baby, Bell } from 'lucide-react';
 import MiniPlayer from './MiniPlayer';
+import UpdatesModal from './UpdatesModal';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useAudio } from '../contexts/AudioContext';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -22,6 +24,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const [isUpdatesOpen, setIsUpdatesOpen] = useState(false);
 
   // Admin route added to simple layout
   const isSimpleLayout = location.pathname === '/' || location.pathname === '/quiz' || location.pathname === '/admin';
@@ -44,7 +47,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     { path: '/trails', icon: Target, label: t.nav.goals },
     { path: '/worship', icon: Music, label: t.nav.worship },
     { path: '/challenges', icon: Zap, label: t.nav.journey },
-    { path: '/kids', icon: Baby, label: t.nav.kids, isKids: true },
+    { path: '/kids', icon: Baby, label: t.nav.kids, isKids: true, isNew: true },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -52,6 +55,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const handleWhatsApp = () => {
     const text = encodeURIComponent("Olá, Shalom! Gostaria de conversar com o Guia Espiritual.");
     window.open(`https://wa.me/551151989852?text=${text}`, '_blank');
+  };
+
+  const handleNavClick = () => {
+    // Navigation logic if needed
   };
 
   if (isSimpleLayout) {
@@ -66,6 +73,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     <div className="h-screen w-full bg-paper flex flex-col md:flex-row text-ink transition-colors duration-300">
       
       <MiniPlayer />
+      
+      {isUpdatesOpen && <UpdatesModal onClose={() => setIsUpdatesOpen(false)} />}
 
       {/* WhatsApp Floating Button */}
       <button 
@@ -88,6 +97,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <Link
               key={item.path}
               to={item.path}
+              onClick={handleNavClick}
               className={`
                 flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 group
                 ${isActive(item.path) 
@@ -104,12 +114,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               <span className={`font-medium ${(item as any).isKids ? "text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-blue-500 font-bold" : ""}`}>
                 {item.label}
               </span>
+              {(item as any).isNew && (
+                <span className="ml-auto text-[9px] font-black bg-red-500 text-white px-2 py-0.5 rounded-full animate-pulse">NOVO</span>
+              )}
             </Link>
           ))}
         </nav>
 
         <Link 
           to="/settings"
+          onClick={handleNavClick}
           className={`
             flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 mt-auto
             ${isActive('/settings') 
@@ -122,19 +136,48 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         </Link>
       </aside>
 
-      <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-paper/80 dark:bg-stone-950/80 backdrop-blur-md z-20 flex items-center justify-between px-6 border-b border-stone-100/50 dark:border-stone-800/50">
-        <div className="flex items-center gap-2">
-          <ShalomLogo size="w-7 h-7" />
-          <h1 className="text-xl font-serif font-bold text-ink dark:text-white">{t.common.appName}</h1>
+      {/* MOBILE HEADER - REDESIGNED */}
+      <div className="md:hidden fixed top-0 left-0 right-0 h-[70px] bg-white/90 dark:bg-stone-950/90 backdrop-blur-xl z-20 flex items-center justify-between px-5 border-b border-stone-100 dark:border-stone-800 transition-all shadow-sm">
+        <div className="flex items-center gap-2.5">
+          <ShalomLogo size="w-8 h-8" />
+          <h1 className="text-xl font-serif font-black text-ink dark:text-white tracking-tight">{t.common.appName}</h1>
         </div>
-        <Link to="/settings">
-          <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${isActive('/settings') ? 'bg-orange text-white' : 'bg-orange-light text-orange'}`}>
-              <Settings size={18} />
-          </div>
-        </Link>
+        
+        <div className="flex items-center gap-3">
+            {/* Botão de Novidades (Pill Shape) */}
+            <button 
+                onClick={() => { setIsUpdatesOpen(true); }}
+                className="group relative flex items-center gap-2 px-3 py-1.5 bg-[#FF4500] rounded-full text-white shadow-lg shadow-red-500/40 active:scale-95 transition-all overflow-hidden border border-white/20 animate-[pulse_3s_infinite]"
+            >
+                {/* Efeito de brilho passando */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out"></div>
+                
+                <Bell size={14} fill="currentColor" className="animate-[swing_3s_infinite]" />
+                <span className="text-[10px] font-black uppercase tracking-widest leading-none">Novidades</span>
+                
+                {/* Bolinha pulsante integrada */}
+                <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-white rounded-full animate-ping"></span>
+            </button>
+
+            <Link to="/settings" onClick={handleNavClick} className="relative group">
+                <div className={`w-9 h-9 rounded-full flex items-center justify-center transition-all border border-transparent ${isActive('/settings') ? 'bg-stone-100 text-ink dark:bg-stone-800 dark:text-white' : 'text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900 active:bg-stone-100'}`}>
+                    <Settings size={20} />
+                </div>
+            </Link>
+        </div>
       </div>
 
-      <main className="flex-1 h-full overflow-y-auto overflow-x-hidden md:p-8 pt-20 pb-28 md:pb-8 px-4 w-full max-w-5xl mx-auto scroll-smooth no-scrollbar">
+      <main className="flex-1 h-full overflow-y-auto overflow-x-hidden md:p-8 pt-[86px] pb-28 md:pb-8 px-4 w-full max-w-5xl mx-auto scroll-smooth no-scrollbar relative">
+        {/* DESKTOP HEADER ACTION BAR */}
+        <div className="hidden md:flex absolute top-4 right-8 z-30 gap-4">
+             <button 
+                onClick={() => { setIsUpdatesOpen(true); }}
+                className="flex items-center gap-2 px-5 py-2.5 bg-[#FF4500] rounded-full shadow-lg shadow-red-500/30 hover:shadow-xl hover:scale-105 transition-all text-sm font-bold text-white border border-white/10 animate-[pulse_3s_infinite]"
+            >
+                <Bell size={18} fill="currentColor" />
+                <span>Novidades</span>
+            </button>
+        </div>
         {children}
       </main>
 
@@ -146,15 +189,22 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <Link
               key={item.path}
               to={item.path}
-              className="flex flex-col items-center gap-1 w-14"
+              onClick={handleNavClick}
+              className="flex flex-col items-center gap-1 w-14 relative"
             >
               <div className={`
-                p-2 rounded-2xl transition-all duration-300
+                p-2 rounded-2xl transition-all duration-300 relative
                 ${active 
                     ? (isKids ? 'bg-gradient-to-tr from-pink-500 to-blue-500 text-white transform -translate-y-2 shadow-lg shadow-pink-500/30' : 'bg-ink dark:bg-gold text-gold dark:text-stone-900 transform -translate-y-2 shadow-lg') 
                     : 'text-stone-400'}
               `}>
                 <item.icon size={22} strokeWidth={active ? 2.5 : 2} fill={active ? "currentColor" : "none"} />
+                {(item as any).isNew && (
+                    <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500 border-2 border-white dark:border-stone-900"></span>
+                    </span>
+                )}
               </div>
               <span className={`text-[9px] font-medium transition-colors ${active ? 'text-ink dark:text-white font-bold' : 'text-stone-400'}`}>
                 {item.label}

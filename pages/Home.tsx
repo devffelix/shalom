@@ -1,12 +1,13 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sun, Battery, Heart, CloudRain, Zap, Book, ArrowRight, X, Sparkles, Bookmark, Trash2, Share2, Music, Calendar, HelpCircle, Frown, Loader2, Download, RefreshCw, MessageCircle, Crown, ScrollText, CheckCircle2, Flame, Target, ChevronRight, HeartHandshake, Trophy, Brain } from 'lucide-react';
+import { Sun, Battery, Heart, CloudRain, Zap, Book, ArrowRight, X, Sparkles, Bookmark, Trash2, Share2, Music, Calendar, HelpCircle, Frown, Loader2, Download, RefreshCw, MessageCircle, Crown, ScrollText, CheckCircle2, Flame, Target, ChevronRight, HeartHandshake, Trophy, Brain, Clock } from 'lucide-react';
 import { generatePrayer, fetchVerse } from '../services/api';
 import { calculateLevel } from '../services/gamification';
 import { Mood, UserProgress, Note, LevelData } from '../types';
 import { TOTAL_CHAPTERS, POPULAR_VERSES } from '../constants';
 import { useLanguage } from '../contexts/LanguageContext';
+import Onboarding, { Step } from '../components/Onboarding';
 
 const MOOD_IMAGES: Record<string, string> = {
   [Mood.Anxious]: "https://images.unsplash.com/photo-1457139621581-298d1801c832?q=80&w=1103&auto=format&fit=crop", 
@@ -73,6 +74,11 @@ const Home: React.FC = () => {
   const [isAmenAnimating, setIsAmenAnimating] = useState(false);
   const [notes, setNotes] = useState<Note[]>([]);
   const [showAllNotes, setShowAllNotes] = useState(false);
+  
+  // Goals State
+  const [dailyGoalChapters, setDailyGoalChapters] = useState(3);
+  const [dailyGoalMinutes, setDailyGoalMinutes] = useState(15);
+  
   const prayerCardRef = useRef<HTMLDivElement>(null);
 
   const today = new Date();
@@ -95,8 +101,21 @@ const Home: React.FC = () => {
     }
     const savedNotes = localStorage.getItem('lumina_notes');
     if (savedNotes) setNotes(JSON.parse(savedNotes));
+    
     const savedName = localStorage.getItem('lumina_username');
     if (savedName) setUserName(savedName);
+
+    const savedGoals = localStorage.getItem('lumina_goals');
+    if (savedGoals) {
+        try {
+            const parsed = JSON.parse(savedGoals);
+            if (parsed.dailyChapters) setDailyGoalChapters(parsed.dailyChapters);
+            if (parsed.dailyStudyMinutes) setDailyGoalMinutes(parsed.dailyStudyMinutes);
+        } catch (e) {
+            console.error("Error loading goals", e);
+        }
+    }
+
     handleRefreshVerse();
   }, [language]); // Refresh when language changes
 
@@ -231,13 +250,45 @@ const Home: React.FC = () => {
     localStorage.setItem('lumina_notes', JSON.stringify(newNotes));
   };
 
+  // Calculations for Progress
   const percentage = progress ? Math.round((progress.readChapters.length / TOTAL_CHAPTERS) * 100) : 0;
-  const dailyGoal = 3;
-  const dailyCount = progress?.dailyReadCount || 0;
-  const dailyProgressPercent = Math.min((dailyCount / dailyGoal) * 100, 100);
+  
+  const dailyChaptersCount = progress?.dailyReadCount || 0;
+  const dailyChaptersPercent = Math.min((dailyChaptersCount / dailyGoalChapters) * 100, 100);
+
+  const dailyMinutesCount = progress?.todayStudyMinutes || 0;
+  const dailyMinutesPercent = Math.min((dailyMinutesCount / dailyGoalMinutes) * 100, 100);
+
+  const allGoalsMet = dailyChaptersCount >= dailyGoalChapters && dailyMinutesCount >= dailyGoalMinutes;
+
+  // Onboarding Steps Configuration
+  const onboardingSteps: Step[] = [
+    {
+      targetId: 'home-bible-card',
+      title: 'Leitura & Estudo',
+      description: 'Aqui você pode ler todos os capítulos da Bíblia, grifá-los e acompanhar seu progresso de leitura.'
+    },
+    {
+      targetId: 'home-worship-card',
+      title: 'Louvor & Adoração',
+      description: 'Encontre músicas que conectam seu coração ao céu, selecionadas para cada momento.'
+    },
+    {
+      targetId: 'home-daily-goal',
+      title: 'Suas Metas',
+      description: 'Defina quanto tempo quer ler por dia e acompanhe sua evolução diária aqui.'
+    },
+    {
+      targetId: 'home-mood-section',
+      title: 'Como você está?',
+      description: 'Diga como se sente e receba uma oração personalizada instantânea.'
+    }
+  ];
 
   return (
     <div className="space-y-6 animate-fade-in pb-32 md:pb-4 relative">
+      <Onboarding steps={onboardingSteps} storageKey="lumina_onboarding_completed" onComplete={() => console.log('Onboarding complete')} />
+
       <div className="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none -z-10">
          <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-orange/5 rounded-full blur-[100px]"></div>
          <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-gold/5 rounded-full blur-[100px]"></div>
@@ -322,8 +373,8 @@ const Home: React.FC = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 h-auto md:h-64">
-          <div onClick={() => navigate('/bible')} className="col-span-1 md:col-span-2 row-span-2 bg-surface dark:bg-stone-800 rounded-[2.5rem] p-6 shadow-sm border border-stone-100 dark:border-stone-700 relative overflow-hidden group cursor-pointer">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 h-auto md:h-64">
+          <div id="home-bible-card" onClick={() => navigate('/bible')} className="col-span-2 md:col-span-2 row-span-2 bg-surface dark:bg-stone-800 rounded-[2.5rem] p-6 shadow-sm border border-stone-100 dark:border-stone-700 relative overflow-hidden group cursor-pointer">
               <div className="absolute top-0 right-0 w-40 h-40 bg-orange/5 rounded-full blur-3xl -mr-10 -mt-10 transition-colors group-hover:bg-orange/10"></div>
               <div className="flex flex-col justify-between h-full relative z-10">
                  <div className="flex justify-between items-start mb-4">
@@ -339,7 +390,7 @@ const Home: React.FC = () => {
                  </div>
               </div>
           </div>
-          <div onClick={() => navigate('/worship')} className="col-span-1 md:col-span-2 bg-stone-900 text-white rounded-[2.5rem] p-6 shadow-lg relative overflow-hidden group cursor-pointer flex flex-col justify-center">
+          <div id="home-worship-card" onClick={() => navigate('/worship')} className="col-span-2 md:col-span-2 bg-stone-900 text-white rounded-[2.5rem] p-6 shadow-lg relative overflow-hidden group cursor-pointer flex flex-col justify-center">
               <div className="absolute inset-0 bg-gradient-to-br from-stone-900 to-black"></div>
               <div className="absolute -right-10 -bottom-10 w-32 h-32 bg-gold rounded-full blur-[60px] opacity-20 group-hover:opacity-40 transition-opacity"></div>
               <div className="relative z-10 flex items-center justify-between">
@@ -371,7 +422,7 @@ const Home: React.FC = () => {
           </div>
       </div>
 
-      <div className="-mx-4 md:mx-0 py-4">
+      <div className="-mx-4 md:mx-0 py-4" id="home-mood-section">
         <div className="flex justify-between items-end px-6 md:px-2 mb-4">
            <div><h3 className="text-xl font-bold text-ink dark:text-white font-serif flex items-center gap-2"><Heart className="text-red-500" size={20} fill="currentColor" /> {t.home.moodTitle}</h3></div>
         </div>
@@ -386,22 +437,47 @@ const Home: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-surface dark:bg-stone-900 p-5 md:p-8 rounded-[2.5rem] shadow-card border border-stone-100 dark:border-stone-800 flex items-center gap-4 md:gap-8 relative overflow-hidden group">
+      {/* REFACTORED DAILY GOALS CARD */}
+      <div id="home-daily-goal" className="bg-surface dark:bg-stone-900 p-5 md:p-8 rounded-[2.5rem] shadow-card border border-stone-100 dark:border-stone-800 flex flex-col md:flex-row items-center gap-6 relative overflow-hidden group">
          <div className="absolute right-0 top-0 h-full w-24 bg-gradient-to-l from-orange/5 to-transparent pointer-events-none"></div>
-         <div className="w-16 h-16 md:w-24 md:h-24 rounded-2xl bg-orange/10 flex items-center justify-center flex-shrink-0 text-orange border border-orange/10 shadow-sm">
-            <ScrollText size={32} className="md:w-12 md:h-12" />
+         
+         <div className="flex items-center gap-4 w-full md:w-auto md:border-r border-stone-100 dark:border-stone-800 md:pr-6">
+             <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-orange/10 flex items-center justify-center flex-shrink-0 text-orange border border-orange/10 shadow-sm">
+                <ScrollText size={32} className="md:w-10 md:h-10" />
+             </div>
+             <div>
+                 <h3 className="font-black text-ink dark:text-white text-lg uppercase tracking-tighter leading-none mb-1">{t.home.dailyGoal}</h3>
+                 <p className="text-xs text-subtle font-medium">Seu progresso de hoje</p>
+                 {allGoalsMet && <div className="mt-2 inline-flex items-center gap-1 text-[10px] font-black text-green-600 bg-green-100 dark:bg-green-900/30 px-2 py-0.5 rounded-full"><CheckCircle2 size={10} /> CONCLUÍDO</div>}
+             </div>
          </div>
-         <div className="flex-1 min-w-0">
-            <div className="flex justify-between items-center mb-3 md:mb-5">
-                <h3 className="font-black text-ink dark:text-white text-lg md:text-2xl uppercase tracking-tighter">{t.home.dailyGoal}</h3>
-                <span className="text-xl md:text-3xl font-black text-orange bg-orange/10 px-3 py-1.5 md:px-4 md:py-2 rounded-2xl uppercase tracking-tighter">{dailyCount} / {dailyGoal}</span>
-            </div>
-            <div className="h-4 md:h-6 w-full bg-stone-100 dark:bg-stone-800 rounded-full overflow-hidden shadow-inner border border-stone-200 dark:border-stone-700">
-                <div className="h-full bg-gradient-to-r from-orange via-gold to-orange rounded-full transition-all duration-1000 ease-out relative" style={{ width: `${dailyProgressPercent}%` }}>
-                   {dailyCount >= dailyGoal && <div className="absolute inset-0 bg-white/30 animate-[shimmer_2s_infinite]"></div>}
+
+         <div className="flex-1 w-full space-y-4">
+            {/* Reading Goal */}
+            <div>
+                <div className="flex justify-between items-center mb-1.5">
+                    <span className="text-xs font-bold text-stone-500 uppercase tracking-wider flex items-center gap-1"><Book size={10} /> Leitura</span>
+                    <span className="text-xs font-black text-ink dark:text-white">{dailyChaptersCount} / {dailyGoalChapters}</span>
+                </div>
+                <div className="h-3 w-full bg-stone-100 dark:bg-stone-800 rounded-full overflow-hidden shadow-inner">
+                    <div className="h-full bg-gradient-to-r from-orange to-gold rounded-full transition-all duration-1000 ease-out relative" style={{ width: `${dailyChaptersPercent}%` }}>
+                        {dailyChaptersCount >= dailyGoalChapters && <div className="absolute inset-0 bg-white/30 animate-[shimmer_2s_infinite]"></div>}
+                    </div>
                 </div>
             </div>
-            {dailyCount >= dailyGoal && <div className="mt-5 text-base font-black text-green-600 flex items-center gap-2 animate-fade-in bg-green-50 dark:bg-green-900/20 px-5 py-3 rounded-2xl w-fit shadow-sm"><CheckCircle2 size={20} /> {t.home.goalReached} +50 XP</div>}
+
+            {/* Study Time Goal */}
+            <div>
+                <div className="flex justify-between items-center mb-1.5">
+                    <span className="text-xs font-bold text-stone-500 uppercase tracking-wider flex items-center gap-1"><Clock size={10} /> Estudo</span>
+                    <span className="text-xs font-black text-ink dark:text-white">{dailyMinutesCount} / {dailyGoalMinutes} min</span>
+                </div>
+                <div className="h-3 w-full bg-stone-100 dark:bg-stone-800 rounded-full overflow-hidden shadow-inner">
+                    <div className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full transition-all duration-1000 ease-out relative" style={{ width: `${dailyMinutesPercent}%` }}>
+                       {dailyMinutesCount >= dailyGoalMinutes && <div className="absolute inset-0 bg-white/30 animate-[shimmer_2s_infinite]"></div>}
+                    </div>
+                </div>
+            </div>
          </div>
       </div>
 
@@ -458,7 +534,7 @@ const Home: React.FC = () => {
       )}
 
       {selectedMood && (
-        <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center sm:p-4 bg-ink/60 backdrop-blur-md animate-fade-in">
+        <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-ink/60 backdrop-blur-md animate-fade-in sm:p-4">
           {isAmenAnimating && (
             <div className="fixed inset-0 z-[60] pointer-events-none flex items-center justify-center">
               {Array.from({ length: 15 }).map((_, i) => (
@@ -468,7 +544,7 @@ const Home: React.FC = () => {
               ))}
             </div>
           )}
-          <div className="bg-paper dark:bg-stone-900 md:rounded-[2.5rem] rounded-t-[2.5rem] w-full max-w-md p-0 relative shadow-2xl animate-slide-up max-h-[85vh] overflow-y-auto overflow-x-hidden" style={{ boxShadow: "0 -10px 40px rgba(0,0,0,0.3)" }}>
+          <div className="bg-paper dark:bg-stone-900 rounded-t-[2.5rem] md:rounded-[2.5rem] w-full max-w-md p-0 relative shadow-2xl animate-slide-up max-h-[90dvh] overflow-y-auto overflow-x-hidden" style={{ boxShadow: "0 -10px 40px rgba(0,0,0,0.3)" }}>
             <div ref={prayerCardRef} className="bg-paper dark:bg-stone-900 md:rounded-t-[2.5rem]">
                 <div className="h-48 w-full relative bg-ink md:rounded-t-[2.5rem]">
                     <img src={MOOD_IMAGES[selectedMood]} className="w-full h-full object-cover" alt="Header" crossOrigin="anonymous" />
@@ -487,8 +563,9 @@ const Home: React.FC = () => {
                     )}
                 </div>
             </div>
-            <button onClick={() => setSelectedMood(null)} className="absolute top-4 right-4 p-2 bg-black/20 backdrop-blur-md rounded-full text-white hover:bg-black/40 border border-white/10 z-50"><X size={20} /></button>
-            <div className="px-8 pb-8 pt-0 flex flex-col gap-3">
+            
+            {/* Action Buttons Section with Safe Area Padding */}
+            <div className="px-8 pb-10 pt-0 flex flex-col gap-3 relative z-20">
                  <div className="flex gap-3">
                     <button onClick={handleDownloadImage} disabled={isLoadingPrayer} className="flex-1 bg-surface dark:bg-stone-800 text-ink dark:text-white py-4 rounded-2xl font-bold text-sm shadow-md border border-stone-200 dark:border-stone-700 hover:bg-stone-50 dark:hover:bg-stone-700 transition-all flex items-center justify-center gap-2"><Download size={18} /> {t.home.saveImage}</button>
                     <button onClick={handleAmen} disabled={isAmenAnimating} className={`flex-[2] bg-ink dark:bg-gold text-white dark:text-stone-900 py-4 rounded-2xl font-bold text-lg shadow-xl hover:bg-stone-800 dark:hover:bg-orange transition-all active:scale-[0.98] ${isAmenAnimating ? 'scale-95 opacity-80' : ''}`}>{isAmenAnimating ? `${t.home.amen}! 🙏` : t.home.amen}</button>
@@ -496,6 +573,8 @@ const Home: React.FC = () => {
                  {/* Novo Botão de Desabafo Contextual no Modal */}
                  <button onClick={handleTalkToGuide} className="w-full bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 py-4 rounded-2xl font-bold text-sm border border-green-200 dark:border-green-800 flex items-center justify-center gap-2 hover:bg-green-100 transition-all"><MessageCircle size={18} /> {t.home.vent}</button>
             </div>
+
+            <button onClick={() => setSelectedMood(null)} className="absolute top-4 right-4 p-2 bg-black/20 backdrop-blur-md rounded-full text-white hover:bg-black/40 border border-white/10 z-50"><X size={20} /></button>
           </div>
         </div>
       )}

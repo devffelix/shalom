@@ -6,6 +6,7 @@ import { generateDailyChallengeContent } from '../services/api';
 import { addXp, checkJourneyEligibility, claimBadge, getAllDisplayBadges } from '../services/gamification';
 import { Zap, Check, Calendar, ArrowLeft, Star, Heart, Briefcase, Cross, BookOpen, CheckCircle, Crown, Award, Gift, Brain, Scroll, Key, Users, Mountain, Lock, Loader2, ChevronRight } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import Onboarding, { Step } from '../components/Onboarding';
 
 // Icon mapping for Badges
 const IconMap: Record<string, any> = {
@@ -150,14 +151,14 @@ const Challenges: React.FC = () => {
     const isCompleted = isDayCompleted(selectedDay);
 
     return (
-      <div className="animate-fade-in space-y-6 pb-20 relative">
+      <div className="animate-fade-in space-y-6 pb-40 md:pb-24 relative">
         {showToast && (
             <div className={`
-                fixed top-24 left-1/2 -translate-x-1/2 z-50 text-white px-10 py-5 rounded-full shadow-2xl animate-fade-in flex items-center gap-4 border-4 border-white/20 scale-125
+                fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[100] text-white px-8 py-5 md:px-12 md:py-6 rounded-full shadow-2xl animate-slide-up flex items-center gap-4 md:gap-5 border-4 border-white/20 min-w-[300px] justify-center
                 ${toastType === 'badge' ? 'bg-gradient-to-r from-gold to-orange' : 'bg-ink'}
             `}>
-                {toastType === 'badge' ? <Award size={24} fill="currentColor" /> : <Crown size={24} className="text-gold" fill="currentColor"/>}
-                <span className="text-3xl font-black tracking-tighter">{showToast}</span>
+                {toastType === 'badge' ? <Award size={32} fill="currentColor" className="shrink-0" /> : <Crown size={28} className="text-gold shrink-0" fill="currentColor"/>}
+                <span className="text-xl md:text-3xl font-black whitespace-nowrap tracking-tighter">{showToast}</span>
             </div>
         )}
 
@@ -284,13 +285,38 @@ const Challenges: React.FC = () => {
   // --- DASHBOARD VIEW (LIST) ---
   const CHALLENGES_LIST = t.challengesList || [];
 
+  // Onboarding Steps
+  const challengesOnboardingSteps: Step[] = [
+    {
+      targetId: 'challenges-header',
+      title: 'Jornadas Temáticas',
+      description: 'Aqui você encontra planos práticos (de 7 a 30 dias) para fortalecer áreas específicas da sua vida, como ansiedade ou gratidão.'
+    },
+    {
+      targetId: 'challenges-first-card',
+      title: 'Escolha seu Caminho',
+      description: 'Toque em um card para iniciar. Você receberá uma direção diária com versículo, reflexão e desafio prático.'
+    },
+    {
+      targetId: 'challenges-progress',
+      title: 'Seu Progresso',
+      description: 'Acompanhe visualmente sua evolução. A barra preenche à medida que você conclui os dias.'
+    },
+    {
+      targetId: 'challenges-action',
+      title: 'Conquiste Medalhas',
+      description: 'Ao completar 100% de uma jornada, você desbloqueia medalhas exclusivas e ganha muito XP para seu perfil!'
+    }
+  ];
+
   return (
-    <div className="animate-fade-in space-y-8 pb-24">
+    <div className="animate-fade-in space-y-8 pb-40 md:pb-24">
+      <Onboarding steps={challengesOnboardingSteps} storageKey="lumina_onboarding_challenges_completed" />
       
-      {/* Reward Modal */}
+      {/* Reward Modal - Responsive Fixes */}
       {rewardModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in" onClick={() => setRewardModal(null)}>
-              <div className="bg-white dark:bg-stone-900 w-full max-w-sm rounded-[3rem] p-8 text-center relative animate-slide-up border-4 border-gold/30 shadow-2xl" onClick={e => e.stopPropagation()}>
+              <div className="bg-white dark:bg-stone-900 w-full max-w-sm rounded-[3rem] p-8 text-center relative animate-slide-up border-4 border-gold/30 shadow-2xl max-h-[85vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
                   <div className="absolute -top-12 left-1/2 -translate-x-1/2">
                       <div className="w-24 h-24 rounded-full bg-gradient-to-br from-gold to-orange flex items-center justify-center border-4 border-white dark:border-stone-900 shadow-xl animate-bounce-slow">
                           <Crown size={40} className="text-white" fill="currentColor" />
@@ -299,7 +325,7 @@ const Challenges: React.FC = () => {
                   <div className="mt-10">
                       <h2 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-gold to-orange mb-2 uppercase tracking-tighter">{t.journey.conquest}</h2>
                       <h3 className="text-xl font-bold text-ink dark:text-white mb-4">{rewardModal.title}</h3>
-                      <p className="text-stone-500 mb-8 leading-relaxed">
+                      <p className="text-stone-500 mb-8 leading-relaxed text-sm md:text-base">
                           {t.journey.awesome} <br/>
                           <span className="font-bold text-green-500">+{XP_REWARD_JOURNEY} {t.journey.xpReceived}</span>
                       </p>
@@ -312,7 +338,7 @@ const Challenges: React.FC = () => {
       )}
 
       {/* Header */}
-      <div className="px-2">
+      <div id="challenges-header" className="px-2">
         <h2 className="text-3xl font-serif font-black text-ink dark:text-white mb-2">{t.journey.title}</h2>
         <p className="text-subtle text-sm max-w-xs">{t.journey.subtitle}</p>
       </div>
@@ -327,16 +353,10 @@ const Challenges: React.FC = () => {
             
             // Check reward status
             const eligibleForReward = checkJourneyEligibility(challenge.id, challenge.days);
-            // We check if badge is already earned to show "Completed" state vs "Claim" state
-            // (Assuming checkJourneyEligibility returns null if already claimed, we need a separate check for display)
-            // But for simplicity in this view:
-            // If eligible -> Show "Claim Reward"
-            // If not eligible but 100% -> Show "Completed" or Badge icon
             
-            // Re-use logic to check if owned
             const savedMain = localStorage.getItem('lumina_progress');
             const earnedBadges = savedMain ? JSON.parse(savedMain).earnedBadges || [] : [];
-            // Map challenge ID to Badge ID manually (same logic as gamification.ts)
+            
             const badgeMap: Record<string, string> = {
                 'anxiety-detox': 'badge_anxiety',
                 'gratitude-journey': 'badge_gratitude',
@@ -352,6 +372,7 @@ const Challenges: React.FC = () => {
             return (
                 <div 
                     key={challenge.id}
+                    id={index === 0 ? "challenges-first-card" : undefined}
                     onClick={() => handleSelectChallenge(challenge)}
                     className="relative bg-surface dark:bg-stone-900 rounded-[2.5rem] p-6 shadow-card border border-stone-100 dark:border-stone-800 overflow-hidden cursor-pointer group hover:scale-[1.02] active:scale-[0.98] transition-all"
                 >
@@ -382,7 +403,7 @@ const Challenges: React.FC = () => {
                     </p>
 
                     {/* Progress Bar & Footer */}
-                    <div className="pl-4">
+                    <div className="pl-4" id={index === 0 ? "challenges-progress" : undefined}>
                         <div className="flex justify-between items-center mb-2">
                             <span className="text-xs font-bold text-ink dark:text-white">{progressPercent}%</span>
                             <span className="text-xs text-stone-400">{progress.length}/{challenge.days}</span>
@@ -392,25 +413,27 @@ const Challenges: React.FC = () => {
                         </div>
 
                         {/* Action Area */}
-                        {eligibleForReward ? (
-                            <button 
-                                onClick={(e) => handleClaimReward(e, challenge)}
-                                className="w-full py-3 bg-gradient-to-r from-gold to-orange text-white rounded-xl font-bold text-sm shadow-lg flex items-center justify-center gap-2 animate-pulse"
-                            >
-                                <Gift size={16} /> {t.journey.claimReward}
-                            </button>
-                        ) : (
-                            <div className="flex justify-between items-center pt-2 border-t border-stone-100 dark:border-stone-800">
-                                <div className="flex -space-x-2">
-                                    {[1,2,3].map(i => (
-                                        <div key={i} className="w-6 h-6 rounded-full bg-stone-200 dark:bg-stone-700 border-2 border-white dark:border-stone-900"></div>
-                                    ))}
+                        <div id={index === 0 ? "challenges-action" : undefined}>
+                            {eligibleForReward ? (
+                                <button 
+                                    onClick={(e) => handleClaimReward(e, challenge)}
+                                    className="w-full py-3 bg-gradient-to-r from-gold to-orange text-white rounded-xl font-bold text-sm shadow-lg flex items-center justify-center gap-2 animate-pulse"
+                                >
+                                    <Gift size={16} /> {t.journey.claimReward}
+                                </button>
+                            ) : (
+                                <div className="flex justify-between items-center pt-2 border-t border-stone-100 dark:border-stone-800">
+                                    <div className="flex -space-x-2">
+                                        {[1,2,3].map(i => (
+                                            <div key={i} className="w-6 h-6 rounded-full bg-stone-200 dark:bg-stone-700 border-2 border-white dark:border-stone-900"></div>
+                                        ))}
+                                    </div>
+                                    <span className="text-xs font-bold text-stone-400 flex items-center gap-1 group-hover:text-orange transition-colors">
+                                        {isBadgeEarned ? t.journey.completedButton : t.common.confirm} <ChevronRight size={14} />
+                                    </span>
                                 </div>
-                                <span className="text-xs font-bold text-stone-400 flex items-center gap-1 group-hover:text-orange transition-colors">
-                                    {isBadgeEarned ? t.journey.completedButton : t.common.confirm} <ChevronRight size={14} />
-                                </span>
-                            </div>
-                        )}
+                            )}
+                        </div>
                     </div>
                 </div>
             )

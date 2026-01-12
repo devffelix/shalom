@@ -1,9 +1,10 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Palette, Camera, Brain, ArrowLeft, Star, CheckCircle2, Download, RefreshCw, XCircle, Heart, Smile, Sparkles, Music, Sun, Wand2, BookOpen, Crown, CloudRain, Shield, Waves, Gift, Zap, Play, Loader2, Image as ImageIcon, Rocket, Cloud } from 'lucide-react';
+import { Palette, Camera, Brain, ArrowLeft, Star, CheckCircle2, Download, RefreshCw, XCircle, Heart, Smile, Sparkles, Music, Sun, Wand2, BookOpen, Crown, CloudRain, Shield, Waves, Gift, Zap, Play, Loader2, Image as ImageIcon, Rocket, Cloud, Lock, Tv, Mountain } from 'lucide-react';
 import ColoringBook, { VectorIllustration } from '../components/ColoringBook';
 import { GoogleGenAI } from "@google/genai";
 import { useLanguage } from '../contexts/LanguageContext';
+import UpdatesModal from '../components/UpdatesModal';
 
 // --- STYLES & FONTS ---
 const FontStyles = () => (
@@ -495,14 +496,22 @@ const KidsQuiz: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     'creation': Sun,
     'noah': CloudRain,
     'david': Shield,
-    'jonah': Waves
+    'jonah': Waves,
+    'moses': Mountain,
+    'daniel': Crown,
+    'nativity': Star,
+    'miracles': Heart
   };
 
   const QUIZ_STYLES: Record<string, {color: string, gradient: string}> = {
     'creation': { color: 'text-yellow-500', gradient: 'from-yellow-400 to-orange-400' },
     'noah': { color: 'text-blue-500', gradient: 'from-blue-400 to-cyan-400' },
     'david': { color: 'text-orange-500', gradient: 'from-orange-400 to-red-400' },
-    'jonah': { color: 'text-teal-500', gradient: 'from-teal-400 to-emerald-400' }
+    'jonah': { color: 'text-teal-500', gradient: 'from-teal-400 to-emerald-400' },
+    'moses': { color: 'text-indigo-500', gradient: 'from-indigo-400 to-purple-500' },
+    'daniel': { color: 'text-red-500', gradient: 'from-red-400 to-rose-500' },
+    'nativity': { color: 'text-purple-500', gradient: 'from-slate-800 to-indigo-900' },
+    'miracles': { color: 'text-pink-500', gradient: 'from-pink-400 to-fuchsia-400' }
   };
 
   const KIDS_QUIZ_THEMES: QuizTheme[] = t.kids.quiz.themes.map(theme => ({
@@ -642,6 +651,7 @@ export const KidsZone: React.FC = () => {
   const [coloringImage, setColoringImage] = useState<{ type: 'svg' | 'image', data: any, title: string } | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [prompt, setPrompt] = useState('');
+  const [showShalomflix, setShowShalomflix] = useState(false);
 
   // Drawing Ideas with Icons map
   const IDEA_ICONS: Record<string, string> = {
@@ -697,6 +707,10 @@ export const KidsZone: React.FC = () => {
     }
   };
 
+  const handleNavClick = (m: 'menu' | 'coloring' | 'quiz' | 'camera') => {
+      setMode(m);
+  };
+
   // Coloring Flow
   if (coloringImage) {
     return (
@@ -711,12 +725,12 @@ export const KidsZone: React.FC = () => {
 
   // Camera Flow
   if (mode === 'camera') {
-    return <PhotoBooth onBack={() => setMode('menu')} />;
+    return <PhotoBooth onBack={() => handleNavClick('menu')} />;
   }
 
   // Quiz Flow
   if (mode === 'quiz') {
-    return <KidsQuiz onBack={() => setMode('menu')} />;
+    return <KidsQuiz onBack={() => handleNavClick('menu')} />;
   }
 
   // Gallery Flow (Coloring Selection)
@@ -725,7 +739,7 @@ export const KidsZone: React.FC = () => {
       <div className="animate-fade-in pb-20 font-kids">
         <FontStyles />
         <div className="flex items-center gap-4 mb-6">
-           <button onClick={() => setMode('menu')} className="p-3 bg-white rounded-full shadow-md"><ArrowLeft size={24} className="text-purple-500"/></button>
+           <button onClick={() => handleNavClick('menu')} className="p-3 bg-white rounded-full shadow-md"><ArrowLeft size={24} className="text-purple-500"/></button>
            <h2 className="text-3xl font-black text-purple-500">{t.kids.coloring.title}</h2>
         </div>
 
@@ -794,6 +808,7 @@ export const KidsZone: React.FC = () => {
   return (
     <div className="animate-fade-in min-h-screen bg-[#f0f9ff] -m-8 p-8 relative overflow-hidden font-kids">
       <FontStyles />
+      {showShalomflix && <UpdatesModal onClose={() => setShowShalomflix(false)} />}
       
       {/* Floating Animated Decorations */}
       <div className="absolute top-10 right-10 opacity-20 animate-float-y pointer-events-none">
@@ -808,7 +823,12 @@ export const KidsZone: React.FC = () => {
       <div className="relative z-10 max-w-lg mx-auto">
         
         {/* Header */}
-        <div className="text-center mb-8 mt-4">
+        <div className="text-center mb-8 mt-4 relative">
+           {/* NOVA ETIQUETA ANIMADA */}
+           <div className="absolute top-0 right-[15%] md:right-[35%] transform translate-x-4 -translate-y-4 rotate-12 z-20 pointer-events-none">
+              <span className="bg-red-500 text-white font-black px-3 py-1 rounded-full shadow-lg border-4 border-white text-sm animate-bounce">Novo!</span>
+           </div>
+
            <div className="inline-flex items-center gap-2 bg-white px-6 py-2 rounded-full shadow-lg mb-4 border-2 border-blue-200 transform hover:-rotate-1 transition-transform cursor-default">
               <span className="text-xl">{t.kids.menu.hello}</span>
            </div>
@@ -823,7 +843,7 @@ export const KidsZone: React.FC = () => {
            
            {/* Featured Card: Coloring (Full Width) */}
            <button 
-             onClick={() => setMode('coloring')}
+             onClick={() => handleNavClick('coloring')}
              className="col-span-2 h-48 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-[2.5rem] p-6 shadow-[0_10px_20px_-5px_rgba(168,85,247,0.4)] flex flex-row items-center justify-between group hover:scale-[1.02] active:scale-[0.98] transition-all relative overflow-hidden border-4 border-white/20"
            >
               {/* Background Shapes */}
@@ -849,7 +869,7 @@ export const KidsZone: React.FC = () => {
 
            {/* Secondary Card: Quiz */}
            <button 
-             onClick={() => setMode('quiz')}
+             onClick={() => handleNavClick('quiz')}
              className="col-span-1 h-40 bg-gradient-to-br from-sky-400 to-blue-600 rounded-[2.5rem] p-5 shadow-[0_10px_20px_-5px_rgba(56,189,248,0.4)] flex flex-col items-center justify-center gap-3 group hover:scale-[1.03] active:scale-[0.95] transition-all relative overflow-hidden border-4 border-white/20"
            >
               <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20"></div>
@@ -863,7 +883,7 @@ export const KidsZone: React.FC = () => {
 
            {/* Secondary Card: Camera */}
            <button 
-             onClick={() => setMode('camera')}
+             onClick={() => handleNavClick('camera')}
              className="col-span-1 h-40 bg-gradient-to-br from-amber-400 to-orange-500 rounded-[2.5rem] p-5 shadow-[0_10px_20px_-5px_rgba(251,191,36,0.4)] flex flex-col items-center justify-center gap-3 group hover:scale-[1.03] active:scale-[0.95] transition-all relative overflow-hidden border-4 border-white/20"
            >
               <div className="absolute -bottom-10 -right-10 w-24 h-24 bg-white/20 rounded-full blur-xl"></div>
@@ -872,6 +892,34 @@ export const KidsZone: React.FC = () => {
               </div>
               <div className="text-center z-10">
                  <h3 className="text-lg font-black text-white leading-tight drop-shadow-sm" dangerouslySetInnerHTML={{__html: t.kids.menu.camera.title.replace(' ', '<br/>')}}></h3>
+              </div>
+           </button>
+
+           {/* SHALOMFLIX CARD (NEW) */}
+           <button 
+             onClick={() => { setShowShalomflix(true); }}
+             className="col-span-2 h-32 bg-stone-900 rounded-[2.5rem] p-6 shadow-2xl flex flex-row items-center gap-6 group hover:scale-[1.02] active:scale-[0.98] transition-all relative overflow-hidden border-4 border-white/10"
+           >
+              <div className="absolute inset-0 bg-gradient-to-r from-red-900/50 to-transparent pointer-events-none"></div>
+              <div className="w-16 h-16 bg-red-600 rounded-2xl flex items-center justify-center text-white shadow-lg border-2 border-red-400 shrink-0 relative">
+                  <Tv size={32} />
+                  <div className="absolute -top-3 -right-3 bg-white text-red-600 rounded-full p-1.5 shadow-md border border-stone-200">
+                      <Lock size={12} fill="currentColor" />
+                  </div>
+              </div>
+              <div className="text-left flex-1 relative z-10">
+                  <div className="inline-flex items-center gap-1 bg-white/10 px-2 py-0.5 rounded text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1 border border-white/10">
+                      {t.kids.menu.shalomflix.tag}
+                  </div>
+                  <h3 className="text-2xl font-black text-white leading-none mb-1 tracking-tight">
+                      <span className="text-red-500">Shalom</span>flix
+                  </h3>
+                  <p className="text-stone-400 font-bold text-xs">
+                      {t.kids.menu.shalomflix.subtitle}
+                  </p>
+              </div>
+              <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/50 group-hover:bg-white group-hover:text-red-600 transition-colors">
+                  <Play size={20} fill="currentColor" />
               </div>
            </button>
         </div>
@@ -886,3 +934,5 @@ export const KidsZone: React.FC = () => {
     </div>
   );
 };
+
+export default KidsZone;

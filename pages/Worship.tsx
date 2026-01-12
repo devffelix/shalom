@@ -4,6 +4,7 @@ import { SongSuggestion } from '../types';
 import { useAudio } from '../contexts/AudioContext';
 import { Music, Search, Play, Pause, AlertCircle, Volume2, VolumeX, BarChart3, SkipBack, SkipForward, Sparkles } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import Onboarding, { Step } from '../components/Onboarding';
 
 const Worship: React.FC = () => {
   const { t } = useLanguage();
@@ -45,8 +46,24 @@ const Worship: React.FC = () => {
     return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
   };
 
+  // Worship Onboarding Steps
+  const worshipOnboardingSteps: Step[] = [
+    {
+      targetId: 'worship-search',
+      title: 'Busca por Sentimento',
+      description: 'Digite como você está se sentindo (ex: ansioso, feliz) para encontrar o louvor perfeito para o seu momento.'
+    },
+    {
+      targetId: 'worship-first-card',
+      title: 'Player Imersivo',
+      description: 'Toque em qualquer música para abrir o player, controlar o volume e sentir a atmosfera de adoração.'
+    }
+  ];
+
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6 animate-fade-in pb-40 md:pb-10">
+      <Onboarding steps={worshipOnboardingSteps} storageKey="lumina_onboarding_worship_completed" />
+
       <div className="bg-gradient-to-br from-stone-900 to-black dark:from-stone-900 dark:to-black rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-card">
         <div className="absolute top-0 right-0 w-64 h-64 bg-gold rounded-full mix-blend-overlay filter blur-[80px] opacity-20"></div>
         <div className="relative z-10">
@@ -61,7 +78,7 @@ const Worship: React.FC = () => {
       </div>
 
       {/* Search Input */}
-      <div className="relative">
+      <div id="worship-search" className="relative">
         <input 
           type="text" 
           placeholder={t.worship.searchPlaceholder}
@@ -104,7 +121,7 @@ const Worship: React.FC = () => {
 
                  {/* Info & Timeline */}
                  <div className="flex-1 w-full flex flex-col justify-center text-center md:text-left min-w-0">
-                    <h3 className="font-serif font-bold text-2xl text-ink dark:text-white truncate drop-shadow-sm">{currentSong.title}</h3>
+                    <h3 className="font-serif font-bold text-xl md:text-2xl text-ink dark:text-white truncate drop-shadow-sm">{currentSong.title}</h3>
                     <p className="text-orange dark:text-gold/80 font-medium text-sm truncate mb-4 tracking-wide uppercase">{currentSong.artist}</p>
                     
                     {/* Custom Timeline Slider */}
@@ -139,8 +156,8 @@ const Worship: React.FC = () => {
                  </div>
 
                  {/* Playback Controls */}
-                 <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end px-4 md:px-0">
-                    {/* Volume */}
+                 <div className="flex items-center gap-4 w-full md:w-auto justify-center md:justify-end px-4 md:px-0">
+                    {/* Volume (Hidden on mobile to save space) */}
                     <div className="hidden md:flex items-center gap-2 group bg-stone-100 dark:bg-black/20 px-3 py-2 rounded-full border border-stone-200 dark:border-white/5 backdrop-blur-sm transition-colors">
                        <button onClick={() => setVolume(volume === 0 ? 1 : 0)}>
                            {volume === 0 ? <VolumeX size={16} className="text-subtle"/> : <Volume2 size={16} className="text-gold"/>}
@@ -159,27 +176,22 @@ const Worship: React.FC = () => {
                        </div>
                     </div>
 
-                    <div className="flex items-center gap-4 mx-auto md:mx-0">
+                    <div className="flex items-center gap-6 md:gap-4">
                         <button className="p-2 text-stone-400 hover:text-ink dark:hover:text-white transition-colors" disabled>
-                            <SkipBack size={20} />
+                            <SkipBack size={24} className="md:w-5 md:h-5" />
                         </button>
                         
                         <button 
                             onClick={togglePlay}
-                            className="w-16 h-16 rounded-full bg-gradient-to-tr from-gold to-orange text-white flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-xl shadow-orange/30 border-2 border-white/10"
+                            className="w-16 h-16 md:w-16 md:h-16 rounded-full bg-gradient-to-tr from-gold to-orange text-white flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-xl shadow-orange/30 border-2 border-white/10"
                         >
                             {isPlaying ? <Pause size={28} fill="currentColor" /> : <Play size={28} fill="currentColor" className="ml-1" />}
                         </button>
 
                         <button className="p-2 text-stone-400 hover:text-ink dark:hover:text-white transition-colors" disabled>
-                            <SkipForward size={20} />
+                            <SkipForward size={24} className="md:w-5 md:h-5" />
                         </button>
                     </div>
-
-                    {/* Mobile Volume Toggle (Optional) */}
-                    <button className="md:hidden text-stone-400" onClick={() => setVolume(volume === 0 ? 1 : 0)}>
-                         {volume === 0 ? <VolumeX size={20}/> : <Volume2 size={20}/>}
-                    </button>
                  </div>
               </div>
            </div>
@@ -187,10 +199,13 @@ const Worship: React.FC = () => {
       )}
 
       {/* Results List */}
-      <div className="space-y-4 pb-20">
+      <div className="space-y-4">
         <h3 className="text-lg font-bold text-ink dark:text-white px-2 mb-4 font-serif">{t.worship.libraryTitle}</h3>
-        {songs.map((song) => (
-          <div key={song.id} className={`
+        {songs.map((song, index) => (
+          <div 
+             key={song.id} 
+             id={index === 0 ? "worship-first-card" : undefined}
+             className={`
              group rounded-[2rem] border transition-all duration-300 overflow-hidden relative cursor-pointer
              ${currentSong?.id === song.id 
                 ? 'bg-ink dark:bg-stone-800 border-gold shadow-lg transform scale-[1.01]' 

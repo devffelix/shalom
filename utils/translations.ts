@@ -160,7 +160,12 @@ const ptKids = {
           new: 'Novo!'
       },
       quiz: { title: 'Quiz Bíblico' },
-      camera: { title: 'Foto Divertida' }
+      camera: { title: 'Foto Divertida' },
+      shalomflix: {
+          tag: 'Em Breve',
+          title: 'Shalomflix',
+          subtitle: 'Disponível em breve para assinantes'
+      }
   },
   coloring: {
       title: 'Colorir',
@@ -252,6 +257,42 @@ const ptKids = {
                   { q: "Para onde Jonas devia ir?", options: ["Nínive", "Tarsis", "Jerusalém"], a: "Nínive" },
                   { q: "Quantos dias ele ficou no peixe?", options: ["1 dia", "3 dias", "7 dias"], a: "3 dias" }
               ]
+          },
+          {
+              id: 'moses',
+              title: 'Moisés',
+              questions: [
+                  { q: "Onde a mãe de Moisés o colocou?", options: ["Num berço", "Num cesto no rio", "Numa caverna"], a: "Num cesto no rio" },
+                  { q: "O que Deus usou para falar com Moisés?", options: ["Uma nuvem", "Um arbusto em fogo", "Um anjo"], a: "Um arbusto em fogo" },
+                  { q: "O que Moisés abriu?", options: ["O Mar Vermelho", "O Rio Jordão", "O portão"], a: "O Mar Vermelho" }
+              ]
+          },
+          {
+              id: 'daniel',
+              title: 'Daniel',
+              questions: [
+                  { q: "Onde Daniel foi jogado?", options: ["Num poço", "Na cova dos leões", "Na prisão"], a: "Na cova dos leões" },
+                  { q: "O que os leões fizeram?", options: ["Rugiram", "Dormiram/Não comeram", "Brincaram"], a: "Dormiram/Não comeram" },
+                  { q: "Quantas vezes Daniel orava?", options: ["1 vez", "2 vezes", "3 vezes"], a: "3 vezes" }
+              ]
+          },
+          {
+              id: 'nativity',
+              title: 'Natal',
+              questions: [
+                  { q: "Onde Jesus nasceu?", options: ["Num hospital", "Num palácio", "Numa manjedoura"], a: "Numa manjedoura" },
+                  { q: "Quem guiou os Reis Magos?", options: ["Um mapa", "Uma estrela", "Um anjo"], a: "Uma estrela" },
+                  { q: "Qual o nome da mãe de Jesus?", options: ["Maria", "Marta", "Sara"], a: "Maria" }
+              ]
+          },
+          {
+              id: 'miracles',
+              title: 'Milagres',
+              questions: [
+                  { q: "Jesus andou sobre o quê?", options: ["A água", "O fogo", "O ar"], a: "A água" },
+                  { q: "O que Jesus multiplicou?", options: ["Ouro", "Pães e peixes", "Pedras"], a: "Pães e peixes" },
+                  { q: "Quem Jesus ressuscitou?", options: ["Lázaro", "Pedro", "João"], a: "Lázaro" }
+              ]
           }
       ]
   }
@@ -326,7 +367,7 @@ const pt = {
     letterDistance: 'A verdade é que, com tanta correria, a distância entre você e Deus não acontece de uma vez… Ela cresce aos poucos.',
     letterLacks: [
       'Você quer orar, mas falta tempo.',
-      'Quer ler a Bíblia, mas falta constância.',
+      'Quer ler a Bíblia, mas falta constancia.',
       'Quer ouvir Deus, mas falta silêncio.'
     ],
     letterWorldScreams: 'O mundo grita. A fé sussurra.',
@@ -549,9 +590,9 @@ const en = {
   },
   landing: {
     // Hero
-    heroTitle: 'Your time with God,',
-    heroSubtitle: 'every single day',
-    heroDesc: 'A spiritual guide on WhatsApp that strengthens your faith, reminds you of the Word, and accompanies you in daily battles.',
+    heroTitle: 'Seu tempo com Deus,',
+    heroSubtitle: 'todos os dias',
+    heroDesc: 'Um guia espiritual no WhatsApp que fortalece sua fé, te lembra da Palavra e te acompanha nas batalhas diárias.',
     ctaStart: 'Start Now',
     ctaPlans: 'Plans',
     login: 'Login',
@@ -903,7 +944,7 @@ const es = {
       'Shalom envía devocionales para parejas que rompen el orgullo y unen los corazones ante Dios.'
     ],
     marriageQuote: '"Cordón de tres dobleces no se rompe pronto."',
-    sloganPrayer: '"Oración que te alcanza donde estés"',
+    sloganPrayer: '"Oración que te alcanza onde estés"',
     familyTitle: '¿Tus hijos te ven orando?',
     familyTag: 'Protección del Hogar',
     familyDesc: [
@@ -922,7 +963,7 @@ const es = {
 
     routineTitle: 'Un Día en la Presencia',
     routineMorning: '07:00 | El Maná Escondido',
-    routineMorningDesc: 'Antes de que comience el caos del mundo, recibes un versículo profético y una dirección clara. Tu mente está blindada antes de salir de casa.',
+    routineMorningDesc: 'Antes de que comience el caos del mundo, recibes un versículo profético e una dirección clara. Tu mente está blindada antes de salir de casa.',
     routineAfternoon: '14:00 | El Escudo de la Fe',
     routineAfternoonDesc: 'En el apogeo del estrés laboral, cuando la ansiedad golpea, Shalom te envía una alabanza u oración que calma tu alma en 3 minutos.',
     routineNight: '22:00 | El Descanso del Alma',
@@ -988,9 +1029,9 @@ const es = {
     guaranteeDesc: 'Entra, usa la app, habla con el Guía. Si no sientes paz en tu corazón, te devolvemos el 100% de tu dinero. Sin preguntas.',
     faqTitle: '¿Dudas?',
     faqList: [
-      { q: '¿Qué es Shalom?', a: 'Shalom es tu compañero espiritual diario. Une la sabiduría milenaria de la Biblia con la conveniência de WhatsApp y una app moderna, enviando oraciones personalizadas, reflexiones profundas y alabanzas seleccionadas para mantener tu fe activa todos los días.' },
+      { q: '¿Qué es Shalom?', a: 'Shalom es tu compañero espiritual diario. Une la sabiduría milenaria de la Biblia con la conveniência de WhatsApp y una app moderna, enviando oraciones personalizadas, reflexiones profundas y alabanzas seleccionadas para mantener tu fe activa todos os días.' },
       { q: '¿Debo pagar algo extra por el chat?', a: '¡No! El plan anual cubre acceso ilimitado al Guía Espiritual y todas las funcionalidades de la app.' },
-      { q: '¿Funciona en iPhone y Android?', a: 'Sí, Shalom es una Web App compatible con todos los celulares modernos, tablets y computadoras.' },
+      { q: '¿Funciona en iPhone e Android?', a: 'Sí, Shalom es una Web App compatible con todos los celulares modernos, tablets y computadoras.' },
       { q: '¿Cómo cancelo si no me gusta?', a: 'Directamente por la app o enviando un correo a nuestro soporte. Es simple, rápido y sin burocracia.' }
     ],
     copyright: '© 2024 Shalom App. Hecho con fe.',

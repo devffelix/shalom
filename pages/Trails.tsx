@@ -4,6 +4,7 @@ import { UserGoals } from '../types';
 import { INITIAL_GOALS, VIRTUES, INITIAL_CHALLENGES } from '../constants';
 import { Target, Clock, Zap, Anchor, HeartHandshake, Shield, Hourglass, Brain, Sword, CheckCircle2, Crown, Save, Flame, BookOpen, ChevronRight, Compass } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import Onboarding, { Step } from '../components/Onboarding';
 
 const IconMap: Record<string, any> = {
   Anchor, HeartHandshake, Shield, Hourglass, Brain, Sword
@@ -44,8 +45,33 @@ const Trails: React.FC = () => {
     setGoals(prev => ({ ...prev, targetJourneyId: id }));
   };
 
+  // Onboarding Configuration
+  const trailsOnboardingSteps: Step[] = [
+    {
+      targetId: 'trails-virtue',
+      title: 'Foco Espiritual',
+      description: 'Escolha uma virtude (como Fé ou Coragem) para ser a intenção principal do seu mês.'
+    },
+    {
+      targetId: 'trails-rhythm',
+      title: 'Metas Diárias',
+      description: 'Defina quantos capítulos ler e quanto tempo estudar por dia. Isso ajusta sua barra de progresso na Home.'
+    },
+    {
+      targetId: 'trails-journey',
+      title: 'Jornada Temática',
+      description: 'Selecione um plano guiado (ex: Gratidão) para receber desafios específicos sobre esse tema.'
+    },
+    {
+      targetId: 'trails-save',
+      title: 'Confirmar',
+      description: 'Não esqueça de salvar suas alterações para que elas comecem a valer no seu perfil.'
+    }
+  ];
+
   return (
-    <div className="space-y-8 pb-32 animate-fade-in">
+    <div className="space-y-8 pb-36 md:pb-40 animate-fade-in">
+      <Onboarding steps={trailsOnboardingSteps} storageKey="lumina_onboarding_trails_completed" />
       
       {/* Header with Visual Element */}
       <div className="relative px-2 py-4">
@@ -63,7 +89,7 @@ const Trails: React.FC = () => {
       </div>
 
       {/* SECTION 1: VIRTUE SELECTION (Intent) */}
-      <section>
+      <section id="trails-virtue">
           <div className="px-2 mb-4 flex justify-between items-end">
               <h3 className="text-lg font-bold font-serif flex items-center gap-2 text-ink dark:text-white">
                  <Crown className="text-orange" size={20} fill="currentColor" /> {t.trails.focusVirtue}
@@ -73,7 +99,7 @@ const Trails: React.FC = () => {
               </span>
           </div>
 
-          <div className="flex gap-4 overflow-x-auto pb-8 -mx-4 px-6 snap-x no-scrollbar">
+          <div className="flex gap-4 overflow-x-auto pb-8 -mx-4 px-6 snap-x snap-mandatory no-scrollbar">
               {VIRTUES.map((virtue) => {
                   const Icon = IconMap[virtue.icon];
                   const isSelected = goals.focusVirtue === virtue.id;
@@ -118,7 +144,7 @@ const Trails: React.FC = () => {
       </section>
 
       {/* SECTION 2: HABITS CONTROL CENTER */}
-      <section className="px-2">
+      <section id="trails-rhythm" className="px-2">
           <h3 className="text-lg font-bold font-serif mb-4 flex items-center gap-2 text-ink dark:text-white">
               <Flame className="text-red-500" size={20} fill="currentColor" /> {t.trails.dailyRhythm}
           </h3>
@@ -185,7 +211,7 @@ const Trails: React.FC = () => {
       </section>
 
       {/* SECTION 3: TARGET JOURNEY */}
-      <section className="px-2">
+      <section id="trails-journey" className="px-2">
           <h3 className="text-lg font-bold font-serif mb-4 flex items-center gap-2 text-ink dark:text-white">
               <Zap className="text-purple-500" size={20} fill="currentColor" /> {t.trails.nextTarget}
           </h3>
@@ -229,7 +255,7 @@ const Trails: React.FC = () => {
       </section>
 
       {/* FLOATING SAVE BUTTON */}
-      <div className="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-paper via-paper to-transparent dark:from-black dark:via-black/90 pointer-events-none z-40">
+      <div id="trails-save" className="fixed bottom-0 left-0 right-0 p-6 pb-8 md:pb-6 bg-gradient-to-t from-paper via-paper to-transparent dark:from-black dark:via-black/90 pointer-events-none z-40">
           <div className="max-w-md mx-auto pointer-events-auto">
             <button 
                 onClick={handleSave}

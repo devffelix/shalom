@@ -1,11 +1,12 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Moon, Sun, Trash2, Save, Camera, ChevronRight, LogOut, Info, Award, Brain, Heart, Scroll, Cross, Key, Users, Mountain, BookOpen, Crown, Zap, Lock, Star, Loader2, Globe } from 'lucide-react';
+import { User, Moon, Sun, Trash2, Save, Camera, ChevronRight, LogOut, Info, Award, Brain, Heart, Scroll, Cross, Key, Users, Mountain, BookOpen, Crown, Zap, Lock, Star, Loader2, Globe, AlertTriangle, X, Send, MessageSquare } from 'lucide-react';
 import { getAllDisplayBadges, getUserXp, calculateLevel } from '../services/gamification';
 import { updateUserName } from '../services/supabase';
 import { Badge } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
+import { ShalomLogo } from '../components/Layout';
 
 // Icon Map
 const IconMap: Record<string, any> = {
@@ -80,6 +81,15 @@ const Settings: React.FC = () => {
   const [badges, setBadges] = useState<{ badge: Badge, earned: boolean }[]>([]);
   const [stats, setStats] = useState({ xp: 0, level: 1, title: '' });
 
+  // --- Cancellation Flow States ---
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showCancelChat, setShowCancelChat] = useState(false);
+  const [chatMessages, setChatMessages] = useState<Array<{sender: 'bot'|'user', text: string}>>([]);
+  const [chatStep, setChatStep] = useState(0);
+  const [chatInput, setChatInput] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const chatEndRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     // Load saved settings
     const savedName = localStorage.getItem('lumina_username');
@@ -105,6 +115,11 @@ const Settings: React.FC = () => {
     setStats({ xp, level: levelData.currentLevel, title: levelData.currentTitle });
 
   }, []);
+
+  // Auto-scroll chat
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [chatMessages, isTyping]);
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -164,6 +179,52 @@ const Settings: React.FC = () => {
       localStorage.removeItem('lumina_email');
       navigate('/');
     }
+  };
+
+  // --- CANCELLATION LOGIC ---
+  const startCancelFlow = () => {
+    setShowCancelModal(true);
+  };
+
+  const startChat = () => {
+    setShowCancelModal(false);
+    setShowCancelChat(true);
+    // Initial bot message
+    setChatMessages([
+        { sender: 'bot', text: `Olá, ${name || 'Viajante'}. Poxa, sinto muito que você queira cancelar sua assinatura... 😔` },
+        { sender: 'bot', text: "Para prosseguirmos, poderia me dizer o motivo do cancelamento?" }
+    ]);
+    setChatStep(1);
+  };
+
+  const handleSendMessage = () => {
+    if (!chatInput.trim()) return;
+
+    // Add user message
+    const newMessage = { sender: 'user' as const, text: chatInput };
+    setChatMessages(prev => [...prev, newMessage]);
+    setChatInput('');
+    setIsTyping(true);
+
+    // Bot response logic
+    setTimeout(() => {
+        let botResponses: { sender: 'bot' | 'user', text: string }[] = [];
+        
+        if (chatStep === 1) {
+            botResponses.push({ sender: 'bot', text: "Entendo perfeitamente. Sua opinião é muito importante para nossa evolução." });
+            botResponses.push({ sender: 'bot', text: "Se pudesse nos dar uma nota de 0 a 5 para o Shalom, que nota daria e porquê?" });
+            setChatStep(2);
+        } else if (chatStep === 2) {
+            botResponses.push({ sender: 'bot', text: "Obrigado pela sinceridade." });
+            botResponses.push({ sender: 'bot', text: "📝 Registramos o seu pedido de cancelamento de assinatura." });
+            botResponses.push({ sender: 'bot', text: "Em até 5 dias úteis você receberá a confirmação/reembolso em seu e-mail cadastrado." });
+            botResponses.push({ sender: 'bot', text: "As portas estarão sempre abertas para você voltar. Fique na paz! 🙏" });
+            setChatStep(3); // End
+        }
+
+        setChatMessages(prev => [...prev, ...botResponses]);
+        setIsTyping(false);
+    }, 1500);
   };
 
   // Filter badges by type
@@ -393,9 +454,121 @@ const Settings: React.FC = () => {
           </div>
       </div>
 
-      <div className="text-center text-stone-400 text-xs py-4">
-         Shalom App v1.4 • {language.toUpperCase()}
+      <div className="text-center text-stone-400 text-xs py-4 pb-8 flex flex-col items-center gap-2">
+         <span>Shalom App v1.4 • {language.toUpperCase()}</span>
+         <button 
+            onClick={startCancelFlow}
+            className="text-stone-300 hover:text-stone-500 dark:hover:text-stone-100 transition-colors text-[10px] underline decoration-stone-200 dark:decoration-stone-700"
+         >
+            Cancelar Assinatura
+         </button>
       </div>
+
+      {/* CONFIRMATION MODAL */}
+      {showCancelModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+            <div className="bg-white dark:bg-stone-900 w-full max-w-sm p-6 rounded-[2rem] shadow-2xl animate-slide-up border border-stone-200 dark:border-stone-800 text-center">
+                <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <AlertTriangle size={32} />
+                </div>
+                <h3 className="text-xl font-bold text-ink dark:text-white mb-2">Tem certeza?</h3>
+                <p className="text-sm text-stone-500 mb-6">Ao cancelar, você perderá acesso ao seu progresso e ao Guia Espiritual.</p>
+                <div className="flex flex-col gap-3">
+                    <button 
+                        onClick={startChat}
+                        className="w-full py-3 bg-red-500 text-white rounded-xl font-bold hover:bg-red-600 transition-colors"
+                    >
+                        Sim, quero cancelar
+                    </button>
+                    <button 
+                        onClick={() => setShowCancelModal(false)}
+                        className="w-full py-3 bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 rounded-xl font-bold hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors"
+                    >
+                        Manter Assinatura
+                    </button>
+                </div>
+            </div>
+        </div>
+      )}
+
+      {/* CHAT MODAL */}
+      {showCancelChat && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+            <div className="bg-white dark:bg-stone-900 w-full max-w-md h-[500px] max-h-[80dvh] flex flex-col rounded-[2rem] shadow-2xl animate-slide-up border border-stone-200 dark:border-stone-800 overflow-hidden relative">
+                
+                {/* Header */}
+                <div className="p-4 bg-stone-50 dark:bg-stone-950 border-b border-stone-100 dark:border-stone-800 flex justify-between items-center shrink-0">
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-ink dark:bg-white text-white dark:text-ink rounded-full flex items-center justify-center">
+                            <ShalomLogo size="w-6 h-6" />
+                        </div>
+                        <div>
+                            <h4 className="font-bold text-sm text-ink dark:text-white">Suporte Shalom</h4>
+                            <p className="text-[10px] text-green-500 font-bold flex items-center gap-1"><span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span> Online agora</p>
+                        </div>
+                    </div>
+                    <button onClick={() => setShowCancelChat(false)} className="p-2 hover:bg-stone-200 dark:hover:bg-stone-800 rounded-full transition-colors text-stone-400">
+                        <X size={20} />
+                    </button>
+                </div>
+
+                {/* Messages Area */}
+                <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#f2f2f2] dark:bg-[#0c0a09]">
+                    {chatMessages.map((msg, idx) => (
+                        <div key={idx} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                            <div className={`
+                                max-w-[80%] p-3 rounded-2xl text-sm leading-relaxed shadow-sm
+                                ${msg.sender === 'user' 
+                                    ? 'bg-green-600 text-white rounded-tr-none' 
+                                    : 'bg-white dark:bg-stone-800 text-stone-800 dark:text-stone-200 rounded-tl-none'}
+                            `}>
+                                {msg.text}
+                            </div>
+                        </div>
+                    ))}
+                    {isTyping && (
+                        <div className="flex justify-start">
+                            <div className="bg-white dark:bg-stone-800 p-3 rounded-2xl rounded-tl-none shadow-sm flex items-center gap-1">
+                                <span className="w-2 h-2 bg-stone-400 rounded-full animate-bounce"></span>
+                                <span className="w-2 h-2 bg-stone-400 rounded-full animate-bounce delay-100"></span>
+                                <span className="w-2 h-2 bg-stone-400 rounded-full animate-bounce delay-200"></span>
+                            </div>
+                        </div>
+                    )}
+                    <div ref={chatEndRef} />
+                </div>
+
+                {/* Input Area */}
+                {chatStep < 3 && (
+                    <div className="p-4 bg-white dark:bg-stone-900 border-t border-stone-100 dark:border-stone-800 flex gap-2 shrink-0">
+                        <input 
+                            type="text" 
+                            value={chatInput}
+                            onChange={(e) => setChatInput(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                            placeholder="Digite sua resposta..."
+                            className="flex-1 bg-stone-100 dark:bg-stone-800 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-green-500/20 text-ink dark:text-white"
+                            autoFocus
+                        />
+                        <button 
+                            onClick={handleSendMessage}
+                            disabled={!chatInput.trim()}
+                            className="w-12 h-12 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white rounded-xl flex items-center justify-center transition-colors shadow-lg"
+                        >
+                            <Send size={18} />
+                        </button>
+                    </div>
+                )}
+                
+                {chatStep === 3 && (
+                    <div className="p-4 bg-white dark:bg-stone-900 border-t border-stone-100 dark:border-stone-800 shrink-0">
+                        <button onClick={() => setShowCancelChat(false)} className="w-full py-3 bg-stone-100 dark:bg-stone-800 text-stone-500 rounded-xl font-bold text-sm">Fechar Chat</button>
+                    </div>
+                )}
+            </div>
+        </div>
+      )}
+
     </div>
   );
 };

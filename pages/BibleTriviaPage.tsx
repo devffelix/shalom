@@ -4,10 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { TRIVIA_CATEGORIES, XP_PER_TRIVIA } from '../constants';
 import { addXp, getUserXp } from '../services/gamification';
 import { TriviaCategory } from '../types';
-import { ArrowLeft, Trophy, Cross, Scroll, Map, Brain, CheckCircle2, XCircle, ArrowRight, Lightbulb, HelpCircle, Star, Crown, BookOpen, Heart, Flame, Home, RefreshCw } from 'lucide-react';
+import { ArrowLeft, Trophy, Cross, Scroll, Map, Brain, CheckCircle2, XCircle, ArrowRight, Lightbulb, HelpCircle, Star, Crown, BookOpen, Heart, Flame, Home, RefreshCw, Sun, Mountain } from 'lucide-react';
 
 const IconMap: Record<string, any> = {
-  Cross, Scroll, Map, Brain, BookOpen, Heart, Flame
+  Cross, Scroll, Map, Brain, BookOpen, Heart, Flame, Crown, Sun, Mountain
 };
 
 const BibleTriviaPage: React.FC = () => {
@@ -69,7 +69,7 @@ const BibleTriviaPage: React.FC = () => {
 
   const nextQuestion = () => {
     if (!selectedCategory) return;
-
+    
     setAnimatingOut(true);
     setTimeout(() => {
         if (currentQuestionIndex < selectedCategory.questions.length - 1) {

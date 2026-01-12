@@ -98,6 +98,9 @@ export const initQuizSession = async (): Promise<string | null> => {
 };
 
 export const saveQuizAnswer = async (sessionId: string, questionId: number, questionText: string, answerText: string) => {
+  // Safety check: Don't try to save if session failed to init
+  if (!sessionId) return;
+
   try {
     const { error } = await supabase
       .from('quiz_answers')
@@ -117,6 +120,9 @@ export const saveQuizAnswer = async (sessionId: string, questionId: number, ques
 };
 
 export const updateSessionStatus = async (sessionId: string, status: 'completed' | 'converted') => {
+  // Safety check
+  if (!sessionId) return;
+
   try {
     await supabase.from('quiz_sessions').update({ status }).eq('id', sessionId);
   } catch (err) {
@@ -128,32 +134,48 @@ export const updateSessionStatus = async (sessionId: string, status: 'completed'
 
 export const getAdminAnalytics = async () => {
   try {
-    // 1. Fetch ALL Sessions (Raw Data)
+    // 1. Fetch Sessions (Raw Data) - LIMITED to prevent browser crash on large datasets
+    // In a real production app, aggregation should be done on backend (Edge Functions or RPC)
     const { data: sessions, error: sessionsError } = await supabase
         .from('quiz_sessions')
         .select('*')
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .limit(5000); // SAFETY LIMIT
 
     if (sessionsError) throw sessionsError;
 
-    // 2. Fetch ALL Answers (Raw Data) - Warning: Optimization needed for huge datasets, but fine for MicroSaaS start
+    if (!sessions || sessions.length === 0) {
+        return {
+            totalStarts: 0,
+            trafficData: [],
+            funnelData: [],
+            answersData: [],
+            activeNow: 0,
+            avgTimeSeconds: 0
+        };
+    }
+
+    // 2. Fetch Answers related to these sessions
+    // Using a simpler query for MVP. For scale, use RPC.
     const { data: answers, error: answersError } = await supabase
         .from('quiz_answers')
-        .select('*');
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(10000); // SAFETY LIMIT
 
     if (answersError) throw answersError;
 
-    const totalStarts = sessions?.length || 0;
+    const totalStarts = sessions.length;
 
     // --- AGGREGATION LOGIC ---
 
     // A. Active Users (Created in last 15 mins)
     const fifteenMinutesAgo = new Date(Date.now() - 15 * 60 * 1000);
-    const activeNow = sessions?.filter(s => new Date(s.created_at) > fifteenMinutesAgo).length || 0;
+    const activeNow = sessions.filter(s => new Date(s.created_at) > fifteenMinutesAgo).length || 0;
 
     // B. Traffic Sources Aggregation
     const sourceMap: Record<string, number> = {};
-    sessions?.forEach(s => {
+    sessions.forEach(s => {
         const src = s.utm_source || 'Desconhecido';
         sourceMap[src] = (sourceMap[src] || 0) + 1;
     });
@@ -196,26 +218,16 @@ export const getAdminAnalytics = async () => {
         };
     });
 
-    // E. Average Time Calculation (For completed sessions)
-    // We assume sessions with status 'completed' or 'converted' are finished.
-    // We approximate time by taking (Last Answer Time - Session Created Time)
+    // E. Average Time Calculation
     let totalDurationSeconds = 0;
     let completedCount = 0;
 
-    const completedSessions = sessions?.filter(s => s.status === 'completed' || s.status === 'converted') || [];
+    const completedSessions = sessions.filter(s => s.status === 'completed' || s.status === 'converted');
     
-    // Create map of session start times
+    // Improved estimation map
     const sessionStartMap = new Map<string, number>();
-    if (sessions) {
-        sessions.forEach(s => sessionStartMap.set(s.id, new Date(s.created_at).getTime()));
-    }
+    sessions.forEach(s => sessionStartMap.set(s.id, new Date(s.created_at).getTime()));
 
-    // Find last answer timestamp for each completed session
-    // This is computationally expensive O(N*M), simplifying for mvp:
-    // We will just average active sessions duration if we had updated_at, 
-    // but here we will estimate based on creation time of answers linked to session
-    
-    // Improved estimation:
     const sessionLastInteraction = new Map<string, number>();
     answers?.forEach(a => {
         const time = new Date(a.created_at).getTime();
@@ -226,11 +238,9 @@ export const getAdminAnalytics = async () => {
     completedSessions.forEach(s => {
         const start = sessionStartMap.get(s.id);
         const end = sessionLastInteraction.get(s.id);
-        // Robustness check: Ensure dates are valid and positive duration
         if (start && end && end > start) {
             const duration = (end - start) / 1000;
-            // Filter out unrealistic durations (e.g. > 2 hours for a simple quiz, might be user returning next day)
-            if (duration < 7200) { 
+            if (duration < 7200) { // Exclude outliers > 2 hours
                 totalDurationSeconds += duration;
                 completedCount++;
             }
@@ -244,8 +254,8 @@ export const getAdminAnalytics = async () => {
       trafficData,
       funnelData,
       answersData,
-      activeNow, // Real calculated value
-      avgTimeSeconds // Real calculated value
+      activeNow, 
+      avgTimeSeconds 
     };
 
   } catch (err) {
