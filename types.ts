@@ -114,7 +114,7 @@ export interface AudioContextType {
   progress: number; // Current time in seconds
   duration: number; // Total duration in seconds
   volume: number; // 0 to 1
-  playSong: (song: SongSuggestion) => void;
+  playSong: (song: SongSuggestion) => Promise<void>;
   togglePlay: () => void;
   seek: (time: number) => void;
   setVolume: (level: number) => void; // level 0 to 1
