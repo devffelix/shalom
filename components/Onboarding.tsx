@@ -53,7 +53,6 @@ const Onboarding: React.FC<OnboardingProps> = ({ steps, onComplete, storageKey }
       const element = document.getElementById(currentStep.targetId);
       if (element) {
         const rect = element.getBoundingClientRect();
-        // Only update if dimensions actually changed (simple diff check could optimize this)
         setTargetRect(rect);
       }
       animationFrameId = requestAnimationFrame(trackPosition);
@@ -61,7 +60,6 @@ const Onboarding: React.FC<OnboardingProps> = ({ steps, onComplete, storageKey }
 
     trackPosition();
     
-    // Add explicit listeners for robustness
     window.addEventListener('resize', trackPosition);
     window.addEventListener('scroll', trackPosition, { capture: true });
 
@@ -92,89 +90,92 @@ const Onboarding: React.FC<OnboardingProps> = ({ steps, onComplete, storageKey }
 
   if (!isVisible || !targetRect) return null;
 
-  // --- RESPONSIVE POSITIONING LOGIC ---
+  // --- REFINED POSITIONING LOGIC TO PREVENT OVERLAP ---
   const windowWidth = window.innerWidth;
   const windowHeight = window.innerHeight;
-  
-  // Card dimensions logic
   const isMobile = windowWidth < 768;
-  const cardWidth = isMobile ? windowWidth - 32 : 300; // Full width - margin on mobile
-  const estimatedCardHeight = 220; 
-
-  // Verifica se o alvo é muito grande
-  const isLargeTarget = targetRect.height > windowHeight * 0.5 || targetRect.width > windowWidth * 0.8;
+  const cardWidth = isMobile ? windowWidth - 40 : 320;
+  const estimatedCardHeight = 260; // Increased buffer for safety
 
   let top, left;
 
-  if (isLargeTarget) {
-      // Centraliza na tela se o alvo for muito grande
-      top = (windowHeight / 2) - (estimatedCardHeight / 2);
-      left = (windowWidth / 2) - (cardWidth / 2);
-  } else {
-      // Posicionamento padrão: Abaixo do elemento
-      top = targetRect.bottom + 20;
-      left = targetRect.left + (targetRect.width / 2) - (cardWidth / 2);
+  // 1. Calculate center of the target
+  const targetCenterY = targetRect.top + targetRect.height / 2;
+  const spaceAbove = targetRect.top;
+  const spaceBelow = windowHeight - targetRect.bottom;
 
-      // Se estourar a parte inferior, tenta colocar em cima
-      if (top + estimatedCardHeight > windowHeight - 20) {
-          const spaceAbove = targetRect.top - 20 - estimatedCardHeight;
-          if (spaceAbove > 20) {
-              top = targetRect.top - 20 - estimatedCardHeight;
-          } else {
-              // Se não couber em cima nem embaixo, centraliza verticalmente
-              top = (windowHeight / 2) - (estimatedCardHeight / 2);
-          }
+  // 2. Decide if placing above or below based on available space
+  // We prefer below (spaceBelow) if it's enough, otherwise check above.
+  if (spaceBelow > estimatedCardHeight + 40) {
+      // Place BELOW
+      top = targetRect.bottom + 24;
+  } else if (spaceAbove > estimatedCardHeight + 40) {
+      // Place ABOVE
+      top = targetRect.top - estimatedCardHeight - 24;
+  } else {
+      // FALLBACK: If target is too tall or covers middle, 
+      // place it at the extreme bottom or top of the viewport
+      // depending on which half the target's center is NOT in.
+      if (targetCenterY > windowHeight / 2) {
+          // Target is in bottom half, put modal at the top
+          top = 24;
+      } else {
+          // Target is in top half, put modal at the bottom
+          top = windowHeight - estimatedCardHeight - 24;
       }
   }
 
-  // Clamping Horizontal (Segurança de borda)
-  left = Math.max(16, Math.min(left, windowWidth - cardWidth - 16));
+  // 3. Horizontal centering relative to target
+  left = targetRect.left + (targetRect.width / 2) - (cardWidth / 2);
+
+  // 4. Clamping: Ensure it stays within screen boundaries
+  const horizontalMargin = 20;
+  left = Math.max(horizontalMargin, Math.min(left, windowWidth - cardWidth - horizontalMargin));
   
-  // Clamping Vertical Final (Segurança absoluta)
-  top = Math.max(16, Math.min(top, windowHeight - estimatedCardHeight - 16));
+  const verticalMargin = 20;
+  top = Math.max(verticalMargin, Math.min(top, windowHeight - estimatedCardHeight - verticalMargin));
 
   const popoverStyle: React.CSSProperties = {
       top: top,
       left: left,
-      width: isMobile ? 'calc(100vw - 32px)' : '300px',
+      width: isMobile ? 'calc(100vw - 40px)' : '320px',
       maxWidth: '400px',
-      position: 'fixed' // Garante posicionamento relativo à viewport
+      position: 'fixed'
   };
 
   return createPortal(
     <div className="fixed inset-0 z-[9999] overflow-hidden pointer-events-auto touch-none">
-      {/* Spotlight Effect - Uses FIXED position to match getBoundingClientRect coordinates perfectly even during scroll */}
+      {/* Spotlight Effect */}
       <div 
-        className="fixed transition-all duration-100 ease-out rounded-3xl"
+        className="fixed transition-all duration-300 ease-out rounded-3xl"
         style={{
-            top: targetRect.top - 5,
-            left: targetRect.left - 5,
-            width: targetRect.width + 10,
-            height: targetRect.height + 10,
-            boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.85)', // Darker overlay for focus
+            top: targetRect.top - 8,
+            left: targetRect.left - 8,
+            width: targetRect.width + 16,
+            height: targetRect.height + 16,
+            boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.85)',
             pointerEvents: 'none'
         }}
       >
-          {/* Pulsing border for focus */}
-          <div className="absolute inset-0 rounded-3xl border-2 border-white/50 animate-pulse"></div>
+          <div className="absolute inset-0 rounded-3xl border-4 border-gold/40 animate-pulse"></div>
       </div>
 
       {/* The Popover Card */}
       <div 
-        className="fixed bg-white dark:bg-stone-900 rounded-3xl p-6 shadow-2xl border-4 border-stone-100 dark:border-stone-800 transition-all duration-300 animate-slide-up flex flex-col gap-4"
+        className="fixed bg-white dark:bg-stone-900 rounded-[2.5rem] p-6 shadow-2xl border-4 border-stone-100 dark:border-stone-800 transition-all duration-500 animate-slide-up flex flex-col gap-4"
         style={popoverStyle}
       >
-          {/* Little Mascot / Logo Header */}
-          <div className="absolute -top-8 left-1/2 -translate-x-1/2">
-              <div className="bg-white dark:bg-stone-800 p-2 rounded-full shadow-lg border-4 border-stone-100 dark:border-stone-700">
+          {/* Mascot / Logo Header */}
+          <div className="absolute -top-10 left-1/2 -translate-x-1/2">
+              <div className="bg-gradient-to-br from-gold to-orange p-3 rounded-full shadow-xl border-4 border-white dark:border-stone-800">
                   <ShalomLogo size="w-10 h-10" />
               </div>
           </div>
 
-          <div className="mt-4 text-center">
+          <div className="mt-6 text-center">
               <h3 className="text-xl font-black text-ink dark:text-white mb-2 leading-tight">{currentStep.title}</h3>
-              <div className="max-h-[30vh] overflow-y-auto pr-1 scrollbar-thin">
-                <p className="text-stone-600 dark:text-stone-300 text-sm leading-relaxed font-medium">
+              <div className="max-h-[30vh] overflow-y-auto pr-1 no-scrollbar">
+                <p className="text-stone-600 dark:text-stone-300 text-sm md:text-base leading-relaxed font-medium">
                     {currentStep.description}
                 </p>
               </div>
@@ -183,22 +184,22 @@ const Onboarding: React.FC<OnboardingProps> = ({ steps, onComplete, storageKey }
           <div className="flex gap-3 mt-2">
               <button 
                 onClick={handleSkip}
-                className="flex-1 py-3 rounded-2xl font-bold text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 transition-colors text-xs uppercase tracking-wider bg-stone-100 dark:bg-stone-800"
+                className="flex-1 py-3.5 rounded-2xl font-bold text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 transition-colors text-xs uppercase tracking-wider bg-stone-100 dark:bg-stone-800"
               >
                   Pular
               </button>
               <button 
                 onClick={handleNext}
-                className="flex-[2] bg-green-500 hover:bg-green-600 text-white py-3 rounded-2xl font-black text-xs shadow-[0_4px_0_rgb(21,128,61)] active:shadow-none active:translate-y-1 transition-all uppercase tracking-wider flex items-center justify-center gap-2"
+                className="flex-[2] bg-green-500 hover:bg-green-600 text-white py-3.5 rounded-2xl font-black text-xs shadow-lg active:scale-95 transition-all uppercase tracking-wider flex items-center justify-center gap-2"
               >
                   {currentStepIndex === steps.length - 1 ? 'Começar' : 'Próximo'} <ChevronRight size={16} strokeWidth={3} />
               </button>
           </div>
 
           {/* Step Dots */}
-          <div className="flex justify-center gap-1.5 mt-1">
+          <div className="flex justify-center gap-2 mt-1">
               {steps.map((_, i) => (
-                  <div key={i} className={`h-1.5 rounded-full transition-all ${i === currentStepIndex ? 'w-6 bg-green-500' : 'w-1.5 bg-stone-300 dark:bg-stone-700'}`}></div>
+                  <div key={i} className={`h-1.5 rounded-full transition-all duration-300 ${i === currentStepIndex ? 'w-8 bg-green-500' : 'w-2 bg-stone-200 dark:bg-stone-700'}`}></div>
               ))}
           </div>
       </div>

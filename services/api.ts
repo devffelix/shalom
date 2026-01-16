@@ -1,6 +1,15 @@
-
 import { BibleApiResponse, Mood, SongSuggestion, ChallengeDayContent } from '../types';
-import { ANXIETY_DETOX_DAYS, GRATITUDE_JOURNEY_DAYS, PROVERBS_JOURNEY_DAYS, HEALING_JOURNEY_DAYS, OPEN_DOORS_JOURNEY_DAYS, RESTORATION_JOURNEY_DAYS, IMPOSSIBLE_CAUSES_JOURNEY_DAYS, FALLBACK_VERSES_DATA } from '../constants';
+import { 
+  FALLBACK_VERSES_DATA,
+  ANXIOUS_PRAYERS,
+  TIRED_PRAYERS,
+  HAPPY_PRAYERS,
+  SAD_PRAYERS,
+  THANKFUL_PRAYERS,
+  CONFUSED_PRAYERS,
+  ANGRY_PRAYERS
+} from '../constants';
+import { JOURNEYS_DATA } from '../data/journeysData';
 import { GoogleGenAI } from "@google/genai";
 
 const BIBLE_API_BASE = 'https://bible-api.com';
@@ -12,7 +21,6 @@ const fetchWithRetry = async (url: string, retries = 3): Promise<Response> => {
     try {
       const response = await fetch(url);
       if (response.ok) return response;
-      // If 404, do not retry as it's a permanent client error (invalid reference)
       if (response.status === 404) {
          throw new Error(`API Error: 404 Not Found - ${url}`);
       }
@@ -22,7 +30,6 @@ const fetchWithRetry = async (url: string, retries = 3): Promise<Response> => {
       throw new Error(`Server Error: ${response.status}`);
     } catch (err) {
       const isNetworkError = err instanceof TypeError && err.message === 'Failed to fetch';
-      // Don't retry 404s
       if (err instanceof Error && err.message.includes('404')) throw err;
       
       if (i === retries - 1) throw err;
@@ -36,26 +43,20 @@ const fetchWithRetry = async (url: string, retries = 3): Promise<Response> => {
 const getTranslationId = (lang: string): string => {
   switch (lang) {
     case 'pt': return 'almeida';
-    case 'es': return 'rvr'; // Reina Valera
-    case 'en': return 'web'; // World English Bible (Public Domain, easier to read than KJV)
+    case 'es': return 'rvr'; 
+    case 'en': return 'web'; 
     default: return 'almeida';
   }
 };
 
 export const fetchChapter = async (book: string, chapter: number, lang: string = 'pt'): Promise<BibleApiResponse> => {
   try {
-    // Handle specific book name mapping for API compatibility
     let apiBook = book;
     if (apiBook === 'Song of Solomon') apiBook = 'Song of Songs';
-
-    // Construct reference string naturally then encode
     const reference = `${apiBook} ${chapter}`;
-    // Use encodeURIComponent to handle spaces and special chars correctly (e.g. "1 Samuel 1" -> "1%20Samuel%201")
     const formattedRef = encodeURIComponent(reference);
-    
     const translation = getTranslationId(lang);
     const url = `${BIBLE_API_BASE}/${formattedRef}?translation=${translation}`;
-    
     const response = await fetchWithRetry(url);
     return await response.json();
   } catch (error) {
@@ -73,11 +74,7 @@ export const fetchVerse = async (reference: string, lang: string = 'pt'): Promis
     return await response.json();
   } catch (error) {
     console.warn("Verse fetch failed, using fallback data.");
-    
-    // Attempt to find the requested reference in local fallback data
-    // Note: Fallback data is currently only in PT. For a real app, we would need fallback for all langs.
     const fallbackText = FALLBACK_VERSES_DATA[reference];
-    
     if (fallbackText) {
         return {
             reference: reference,
@@ -88,8 +85,6 @@ export const fetchVerse = async (reference: string, lang: string = 'pt'): Promis
             translation_note: 'Modo Offline Ativado'
         };
     }
-
-    // If specific verse not found, return a random one from fallback to ensure UI doesn't break
     const fallbackKeys = Object.keys(FALLBACK_VERSES_DATA);
     const randomKey = fallbackKeys[Math.floor(Math.random() * fallbackKeys.length)];
     return {
@@ -108,17 +103,32 @@ export const generatePrayer = async (mood: Mood): Promise<string> => {
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
-      contents: `Escreva uma oração cristã personalizada e curta (máximo 400 caracteres) para alguém que está se sentindo ${mood.toLowerCase()}. Inclua uma referência bíblica de conforto no final.`,
+      contents: `Escreva uma oração cristã personalizada e curta (máximo 400 caracteres) para uma pessoa que está se sentindo ${mood.toLowerCase()}. A oração deve ser íntima, profunda e respeitosa. Termine citando um versículo bíblico de consolo adequado.`,
       config: {
-        systemInstruction: "Você é um guia espiritual cristão acolhedor e sábio. Suas orações são baseadas na Bíblia e trazem paz.",
+        systemInstruction: "Você é um guia espiritual cristão acolhedor e sábio. Suas orações são baseadas na Bíblia, usam linguagem natural e trazem paz.",
         temperature: 0.8,
       }
     });
-    return response.text || "Senhor, pedimos a Tua paz agora. Amém.";
+    return response.text || getLocalFallbackPrayer(mood);
   } catch (error) {
-    console.error("Gemini API Error:", error);
-    return `Senhor, neste momento de ${mood.toLowerCase()}, peço a Tua paz que excede todo o entendimento. Guarda o meu coração e os meus pensamentos em Cristo Jesus. Amém. (Filipenses 4:7)`;
+    console.error("Gemini API Error, using local database:", error);
+    return getLocalFallbackPrayer(mood);
   }
+};
+
+const getLocalFallbackPrayer = (mood: Mood): string => {
+    let prayers: string[] = [];
+    switch (mood) {
+        case Mood.Anxious: prayers = ANXIOUS_PRAYERS; break;
+        case Mood.Tired: prayers = TIRED_PRAYERS; break;
+        case Mood.Happy: prayers = HAPPY_PRAYERS; break;
+        case Mood.Sad: prayers = SAD_PRAYERS; break;
+        case Mood.Thankful: prayers = THANKFUL_PRAYERS; break;
+        case Mood.Confused: prayers = CONFUSED_PRAYERS; break;
+        case Mood.Angry: prayers = ANGRY_PRAYERS; break;
+        default: prayers = ["Senhor, entrego minha vida em Tuas mãos hoje. Que a Tua vontade se cumpra e que eu sinta a Tua presença em cada passo. Amém."];
+    }
+    return prayers[Math.floor(Math.random() * prayers.length)];
 };
 
 export const generateReflection = async (topic: string): Promise<string> => {
@@ -146,7 +156,10 @@ const ALL_SONGS: SongSuggestion[] = [
   { id: "5", title: "O Abraço de Deus", artist: "Adoração", reason: "Sinta o conforto e o amor do Pai te envolvendo.", audioUrl: "https://files.catbox.moe/ulohm3.mp3" },
   { id: "6", title: "Língua dos Anjos", artist: "Adoração", reason: "Uma atmosfera celestial para edificar seu espírito.", audioUrl: "https://files.catbox.moe/pzx4kx.mp3" },
   { id: "7", title: "Estrela Guia", artist: "Adoração", reason: "A luz de Jesus ilumina o seu caminho.", audioUrl: "https://files.catbox.moe/kaddqg.mp3" },
-  { id: "8", title: "Sopro Divino", artist: "Adoração", reason: "Sinta o renovo do Espírito Santo em sua vida.", audioUrl: "https://files.catbox.moe/i1kvh4.mp3" }
+  { id: "8", title: "Sopro Divino", artist: "Adoração", reason: "Sinta o renovo do Espírito Santo em sua vida.", audioUrl: "https://files.catbox.moe/i1kvh4.mp3" },
+  { id: "9", title: "Calma que vem de Deus", artist: "Adoração", reason: "Sinta a paz profunda que só o Espírito pode dar.", audioUrl: "https://files.catbox.moe/xsydaw.mp3" },
+  { id: "10", title: "Chuva de Tesouros", artist: "Adoração", reason: "Promessas de abundância e bênçãos sobre sua vida.", audioUrl: "https://files.catbox.moe/ot79va.mp3" },
+  { id: "11", title: "Liberta o meu coração", artist: "Adoração", reason: "Um clamor por liberdade espiritual e cura interior.", audioUrl: "https://files.catbox.moe/zlhcub.mp3" }
 ];
 
 export const suggestSongs = async (query: string): Promise<SongSuggestion[]> => {
@@ -160,13 +173,17 @@ export const suggestSongs = async (query: string): Promise<SongSuggestion[]> => 
 };
 
 export const generateDailyChallengeContent = async (challengeId: string, day: number): Promise<ChallengeDayContent> => {
-  if (challengeId === 'anxiety-detox') { if (ANXIETY_DETOX_DAYS[day]) return ANXIETY_DETOX_DAYS[day]; }
-  if (challengeId === 'gratitude-journey') { if (GRATITUDE_JOURNEY_DAYS[day]) return GRATITUDE_JOURNEY_DAYS[day]; }
-  if (challengeId === 'proverbs-wisdom') { if (PROVERBS_JOURNEY_DAYS[day]) return PROVERBS_JOURNEY_DAYS[day]; }
-  if (challengeId === 'healing-miracle') { if (HEALING_JOURNEY_DAYS[day]) return HEALING_JOURNEY_DAYS[day]; }
-  if (challengeId === 'open-doors') { if (OPEN_DOORS_JOURNEY_DAYS[day]) return OPEN_DOORS_JOURNEY_DAYS[day]; }
-  if (challengeId === 'restoration') { if (RESTORATION_JOURNEY_DAYS[day]) return RESTORATION_JOURNEY_DAYS[day]; }
-  if (challengeId === 'impossible-causes') { if (IMPOSSIBLE_CAUSES_JOURNEY_DAYS[day]) return IMPOSSIBLE_CAUSES_JOURNEY_DAYS[day]; }
+  // Carregar do JOURNEYS_DATA centralizado
+  const journey = JOURNEYS_DATA[challengeId];
+  if (journey && journey[day]) {
+      return journey[day];
+  }
 
-  return { verse: "Salmos 23:1", thought: "O Senhor é o meu pastor.", action: "Tire 5 minutos para agradecer.", reflection: "Conteúdo completo indisponível." };
+  // Fallback se não encontrar o dia específico
+  return { 
+      verse: "Salmos 23:1", 
+      thought: "O Senhor é o meu pastor.", 
+      action: "Tire 5 minutos para agradecer hoje.", 
+      reflection: "A presença de Deus é constante. Mesmo quando não sentimos, Ele está operando nos bastidores da nossa vida." 
+  };
 }

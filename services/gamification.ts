@@ -1,4 +1,3 @@
-
 import { UserProgress, LevelData, Badge, BibleBook } from '../types';
 import { USER_LEVELS, STATIC_BADGES, BIBLE_BOOKS, XP_PER_BADGE } from '../constants';
 
@@ -182,7 +181,11 @@ export const checkJourneyEligibility = (challengeId: string, totalDays: number):
     'healing-miracle': 'badge_healing',
     'open-doors': 'badge_doors',
     'restoration': 'badge_restoration',
-    'impossible-causes': 'badge_impossible'
+    'impossible-causes': 'badge_impossible',
+    'purpose-discovery': 'badge_purpose',
+    'fearless-faith': 'badge_fearless',
+    'biblical-identity': 'badge_identity',
+    'stewardship-life': 'badge_stewardship'
   };
 
   const badgeId = badgeMap[challengeId];
