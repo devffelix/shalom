@@ -88,7 +88,13 @@ const enChallengesList = [
   { id: 'proverbs-wisdom', title: 'Proverbs Wisdom', description: '31 days diving into the source of wisdom for decisions and practical life.', days: 31, theme: 'Wisdom' },
   { id: 'healing-miracle', title: 'Healing Miracle', description: '14 days strengthening faith for physical, emotional, and spiritual healing.', days: 14, theme: 'Divine Healing' },
   { id: 'open-doors', title: 'Open Doors', description: '21 days of prayer for provision, employment, and professional direction.', days: 21, theme: 'Provision' },
-  { id: 'impossible-causes', title: 'Impossible Causes', description: '7 days of intense crying out for urgent miracles.', days: 7, theme: 'Urgent Miracles' }
+  { id: 'impossible-causes', title: 'Impossible Causes', description: '7 days of intense crying out for urgent miracles.', days: 7, theme: 'Urgent Miracles' },
+  { id: 'spiritual-warfare', title: 'Spiritual Warfare', description: '14 days learning to protect yourself and win invisible battles.', days: 14, theme: 'Spiritual Warfare' },
+  { id: 'financial-freedom', title: 'Financial Freedom', description: '21 days of biblical principles to get out of debt and prosper with wisdom.', days: 21, theme: 'Finances' },
+  { id: 'faith-foundations', title: 'Faith Foundations', description: '10 days building a solid foundation in Christian fundamentals.', days: 10, theme: 'Spiritual Growth' },
+  { id: 'holy-relationships', title: 'Holy Relationships', description: '14 days transforming friendships, dating and bonds with purity.', days: 14, theme: 'Relationships' },
+  { id: 'prayer-power', title: 'Prayer Power', description: '21 days discovering how to pray effectively and see answers.', days: 21, theme: 'Prayer Life' },
+  { id: 'spiritual-renewal', title: 'Spiritual Renewal', description: '7 days of fasting, prayer and deep reconnection with God.', days: 7, theme: 'Revival' }
 ];
 
 const enTrails = {
@@ -130,7 +136,13 @@ const enChallengesMap = {
   'proverbs-wisdom': { title: 'Wisdom' },
   'healing-miracle': { title: 'Divine Healing' },
   'open-doors': { title: 'Open Doors' },
-  'impossible-causes': { title: 'Impossible Causes' }
+  'impossible-causes': { title: 'Impossible Causes' },
+  'spiritual-warfare': { title: 'Spiritual Warfare' },
+  'financial-freedom': { title: 'Financial Freedom' },
+  'faith-foundations': { title: 'Faith Foundations' },
+  'holy-relationships': { title: 'Holy Relationships' },
+  'prayer-power': { title: 'Prayer Power' },
+  'spiritual-renewal': { title: 'Spiritual Renewal' }
 };
 
 const enSettings = {
@@ -159,152 +171,152 @@ const enSettings = {
 
 const enKids = {
   menu: {
-      hello: 'Hello, Little One!',
-      title: 'Kids Zone',
-      subtitle: 'Learn while playing!',
-      explore: 'Tap to explore',
-      coloring: {
-          tag: 'Creative',
-          title: 'Paint & Create',
-          subtitle: 'Use your imagination',
-          new: 'New!'
-      },
-      quiz: { title: 'Bible Quiz' },
-      camera: { title: 'Fun Photo' },
-      shalomflix: {
-          tag: 'Coming Soon',
-          title: 'Shalomflix',
-          subtitle: 'Available soon for subscribers'
-      }
+    hello: 'Hello, Little One!',
+    title: 'Kids Zone',
+    subtitle: 'Learn while playing!',
+    explore: 'Tap to explore',
+    coloring: {
+      tag: 'Creative',
+      title: 'Paint & Create',
+      subtitle: 'Use your imagination',
+      new: 'New!'
+    },
+    quiz: { title: 'Bible Quiz' },
+    camera: { title: 'Fun Photo' },
+    shalomflix: {
+      tag: 'Coming Soon',
+      title: 'Shalomflix',
+      subtitle: 'Available soon for subscribers'
+    }
   },
   coloring: {
-      title: 'Coloring',
-      coloringTitle: 'Coloring Time',
-      magicCreator: 'Magic Creator',
-      magicDesc: 'Describe a drawing and IA creates it for you to paint!',
-      placeholder: 'Ex: Lion of Judah in the forest...',
-      readyIdeas: 'Ready Ideas',
-      ideas: [
-          { id: 'lion', title: 'Lion of Judah', prompt: 'A majestic and friendly cartoon lion for coloring, black lines white background' },
-          { id: 'whale', title: 'Jonah and the Whale', prompt: 'A big and happy whale in the sea coloring book style, black outlines' },
-          { id: 'ark', title: 'Noah\'s Ark', prompt: 'Noah\'s ark with animals cartoon style for coloring' },
-          { id: 'shepherd', title: 'The Good Shepherd', prompt: 'Jesus as shepherd with cute sheep coloring style' },
-          { id: 'david', title: 'David and Goliath', prompt: 'Little David with a stone and giant Goliath cartoon for coloring' },
-          { id: 'angel', title: 'Guardian Angel', prompt: 'A cute angel flying coloring style' },
-          { id: 'creation', title: 'The Creation', prompt: 'World being created, sun, moon, stars and trees coloring style' },
-          { id: 'nativity', title: 'Nativity', prompt: 'Christmas nativity with baby jesus coloring style' }
-      ],
-      aiPrompt: 'Create a kids coloring page (line art, black and white, no fill, thick lines) about: {prompt}. Cute cartoon style.',
-      error: 'Error creating image. Try again.',
-      save: 'Save Art',
-      reset: 'Clear'
+    title: 'Coloring',
+    coloringTitle: 'Coloring Time',
+    magicCreator: 'Magic Creator',
+    magicDesc: 'Describe a drawing and IA creates it for you to paint!',
+    placeholder: 'Ex: Lion of Judah in the forest...',
+    readyIdeas: 'Ready Ideas',
+    ideas: [
+      { id: 'lion', title: 'Lion of Judah', prompt: 'A majestic and friendly cartoon lion for coloring, black lines white background' },
+      { id: 'whale', title: 'Jonah and the Whale', prompt: 'A big and happy whale in the sea coloring book style, black outlines' },
+      { id: 'ark', title: 'Noah\'s Ark', prompt: 'Noah\'s ark with animals cartoon style for coloring' },
+      { id: 'shepherd', title: 'The Good Shepherd', prompt: 'Jesus as shepherd with cute sheep coloring style' },
+      { id: 'david', title: 'David and Goliath', prompt: 'Little David with a stone and giant Goliath cartoon for coloring' },
+      { id: 'angel', title: 'Guardian Angel', prompt: 'A cute angel flying coloring style' },
+      { id: 'creation', title: 'The Creation', prompt: 'World being created, sun, moon, stars and trees coloring style' },
+      { id: 'nativity', title: 'Nativity', prompt: 'Christmas nativity with baby jesus coloring style' }
+    ],
+    aiPrompt: 'Create a kids coloring page (line art, black and white, no fill, thick lines) about: {prompt}. Cute cartoon style.',
+    error: 'Error creating image. Try again.',
+    save: 'Save Art',
+    reset: 'Clear'
   },
   camera: {
-      title: 'Kids Photo',
-      takePhoto: 'Take Photo',
-      save: 'Save Photo',
-      retake: 'Take Another',
-      noCamera: 'No Camera',
-      permission: 'We need camera access.',
-      retry: 'Try Again',
-      frames: [
-          { id: 1, label: 'Hero', text: 'Faith Hero', colors: ["#00c6ff", "#0072ff"], icon: "🦸‍♂️" },
-          { id: 2, label: 'Music', text: 'Little Worshiper', colors: ["#FFD700", "#ff9a00"], icon: "🎵" },
-          { id: 3, label: 'Crown', text: 'King\'s Child', colors: ["#ff9a9e", "#ff6a88"], icon: "👑" },
-          { id: 4, label: 'Nature', text: 'God\'s Creation', colors: ["#56ab2f", "#a8e063"], icon: "🌿" },
-          { id: 5, label: 'Bubbles', text: 'Lord\'s Joy', colors: ["#FF8008", "#FFC837"], icon: "😄" },
-          { id: 6, label: 'Love', text: 'Jesus Loves Me', colors: ["#DA22FF", "#9733EE"], icon: "❤️" }
-      ],
-      effects: {
-          sparkles: 'Sparkles',
-          confetti: 'Party',
-          amen: 'Amen',
-          angel: 'Angel',
-          hearts: 'Love'
-      }
+    title: 'Kids Photo',
+    takePhoto: 'Take Photo',
+    save: 'Save Photo',
+    retake: 'Take Another',
+    noCamera: 'No Camera',
+    permission: 'We need camera access.',
+    retry: 'Try Again',
+    frames: [
+      { id: 1, label: 'Hero', text: 'Faith Hero', colors: ["#00c6ff", "#0072ff"], icon: "🦸‍♂️" },
+      { id: 2, label: 'Music', text: 'Little Worshiper', colors: ["#FFD700", "#ff9a00"], icon: "🎵" },
+      { id: 3, label: 'Crown', text: 'King\'s Child', colors: ["#ff9a9e", "#ff6a88"], icon: "👑" },
+      { id: 4, label: 'Nature', text: 'God\'s Creation', colors: ["#56ab2f", "#a8e063"], icon: "🌿" },
+      { id: 5, label: 'Bubbles', text: 'Lord\'s Joy', colors: ["#FF8008", "#FFC837"], icon: "😄" },
+      { id: 6, label: 'Love', text: 'Jesus Loves Me', colors: ["#DA22FF", "#9733EE"], icon: "❤️" }
+    ],
+    effects: {
+      sparkles: 'Sparkles',
+      confetti: 'Party',
+      amen: 'Amen',
+      angel: 'Angel',
+      hearts: 'Love'
+    }
   },
   quiz: {
-      title: 'Kids Quiz',
-      questionsCount: 'Questions',
-      question: 'Question',
-      congrats: 'Congratulations!',
-      correct: 'You got {score} of {total}!',
-      playAgain: 'Play Again',
-      exit: 'Exit',
-      themes: [
-          {
-              id: 'creation',
-              title: 'The Creation',
-              questions: [
-                  { q: "Who created the world?", options: ["Noah", "God", "Adam"], a: "God" },
-                  { q: "What did God create on the first day?", options: ["Animals", "Light", "Plants"], a: "Light" },
-                  { q: "Who was the first man?", options: ["Peter", "Adam", "Joseph"], a: "Adam" }
-              ]
-          },
-          {
-              id: 'noah',
-              title: 'Noah\'s Ark',
-              questions: [
-                  { q: "What did Noah build?", options: ["A house", "A temple", "An ark"], a: "An ark" },
-                  { q: "How many animals of each type entered?", options: ["One", "Two (pair)", "Ten"], a: "Two (pair)" },
-                  { q: "What appeared in the sky after the rain?", options: ["Rainbow", "Star", "Moon"], a: "Rainbow" }
-              ]
-          },
-          {
-              id: 'david',
-              title: 'David and Goliath',
-              questions: [
-                  { q: "What did David use to fight?", options: ["Sword", "Sling and stone", "Spear"], a: "Sling and stone" },
-                  { q: "Who was the giant?", options: ["Goliath", "Saul", "Samson"], a: "Goliath" },
-                  { q: "What did David take care of?", options: ["Sheep", "Horses", "Camels"], a: "Sheep" }
-              ]
-          },
-          {
-              id: 'jonah',
-              title: 'Jonah',
-              questions: [
-                  { q: "Who swallowed Jonah?", options: ["A lion", "A big fish", "A bear"], a: "A big fish" },
-                  { q: "Where was Jonah supposed to go?", options: ["Nineveh", "Tarshish", "Jerusalem"], a: "Nineveh" },
-                  { q: "How many days did he stay in the fish?", options: ["1 day", "3 days", "7 days"], a: "3 days" }
-              ]
-          },
-          {
-              id: 'moses',
-              title: 'Moses',
-              questions: [
-                  { q: "Where did Moses' mother put him?", options: ["In a crib", "In a basket on the river", "In a cave"], a: "In a basket on the river" },
-                  { q: "What did God use to speak to Moses?", options: ["A cloud", "A burning bush", "An angel"], a: "A burning bush" },
-                  { q: "What did Moses open?", options: ["The Red Sea", "The Jordan River", "The gate"], a: "The Red Sea" }
-              ]
-          },
-          {
-              id: 'daniel',
-              title: 'Daniel',
-              questions: [
-                  { q: "Where was Daniel thrown?", options: ["In a well", "In the lions' den", "In prison"], a: "In the lions' den" },
-                  { q: "What did the lions do?", options: ["Roared", "Slept/Didn't eat", "Played"], a: "Slept/Didn't eat" },
-                  { q: "How many times did Daniel pray?", options: ["1 time", "2 times", "3 times"], a: "3 times" }
-              ]
-          },
-          {
-              id: 'nativity',
-              title: 'Christmas',
-              questions: [
-                  { q: "Where was Jesus born?", options: ["In a hospital", "In a palace", "In a manger"], a: "In a manger" },
-                  { q: "Who guided the Wise Men?", options: ["A map", "A star", "An angel"], a: "A star" },
-                  { q: "What was Jesus' mother's name?", options: ["Mary", "Martha", "Sarah"], a: "Mary" }
-              ]
-          },
-          {
-              id: 'miracles',
-              title: 'Miracles',
-              questions: [
-                  { q: "What did Jesus walk on?", options: ["Water", "Fire", "Air"], a: "Water" },
-                  { q: "What did Jesus multiply?", options: ["Gold", "Loaves and fishes", "Stones"], a: "Loaves and fishes" },
-                  { q: "Who did Jesus raise from the dead?", options: ["Lazarus", "Peter", "John"], a: "Lazarus" }
-              ]
-          }
-      ]
+    title: 'Kids Quiz',
+    questionsCount: 'Questions',
+    question: 'Question',
+    congrats: 'Congratulations!',
+    correct: 'You got {score} of {total}!',
+    playAgain: 'Play Again',
+    exit: 'Exit',
+    themes: [
+      {
+        id: 'creation',
+        title: 'The Creation',
+        questions: [
+          { q: "Who created the world?", options: ["Noah", "God", "Adam"], a: "God" },
+          { q: "What did God create on the first day?", options: ["Animals", "Light", "Plants"], a: "Light" },
+          { q: "Who was the first man?", options: ["Peter", "Adam", "Joseph"], a: "Adam" }
+        ]
+      },
+      {
+        id: 'noah',
+        title: 'Noah\'s Ark',
+        questions: [
+          { q: "What did Noah build?", options: ["A house", "A temple", "An ark"], a: "An ark" },
+          { q: "How many animals of each type entered?", options: ["One", "Two (pair)", "Ten"], a: "Two (pair)" },
+          { q: "What appeared in the sky after the rain?", options: ["Rainbow", "Star", "Moon"], a: "Rainbow" }
+        ]
+      },
+      {
+        id: 'david',
+        title: 'David and Goliath',
+        questions: [
+          { q: "What did David use to fight?", options: ["Sword", "Sling and stone", "Spear"], a: "Sling and stone" },
+          { q: "Who was the giant?", options: ["Goliath", "Saul", "Samson"], a: "Goliath" },
+          { q: "What did David take care of?", options: ["Sheep", "Horses", "Camels"], a: "Sheep" }
+        ]
+      },
+      {
+        id: 'jonah',
+        title: 'Jonah',
+        questions: [
+          { q: "Who swallowed Jonah?", options: ["A lion", "A big fish", "A bear"], a: "A big fish" },
+          { q: "Where was Jonah supposed to go?", options: ["Nineveh", "Tarshish", "Jerusalem"], a: "Nineveh" },
+          { q: "How many days did he stay in the fish?", options: ["1 day", "3 days", "7 days"], a: "3 days" }
+        ]
+      },
+      {
+        id: 'moses',
+        title: 'Moses',
+        questions: [
+          { q: "Where did Moses' mother put him?", options: ["In a crib", "In a basket on the river", "In a cave"], a: "In a basket on the river" },
+          { q: "What did God use to speak to Moses?", options: ["A cloud", "A burning bush", "An angel"], a: "A burning bush" },
+          { q: "What did Moses open?", options: ["The Red Sea", "The Jordan River", "The gate"], a: "The Red Sea" }
+        ]
+      },
+      {
+        id: 'daniel',
+        title: 'Daniel',
+        questions: [
+          { q: "Where was Daniel thrown?", options: ["In a well", "In the lions' den", "In prison"], a: "In the lions' den" },
+          { q: "What did the lions do?", options: ["Roared", "Slept/Didn't eat", "Played"], a: "Slept/Didn't eat" },
+          { q: "How many times did Daniel pray?", options: ["1 time", "2 times", "3 times"], a: "3 times" }
+        ]
+      },
+      {
+        id: 'nativity',
+        title: 'Christmas',
+        questions: [
+          { q: "Where was Jesus born?", options: ["In a hospital", "In a palace", "In a manger"], a: "In a manger" },
+          { q: "Who guided the Wise Men?", options: ["A map", "A star", "An angel"], a: "A star" },
+          { q: "What was Jesus' mother's name?", options: ["Mary", "Martha", "Sarah"], a: "Mary" }
+        ]
+      },
+      {
+        id: 'miracles',
+        title: 'Miracles',
+        questions: [
+          { q: "What did Jesus walk on?", options: ["Water", "Fire", "Air"], a: "Water" },
+          { q: "What did Jesus multiply?", options: ["Gold", "Loaves and fishes", "Stones"], a: "Loaves and fishes" },
+          { q: "Who did Jesus raise from the dead?", options: ["Lazarus", "Peter", "John"], a: "Lazarus" }
+        ]
+      }
+    ]
   }
 };
 
@@ -487,6 +499,17 @@ export const en = {
     devicesTitle: 'Your faith journey, anywhere.',
     devicesTag: 'Constant presence in your life',
     devicesDesc: 'Track your Bible progress on PC, listen to worship on Tablet, and receive your daily prayer on mobile. Everything connected.',
+    premiumTitle: 'The Arsenal that Will Shield your Home',
+    premiumSubtitle: 'More than an app, a safe environment where the world doesn\'t enter.',
+    flixTitle: 'Shalom Flix: The End of the War for Screens',
+    flixDesc: 'While the world tries to steal your children\'s minds with inverted values, Shalom Flix delivers exclusive biblical animations. Let them dive into the stories of David, Noah, and Jesus with art that enchants and teaches the truth that sets free.',
+    psalmsTitle: 'Psalms Explained: Where Fear has no Voice',
+    psalmsDesc: 'Is anxiety tightening your chest? Dive into deep analyses of Psalms like 23 and 91. Not just reading, but a detailed explanation of how to apply this real protection in your life right now.',
+    whatJesusTitle: '“Jesus wanted you to know...”',
+    whatJesusDesc: 'For those days when you feel unworthy or forgotten. Receive messages that speak directly to what you are living. It\'s as if He were sitting by your side, giving you the direction that is missing.',
+    reconnectionTitle: 'Reconnection Manual',
+    reconnectionDesc: 'Has the flame gone out? Do you feel your prayer hits the ceiling? Our step-by-step manual guides you back to the first love. No religiosity, just the real path back to the Father\'s arms.',
+    valueCall: 'We deliver into your hands the tools for a life of unshakable peace.',
     pricingHeadline: 'How much is your soul\'s peace and your family\'s protection worth?',
     pricingSub: 'Probably priceless. But today, we make it accessible to everyone.',
     offerTag: 'Exclusive Launch Offer',

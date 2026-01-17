@@ -88,7 +88,13 @@ const esChallengesList = [
   { id: 'proverbs-wisdom', title: 'Sabiduría de Proverbios', description: '31 dias sumergiéndose en la fuente de la sabiduría para decisiones y vida práctica.', days: 31, theme: 'Sabiduría' },
   { id: 'healing-miracle', title: 'Milagro de Sanidad', description: '14 dias fortaleciendo la fe para la sanidad física, emocional y espiritual.', days: 14, theme: 'Sanidad Divina' },
   { id: 'open-doors', title: 'Puertas Abiertas', description: '21 dias de oración por provisión, empleo y dirección profesional.', days: 21, theme: 'Provisión' },
-  { id: 'impossible-causes', title: 'Causas Impossíveis', description: '7 dias de clamor intenso por milagres urgentes.', days: 7, theme: 'Milagros Urgentes' }
+  { id: 'impossible-causes', title: 'Causas Impossíveis', description: '7 dias de clamor intenso por milagres urgentes.', days: 7, theme: 'Milagros Urgentes' },
+  { id: 'spiritual-warfare', title: 'Guerra Espiritual', description: '14 días aprendiendo a protegerse y vencer batallas invisibles.', days: 14, theme: 'Batalla Espiritual' },
+  { id: 'financial-freedom', title: 'Libertad Financiera', description: '21 días de principios bíblicos para salir de deudas y prosperar con sabiduría.', days: 21, theme: 'Finanzas' },
+  { id: 'faith-foundations', title: 'Cimientos de la Fe', description: '10 días construyendo una base sólida en los fundamentos cristianos.', days: 10, theme: 'Crecimiento Espiritual' },
+  { id: 'holy-relationships', title: 'Relaciones Santas', description: '14 días transformando amistades, noviazgo y vínculos con pureza.', days: 14, theme: 'Relaciones' },
+  { id: 'prayer-power', title: 'Poder de la Oración', description: '21 días descubriendo cómo orar de forma eficaz y ver respuestas.', days: 21, theme: 'Vida de Oración' },
+  { id: 'spiritual-renewal', title: 'Renovación Espiritual', description: '7 días de ayuno, oración y reconexión profunda con Dios.', days: 7, theme: 'Avivamiento' }
 ];
 
 const esTrails = {
@@ -130,7 +136,13 @@ const esChallengesMap = {
   'proverbs-wisdom': { title: 'Sabiduría' },
   'healing-miracle': { title: 'Sanidad Divina' },
   'open-doors': { title: 'Puertas Abiertas' },
-  'impossible-causes': { title: 'Causas Impossíveis' }
+  'impossible-causes': { title: 'Causas Impossíveis' },
+  'spiritual-warfare': { title: 'Guerra Espiritual' },
+  'financial-freedom': { title: 'Libertad Financiera' },
+  'faith-foundations': { title: 'Crecimiento Espiritual' },
+  'holy-relationships': { title: 'Relaciones Santas' },
+  'prayer-power': { title: 'Poder de la Oración' },
+  'spiritual-renewal': { title: 'Renovación Espiritual' }
 };
 
 const esSettings = {
@@ -159,152 +171,152 @@ const esSettings = {
 
 const esKids = {
   menu: {
-      hello: '¡Hola, Pequeño(a)!',
-      title: 'Kids Zone',
-      subtitle: '¡Aprende jugando!',
-      explore: 'Toca para explorar',
-      coloring: {
-          tag: 'Creativo',
-          title: 'Pintar y Crear',
-          subtitle: 'Usa tu imaginación',
-          new: '¡Nuevo!'
-      },
-      quiz: { title: 'Quiz Bíblico' },
-      camera: { title: 'Foto Divertida' },
-      shalomflix: {
-          tag: 'Próximamente',
-          title: 'Shalomflix',
-          subtitle: 'Disponible pronto para suscriptores'
-      }
+    hello: '¡Hola, Pequeño(a)!',
+    title: 'Kids Zone',
+    subtitle: '¡Aprende jugando!',
+    explore: 'Toca para explorar',
+    coloring: {
+      tag: 'Creativo',
+      title: 'Pintar y Crear',
+      subtitle: 'Usa tu imaginación',
+      new: '¡Nuevo!'
+    },
+    quiz: { title: 'Quiz Bíblico' },
+    camera: { title: 'Foto Divertida' },
+    shalomflix: {
+      tag: 'Próximamente',
+      title: 'Shalomflix',
+      subtitle: 'Disponible pronto para suscriptores'
+    }
   },
   coloring: {
-      title: 'Colorear',
-      coloringTitle: 'Hora de Colorear',
-      magicCreator: 'Creador Mágico',
-      magicDesc: '¡Describe un dibujo y la IA lo crea para que lo pintes!',
-      placeholder: 'Ej: León de Judá en la selva...',
-      readyIdeas: 'Ideas Listas',
-      ideas: [
-          { id: 'lion', title: 'León de Judá', prompt: 'Un león majestuoso y amigable estilo dibujo animado para colorear, trazos negros fondo blanco' },
-          { id: 'whale', title: 'Jonás y la Ballena', prompt: 'Una ballena grande e feliz en el mar estilo dibujo para colorear, trazos negros' },
-          { id: 'ark', title: 'Arca de Noé', prompt: 'Arca de Noé com animales estilo cartoon para colorear' },
-          { id: 'shepherd', title: 'El Buen Pastor', prompt: 'Jesús como pastor con ovejas lindas estilo dibujo para colorear' },
-          { id: 'david', title: 'David y Goliat', prompt: 'Pequeño David con una piedra y gigante Golias cartoon para colorear' },
-          { id: 'angel', title: 'Ángel de la Guarda', prompt: 'Un ángel lindo volando estilo dibujo para colorear' },
-          { id: 'creation', title: 'La Creación', prompt: 'Mundo siendo creado, sol, moon, estrellas y árboles estilo dibujo para colorear' },
-          { id: 'nativity', title: 'Nascimento', prompt: 'Pesebre de navidad con niño jesús estilo dibujo para colorear' }
-      ],
-      aiPrompt: 'Crea un dibujo para colorear infantil (line art, blanco y negro, sin relleno, trazos gruesos) sobre: {prompt}. Estilo cartoon lindo.',
-      error: 'Error al crear la imagen. Inténtalo de nuevo.',
-      save: 'Guardar Arte',
-      reset: 'Limpiar'
+    title: 'Colorear',
+    coloringTitle: 'Hora de Colorear',
+    magicCreator: 'Creador Mágico',
+    magicDesc: '¡Describe un dibujo y la IA lo crea para que lo pintes!',
+    placeholder: 'Ej: León de Judá en la selva...',
+    readyIdeas: 'Ideas Listas',
+    ideas: [
+      { id: 'lion', title: 'León de Judá', prompt: 'Un león majestuoso y amigable estilo dibujo animado para colorear, trazos negros fondo blanco' },
+      { id: 'whale', title: 'Jonás y la Ballena', prompt: 'Una ballena grande e feliz en el mar estilo dibujo para colorear, trazos negros' },
+      { id: 'ark', title: 'Arca de Noé', prompt: 'Arca de Noé com animales estilo cartoon para colorear' },
+      { id: 'shepherd', title: 'El Buen Pastor', prompt: 'Jesús como pastor con ovejas lindas estilo dibujo para colorear' },
+      { id: 'david', title: 'David y Goliat', prompt: 'Pequeño David con una piedra y gigante Golias cartoon para colorear' },
+      { id: 'angel', title: 'Ángel de la Guarda', prompt: 'Un ángel lindo volando estilo dibujo para colorear' },
+      { id: 'creation', title: 'La Creación', prompt: 'Mundo siendo creado, sol, moon, estrellas y árboles estilo dibujo para colorear' },
+      { id: 'nativity', title: 'Nascimento', prompt: 'Pesebre de navidad con niño jesús estilo dibujo para colorear' }
+    ],
+    aiPrompt: 'Crea un dibujo para colorear infantil (line art, blanco y negro, sin relleno, trazos gruesos) sobre: {prompt}. Estilo cartoon lindo.',
+    error: 'Error al crear la imagen. Inténtalo de nuevo.',
+    save: 'Guardar Arte',
+    reset: 'Limpiar'
   },
   camera: {
-      title: 'Foto Kids',
-      takePhoto: 'Tomar Foto',
-      save: 'Guardar Foto',
-      retake: 'Tomar Otra',
-      noCamera: 'Sin Cámara',
-      permission: 'Necesitamos acceso a la cámara.',
-      retry: 'Intentar de Nuevo',
-      frames: [
-          { id: 1, label: 'Héroe', text: 'Héroe de la Fe', colors: ["#00c6ff", "#0072ff"], icon: "🦸‍♂️" },
-          { id: 2, label: 'Música', text: 'Pequeño Adorador', colors: ["#FFD700", "#ff9a00"], icon: "🎵" },
-          { id: 3, label: 'Corona', text: 'Hijo del Rey', colors: ["#ff9a9e", "#ff6a88"], icon: "👑" },
-          { id: 4, label: 'Natureza', text: 'Creación de Dios', colors: ["#56ab2f", "#a8e063"], icon: "🌿" },
-          { id: 5, label: 'Burbujas', text: 'Alegría do Senhor', colors: ["#FF8008", "#FFC837"], icon: "😄" },
-          { id: 6, label: 'Amor', text: 'Jesús me Ama', colors: ["#DA22FF", "#9733EE"], icon: "❤️" }
-      ],
-      effects: {
-          sparkles: 'Brillos',
-          confetti: 'Fiesta',
-          amen: 'Amén',
-          angel: 'Ángel',
-          hearts: 'Amor'
-      }
+    title: 'Foto Kids',
+    takePhoto: 'Tomar Foto',
+    save: 'Guardar Foto',
+    retake: 'Tomar Otra',
+    noCamera: 'Sin Cámara',
+    permission: 'Necesitamos acceso a la cámara.',
+    retry: 'Intentar de Nuevo',
+    frames: [
+      { id: 1, label: 'Héroe', text: 'Héroe de la Fe', colors: ["#00c6ff", "#0072ff"], icon: "🦸‍♂️" },
+      { id: 2, label: 'Música', text: 'Pequeño Adorador', colors: ["#FFD700", "#ff9a00"], icon: "🎵" },
+      { id: 3, label: 'Corona', text: 'Hijo del Rey', colors: ["#ff9a9e", "#ff6a88"], icon: "👑" },
+      { id: 4, label: 'Natureza', text: 'Creación de Dios', colors: ["#56ab2f", "#a8e063"], icon: "🌿" },
+      { id: 5, label: 'Burbujas', text: 'Alegría do Senhor', colors: ["#FF8008", "#FFC837"], icon: "😄" },
+      { id: 6, label: 'Amor', text: 'Jesús me Ama', colors: ["#DA22FF", "#9733EE"], icon: "❤️" }
+    ],
+    effects: {
+      sparkles: 'Brillos',
+      confetti: 'Fiesta',
+      amen: 'Amén',
+      angel: 'Ángel',
+      hearts: 'Amor'
+    }
   },
   quiz: {
-      title: 'Quiz Kids',
-      questionsCount: 'Preguntas',
-      question: 'Pregunta',
-      congrats: '¡Felicidades!',
-      correct: '¡Acertaste {score} de {total}!',
-      playAgain: 'Jugar de Nuevo',
-      exit: 'Salir',
-      themes: [
-          {
-              id: 'creation',
-              title: 'La Creación',
-              questions: [
-                  { q: "¿Quién creó el mundo?", options: ["Noé", "Dios", "Adán"], a: "Dios" },
-                  { q: "¿Qué creó Dios el primer día?", options: ["Animales", "Luz", "Plantas"], a: "Luz" },
-                  { q: "¿Quién fue el primer hombre?", options: ["Pedro", "Adán", "José"], a: "Adão" }
-              ]
-          },
-          {
-              id: 'noah',
-              title: 'Arca de Noé',
-              questions: [
-                  { q: "¿Qué construyó Noé?", options: ["Una casa", "Um templo", "Una arca"], a: "Una arca" },
-                  { q: "¿Cuántos animales de cada tipo entraron?", options: ["Uno", "Dos (pareja)", "Diez"], a: "Dos (pareja)" },
-                  { q: "¿Qué apareció en el cielo después de la lluvia?", options: ["Arco iris", "Estrella", "Luna"], a: "Arco iris" }
-              ]
-          },
-          {
-              id: 'david',
-              title: 'David y Goliat',
-              questions: [
-                  { q: "¿Qué usó David para luchar?", options: ["Espada", "Honda y piedra", "Lanza"], a: "Honda y piedra" },
-                  { q: "¿Quién era el gigante?", options: ["Goliat", "Saúl", "Sansón"], a: "Goliat" },
-                  { q: "¿Qué cuidaba David?", options: ["Ovejas", "Caballos", "Camellos"], a: "Ovejas" }
-              ]
-          },
-          {
-              id: 'jonah',
-              title: 'Jonás',
-              questions: [
-                  { q: "¿Quién se tragó a Jonás?", options: ["Un león", "Un gran pez", "Un oso"], a: "Un gran pez" },
-                  { q: "¿A dónde debía ir Jonás?", options: ["Nínive", "Tarsis", "Jerusalén"], a: "Nínive" },
-                  { q: "¿Cuántos dás se quedó en el pez?", options: ["1 día", "3 días", "7 dás"], a: "3 dás" }
-              ]
-          },
-          {
-              id: 'moses',
-              title: 'Moisés',
-              questions: [
-                  { q: "¿Dónde lo puso la madre de Moisés?", options: ["En una cuna", "En una cesta en el río", "En una cueva"], a: "En una cesta en el río" },
-                  { q: "¿Qué usó Dios para hablar con Moisés?", options: ["Una nube", "Una zarza ardiente", "Un ángel"], a: "Una zarza ardiente" },
-                  { q: "¿Qué abrió Moisés?", options: ["El Mar Rojo", "El Río Jordán", "El portón"], a: "El Mar Rojo" }
-              ]
-          },
-          {
-              id: 'daniel',
-              title: 'Daniel',
-              questions: [
-                  { q: "¿Dónde fue arrojado Daniel?", options: ["En un pozo", "En el foso de los leones", "En la prisión"], a: "En el foso de los leones" },
-                  { q: "¿Qué hicieron los leones?", options: ["Rugieron", "Durmieron/No comieron", "Jugaron"], a: "Durmieron/No comieron" },
-                  { q: "¿Cuántas veces oraba Daniel?", options: ["1 vez", "2 vezes", "3 vezes"], a: "3 vezes" }
-              ]
-          },
-          {
-              id: 'nativity',
-              title: 'Navidad',
-              questions: [
-                  { q: "¿Dónde nació Jesús?", options: ["En un hospital", "En un palacio", "En un pesebre"], a: "En un pesebre" },
-                  { q: "¿Quién guió a los Reyes Magos?", options: ["Un mapa", "Uma estrela", "Um anjo"], a: "Uma estrela" },
-                  { q: "¿Cuál es el nome de la madre de Jesús?", options: ["María", "Marta", "Sara"], a: "Maria" }
-              ]
-          },
-          {
-              id: 'miracles',
-              title: 'Milagros',
-              questions: [
-                  { q: "¿Sobre qué caminó Jesús?", options: ["El agua", "El fuego", "El aire"], a: "El agua" },
-                  { q: "¿Qué multiplicó Jesús?", options: ["Oro", "Panes y peces", "Piedras"], a: "Panes y peces" },
-                  { q: "¿A quién resucitó Jesús?", options: ["Lázaro", "Pedro", "Juan"], a: "Lázaro" }
-              ]
-          }
-      ]
+    title: 'Quiz Kids',
+    questionsCount: 'Preguntas',
+    question: 'Pregunta',
+    congrats: '¡Felicidades!',
+    correct: '¡Acertaste {score} de {total}!',
+    playAgain: 'Jugar de Nuevo',
+    exit: 'Salir',
+    themes: [
+      {
+        id: 'creation',
+        title: 'La Creación',
+        questions: [
+          { q: "¿Quién creó el mundo?", options: ["Noé", "Dios", "Adán"], a: "Dios" },
+          { q: "¿Qué creó Dios el primer día?", options: ["Animales", "Luz", "Plantas"], a: "Luz" },
+          { q: "¿Quién fue el primer hombre?", options: ["Pedro", "Adán", "José"], a: "Adão" }
+        ]
+      },
+      {
+        id: 'noah',
+        title: 'Arca de Noé',
+        questions: [
+          { q: "¿Qué construyó Noé?", options: ["Una casa", "Um templo", "Una arca"], a: "Una arca" },
+          { q: "¿Cuántos animales de cada tipo entraron?", options: ["Uno", "Dos (pareja)", "Diez"], a: "Dos (pareja)" },
+          { q: "¿Qué apareció en el cielo después de la lluvia?", options: ["Arco iris", "Estrella", "Luna"], a: "Arco iris" }
+        ]
+      },
+      {
+        id: 'david',
+        title: 'David y Goliat',
+        questions: [
+          { q: "¿Qué usó David para luchar?", options: ["Espada", "Honda y piedra", "Lanza"], a: "Honda y piedra" },
+          { q: "¿Quién era el gigante?", options: ["Goliat", "Saúl", "Sansón"], a: "Goliat" },
+          { q: "¿Qué cuidaba David?", options: ["Ovejas", "Caballos", "Camellos"], a: "Ovejas" }
+        ]
+      },
+      {
+        id: 'jonah',
+        title: 'Jonás',
+        questions: [
+          { q: "¿Quién se tragó a Jonás?", options: ["Un león", "Un gran pez", "Un oso"], a: "Un gran pez" },
+          { q: "¿A dónde debía ir Jonás?", options: ["Nínive", "Tarsis", "Jerusalén"], a: "Nínive" },
+          { q: "¿Cuántos dás se quedó en el pez?", options: ["1 día", "3 días", "7 dás"], a: "3 dás" }
+        ]
+      },
+      {
+        id: 'moses',
+        title: 'Moisés',
+        questions: [
+          { q: "¿Dónde lo puso la madre de Moisés?", options: ["En una cuna", "En una cesta en el río", "En una cueva"], a: "En una cesta en el río" },
+          { q: "¿Qué usó Dios para hablar con Moisés?", options: ["Una nube", "Una zarza ardiente", "Un ángel"], a: "Una zarza ardiente" },
+          { q: "¿Qué abrió Moisés?", options: ["El Mar Rojo", "El Río Jordán", "El portón"], a: "El Mar Rojo" }
+        ]
+      },
+      {
+        id: 'daniel',
+        title: 'Daniel',
+        questions: [
+          { q: "¿Dónde fue arrojado Daniel?", options: ["En un pozo", "En el foso de los leones", "En la prisión"], a: "En el foso de los leones" },
+          { q: "¿Qué hicieron los leones?", options: ["Rugieron", "Durmieron/No comieron", "Jugaron"], a: "Durmieron/No comieron" },
+          { q: "¿Cuántas veces oraba Daniel?", options: ["1 vez", "2 vezes", "3 vezes"], a: "3 vezes" }
+        ]
+      },
+      {
+        id: 'nativity',
+        title: 'Navidad',
+        questions: [
+          { q: "¿Dónde nació Jesús?", options: ["En un hospital", "En un palacio", "En un pesebre"], a: "En un pesebre" },
+          { q: "¿Quién guió a los Reyes Magos?", options: ["Un mapa", "Uma estrela", "Um anjo"], a: "Uma estrela" },
+          { q: "¿Cuál es el nome de la madre de Jesús?", options: ["María", "Marta", "Sara"], a: "Maria" }
+        ]
+      },
+      {
+        id: 'miracles',
+        title: 'Milagros',
+        questions: [
+          { q: "¿Sobre qué caminó Jesús?", options: ["El agua", "El fuego", "El aire"], a: "El agua" },
+          { q: "¿Qué multiplicó Jesús?", options: ["Oro", "Panes y peces", "Piedras"], a: "Panes y peces" },
+          { q: "¿A quién resucitó Jesús?", options: ["Lázaro", "Pedro", "Juan"], a: "Lázaro" }
+        ]
+      }
+    ]
   }
 };
 
@@ -487,6 +499,17 @@ export const es = {
     devicesTitle: 'Tu jornada de fe, en cualquier lugar.',
     devicesTag: 'Presencia constante en tu vida',
     devicesDesc: 'Sigue tu progreso bíblico en PC, escucha alabanzas en Tablet y recibe tu oración diaria en el móvil. Todo conectado.',
+    premiumTitle: 'El Arsenal que Blindará tu Casa',
+    premiumSubtitle: 'Más que una app, un ambiente seguro donde el mundo no entra.',
+    flixTitle: 'Shalom Flix: El fin de la Guerra por las Pantallas',
+    flixDesc: 'Mientras el mundo intenta robar la mente de tus hijos con valores invertidos, Shalom Flix entrega animaciones bíblicas exclusivas. Déjalos sumergirse en las historias de David, Noé y Jesús con artes que encantan y enseñan la verdad que libera.',
+    psalmsTitle: 'Salmos Explicados: Donde el Miedo no tiene Voz',
+    psalmsDesc: '¿La ansiedad te aprieta el pecho? Sumérgete en análisis profundos de Salmos como el 23 y el 91. No solo lectura, sino una explicación detallada sobre como aplicar esta protección real en tu vida ahora.',
+    whatJesusTitle: '“Jesús quería que supieras...”',
+    whatJesusDesc: 'Para esos días en los que te sientes indigno o olvidado. Recibe mensajes que hablan directamente a lo que estás viviendo. Es como si Él estuviera sentado a tu lado, dándote la dirección que falta.',
+    reconnectionTitle: 'Manual de Reacercamiento',
+    reconnectionDesc: '¿Se apagó la llama? ¿Sientes que tu oración golpea el techo? Nuestro manual paso a paso te guía de regreso al primer amor. Sin religiosidad, solo el camino real de regreso a los brazos del Padre.',
+    valueCall: 'Entregamos en tus manos las herramientas para una vida de paz inquebrantable.',
     pricingHeadline: '¿Cuánto vale la paz de tu alma y la protección de tu familia?',
     pricingSub: 'Probablemente no tiene precio. Pero hoy, lo hacemos accesible para todos.',
     offerTag: 'Oferta Exclusiva de Lançamiento',
