@@ -88,7 +88,6 @@ const ptChallengesList = [
   { id: 'proverbs-wisdom', title: 'Sabedoria de Provérbios', description: '31 dias mergulhando na fonte de sabedoria para decisões e vida prática.', days: 31, theme: 'Sabedoria' },
   { id: 'healing-miracle', title: 'Milagre da Cura', description: '14 dias fortalecendo a fé para cura física, emocional e espiritual.', days: 14, theme: 'Cura Divina' },
   { id: 'open-doors', title: 'Portas Abertas', description: '21 dias de oração por provisão, emprego e direção profissional.', days: 21, theme: 'Provisão Financeira e Emprego' },
-<<<<<<< HEAD
   { id: 'impossible-causes', title: 'Causas Impossíveis', description: '7 dias de clamor intenso por milagres urgentes.', days: 7, theme: 'Fé para Milagres Urgentes' },
   { id: 'spiritual-warfare', title: 'Guerra Espiritual', description: '14 dias aprendendo a se proteger e vencer batalhas invisíveis.', days: 14, theme: 'Batalha Espiritual' },
   { id: 'financial-freedom', title: 'Liberdade Financeira', description: '21 dias de princípios bíblicos para sair de dívidas e prosperar com sabedoria.', days: 21, theme: 'Finanças' },
@@ -96,9 +95,6 @@ const ptChallengesList = [
   { id: 'holy-relationships', title: 'Relacionamentos Santos', description: '14 dias transformando amizades, namoro e vínculos com pureza.', days: 14, theme: 'Relacionamentos' },
   { id: 'prayer-power', title: 'Poder da Oração', description: '21 dias descobrindo como orar de forma eficaz e ver respostas.', days: 21, theme: 'Vida de Oração' },
   { id: 'spiritual-renewal', title: 'Renovação Espiritual', description: '7 dias de jejum, oração e reconexão profunda com Deus.', days: 7, theme: 'Avivamento' }
-=======
-  { id: 'impossible-causes', title: 'Causas Impossíveis', description: '7 dias de clamor intenso por milagres urgentes.', days: 7, theme: 'Fé para Milagres Urgentes' }
->>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
 ];
 
 const ptTrails = {
@@ -140,7 +136,6 @@ const ptChallengesMap = {
   'proverbs-wisdom': { title: 'Sabedoria' },
   'healing-miracle': { title: 'Cura Divina' },
   'open-doors': { title: 'Portas Abertas' },
-<<<<<<< HEAD
   'impossible-causes': { title: 'Causas Impossíveis' },
   'spiritual-warfare': { title: 'Guerra Espiritual' },
   'financial-freedom': { title: 'Liberdade Financeira' },
@@ -148,9 +143,6 @@ const ptChallengesMap = {
   'holy-relationships': { title: 'Relacionamentos Santos' },
   'prayer-power': { title: 'Poder da Oração' },
   'spiritual-renewal': { title: 'Renovação Espiritual' }
-=======
-  'impossible-causes': { title: 'Causas Impossíveis' }
->>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
 };
 
 const ptSettings = {
@@ -179,7 +171,6 @@ const ptSettings = {
 
 const ptKids = {
   menu: {
-<<<<<<< HEAD
     hello: 'Olá, Pequeno(a)!',
     title: 'Kids Zone',
     subtitle: 'Aprenda brincando!',
@@ -326,154 +317,6 @@ const ptKids = {
         ]
       }
     ]
-=======
-      hello: 'Olá, Pequeno(a)!',
-      title: 'Kids Zone',
-      subtitle: 'Aprenda brincando!',
-      explore: 'Toque para explorar',
-      coloring: {
-          tag: 'Criativo',
-          title: 'Pintar & Criar',
-          subtitle: 'Use sua imaginação',
-          new: 'Novo!'
-      },
-      quiz: { title: 'Quiz Bíblico' },
-      camera: { title: 'Foto Divertida' },
-      shalomflix: {
-          tag: 'Em Breve',
-          title: 'Shalomflix',
-          subtitle: 'Disponível em breve para assinantes'
-      }
-  },
-  coloring: {
-      title: 'Colorir',
-      coloringTitle: 'Hora de Colorir',
-      magicCreator: 'Criador Mágico',
-      magicDesc: 'Descreva um desenho e a IA cria para você pintar!',
-      placeholder: 'Ex: Leão de Judá na floresta...',
-      readyIdeas: 'Ideias Prontas',
-      ideas: [
-          { id: 'lion', title: 'Leão de Judá', prompt: 'Um leão majestoso e amigável estilo desenho animado para colorir, traços pretos fundo branco' },
-          { id: 'whale', title: 'Jonas e a Baleia', prompt: 'Uma baleia grande e feliz no mar estilo desenho para colorir, traços pretos fundo branco' },
-          { id: 'ark', title: 'Arca de Noé', prompt: 'Arca de Noé com animais estilo cartoon para colorir, outline black white background' },
-          { id: 'shepherd', title: 'O Bom Pastor', prompt: 'Jesus como pastor com ovelhas fofas estilo desenho para colorir, traços simples' },
-          { id: 'david', title: 'Davi e Golias', prompt: 'Pequeno Davi com uma pedra e gigante Golias cartoon para colorir' },
-          { id: 'angel', title: 'Anjo da Guarda', prompt: 'Um anjo fofo voando estilo desenho para colorir' },
-          { id: 'creation', title: 'A Criação', prompt: 'Mundo sendo criado, sol, moon, estrelas e arvores estilo desenho para colorir' },
-          { id: 'nativity', title: 'Nascimento', prompt: 'Presepio de natal com menino jesus estilo desenho para colorir' }
-      ],
-      aiPrompt: 'Crie um desenho para colorir infantil (line art, preto e branco, sem preenchimento, traços grossos) sobre: {prompt}. Estilo cartoon fofo.',
-      error: 'Erro ao criar imagem. Tente novamente.',
-      save: 'Salvar Arte',
-      reset: 'Limpar'
-  },
-  camera: {
-      title: 'Foto Kids',
-      takePhoto: 'Tirar Foto',
-      save: 'Salvar Foto',
-      retake: 'Tirar Outra',
-      noCamera: 'Sem Câmera',
-      permission: 'Precisamos de acesso à câmera.',
-      retry: 'Tentar Novamente',
-      frames: [
-          { id: 1, label: 'Herói', text: 'Herói da Fé', colors: ["#00c6ff", "#0072ff"], icon: "🦸‍♂️" },
-          { id: 2, label: 'Music', text: 'Pequeno Adorador', colors: ["#FFD700", "#ff9a00"], icon: "🎵" },
-          { id: 3, label: 'Coroa', text: 'Filho do Rei', colors: ["#ff9a9e", "#ff6a88"], icon: "👑" },
-          { id: 4, label: 'Natureza', text: 'Criação de Deus', colors: ["#56ab2f", "#a8e063"], icon: "🌿" },
-          { id: 5, label: 'Bolhas', text: 'Alegria do Senhor', colors: ["#FF8008", "#FFC837"], icon: "😄" },
-          { id: 6, label: 'Amor', text: 'Jesus me Ama', colors: ["#DA22FF", "#9733EE"], icon: "❤️" }
-      ],
-      effects: {
-          sparkles: 'Brilhos',
-          confetti: 'Festa',
-          amen: 'Amém',
-          angel: 'Anjo',
-          hearts: 'Amor'
-      }
-  },
-  quiz: {
-      title: 'Quiz Kids',
-      questionsCount: 'Perguntas',
-      question: 'Pergunta',
-      congrats: 'Parabéns!',
-      correct: 'Você acertou {score} de {total}!',
-      playAgain: 'Jogar de Novo',
-      exit: 'Sair',
-      themes: [
-          {
-              id: 'creation',
-              title: 'A Criação',
-              questions: [
-                  { q: "Quem criou o mundo?", options: ["Noé", "Deus", "Adão"], a: "Deus" },
-                  { q: "O que Deus criou no primeiro dia?", options: ["Animais", "Luz", "Plantas"], a: "Luz" },
-                  { q: "Quem foi o primeiro homem?", options: ["Pedro", "Adão", "José"], a: "Adão" }
-              ]
-          },
-          {
-              id: 'noah',
-              title: 'Arca de Noé',
-              questions: [
-                  { q: "O que Noé construiu?", options: ["Uma casa", "Um templo", "Uma arca"], a: "Uma arca" },
-                  { q: "Quantos animais de cada tipo entraram?", options: ["Um", "Dois (casal)", "Dez"], a: "Dois (casal)" },
-                  { q: "O que apareceu no céu depois da chuva?", options: ["Arco-íris", "Estrela", "Lua"], a: "Arco-íris" }
-              ]
-          },
-          {
-              id: 'david',
-              title: 'Davi e Golias',
-              questions: [
-                  { q: "O que Davi usou para lutar?", options: ["Espada", "Funda e pedra", "Lança"], a: "Funda e pedra" },
-                  { q: "Quem era o gigante?", options: ["Golias", "Saul", "Sansão"], a: "Golias" },
-                  { q: "Davi cuidava de quê?", options: ["Ovelhas", "Cavalos", "Camelos"], a: "Ovelhas" }
-              ]
-          },
-          {
-              id: 'jonah',
-              title: 'Jonas',
-              questions: [
-                  { q: "Quem engoliu Jonas?", options: ["Um leão", "Um grande peixe", "Um urso"], a: "Um grande peixe" },
-                  { q: "Para onde Jonas devia ir?", options: ["Nínive", "Tarsis", "Jerusalém"], a: "Nínive" },
-                  { q: "Quantos dias ele ficou no peixe?", options: ["1 dia", "3 dias", "7 dias"], a: "3 dias" }
-              ]
-          },
-          {
-              id: 'moses',
-              title: 'Moisés',
-              questions: [
-                  { q: "Onde a mãe de Moisés o colocou?", options: ["Num berço", "Num cesto no rio", "Numa caverna"], a: "Num cesto no rio" },
-                  { q: "O que Deus usou para falar com Moisés?", options: ["Uma nuvem", "Um arbusto em fogo", "Um anjo"], a: "Um arbusto em fogo" },
-                  { q: "O que Moisés abriu?", options: ["O Mar Vermelho", "O Rio Jordão", "O portão"], a: "O Mar Vermelho" }
-              ]
-          },
-          {
-              id: 'daniel',
-              title: 'Daniel',
-              questions: [
-                  { q: "Onde Daniel foi jogado?", options: ["Num poço", "Na cova dos leões", "Na prisão"], a: "Na cova dos leões" },
-                  { q: "O que os leões fizeram?", options: ["Rugiram", "Dormiram/Não comeram", "Brincaram"], a: "Dormiram/Não comeram" },
-                  { q: "Quantas vezes Daniel orava?", options: ["1 vez", "2 vezes", "3 vezes"], a: "3 vezes" }
-              ]
-          },
-          {
-              id: 'nativity',
-              title: 'Natal',
-              questions: [
-                  { q: "Onde Jesus nasceu?", options: ["Num hospital", "Num palácio", "Numa manjedoura"], a: "Numa manjedoura" },
-                  { q: "Quem guiou os Reis Magos?", options: ["Um mapa", "Uma estrela", "Um anjo"], a: "Uma estrela" },
-                  { q: "Qual o nome da mãe de Jesus?", options: ["Maria", "Marta", "Sara"], a: "Maria" }
-              ]
-          },
-          {
-              id: 'miracles',
-              title: 'Milagres',
-              questions: [
-                  { q: "Jesus andou sobre o quê?", options: ["A água", "O fogo", "O ar"], a: "A água" },
-                  { q: "O que Jesus multiplicou?", options: ["Ouro", "Pães e peixes", "Pedras"], a: "Pães e peixes" },
-                  { q: "Quem Jesus ressuscitou?", options: ["Lázaro", "Pedro", "João"], a: "Lázaro" }
-              ]
-          }
-      ]
->>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
   }
 };
 
@@ -528,13 +371,8 @@ export const pt = {
     letterP2: 'A pressão no trabalho aumenta, mas o salário não.',
     letterP3: 'Seus filhos estão expostos a coisas que você nunca imaginou. O casamento, que deveria ser abrigo, virou tensão.',
     letterP4: 'Você sorri na igreja… mas chora escondido no banheiro.',
-<<<<<<< HEAD
     letterWorstFeeling: 'E o pior sentimento de todos:',
     letterAlone: 'Mesmo acreditando em Deus, às vezes você se sente sozinho.',
-=======
-    letterWorstFeeling: 'And the worst feeling of all:',
-    letterAlone: 'Even believing in God, sometimes you feel alone.',
->>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
     letterPain: 'A ansiedade aperta. A oração não sai. E a paz… simplesmente não vem.',
     letterNotWeakness: 'Isso não é fraqueza. Isso é a vida real de quem ainda está lutando.',
     letterFear: 'Você não está apenas cansado. Você está com medo.',
@@ -568,11 +406,7 @@ export const pt = {
     ],
     letterBonus: 'Além disso:',
     letterBonusDesc: 'Palavra diária explicada de forma simples, desafios espirituais para fortalecer sua fé, louvores que acalmam a alma e uma resposta carinhosa sempre que você precisar falar.',
-<<<<<<< HEAD
     letterBibleOnly: 'Tudo baseado exclusivamente na Bíblia. Nada inventado. Nada além da Palavra de Deus.',
-=======
-    letterBibleOnly: 'All based exclusivamente na Bíblia. Nada inventado. Nada além da Palavra de Deus.',
->>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
     letterJesus: 'Shalom não substitui Jesus. Shalom te aproxima de Jesus.',
     letterResults: [
       'Vai orar mais',
@@ -581,11 +415,7 @@ export const pt = {
       'Vai sentir paz onde antes havia medo'
     ],
     letterAutoExit: 'Sua vida espiritual vai sair do automático.',
-<<<<<<< HEAD
     letterCall: 'Se você está sentindo, agora mesmo, que Deus está te chamando para mais perto… não ignore isso.',
-=======
-    letterCall: 'If you are feeling, right now, that God is calling you closer… do not ignore this.',
->>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
     letterAction: [
       '👉 Ative o Shalom no seu WhatsApp hoje',
       '👉 Receba a primeira oração ainda hoje',
@@ -618,11 +448,7 @@ export const pt = {
     marriageTag: 'Aliança Blindada',
     marriageDesc: [
       'As lutas diárias desgastam o amor.',
-<<<<<<< HEAD
       'Pequenas brigas viram grandes silêncios.',
-=======
-      'Pequenas brigas viram grandes silences.',
->>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
       'O segredo para reverter isso não é apenas diálogo, é oração conjunta.',
       'O Shalom envia devocionais para casais que quebram o orgulho e unem os corações diante de Deus.'
     ],
@@ -631,11 +457,7 @@ export const pt = {
     familyTitle: 'Seus filhos veem você orando?',
     familyTag: 'Proteção do Lar',
     familyDesc: [
-<<<<<<< HEAD
       'O mundo lá fora não tem misericórdia da sua família.',
-=======
-      'O mundo lá fora não tem misericordia da sua família.',
->>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
       'Seus filhos são bombardeados por valores invertidos na escola e nas telas.',
       'Se você não ensinar a verdade em casa, o mundo ensinará a mentira lá fora.',
       'O Shalom ajuda você a levantar um altar na sua sala.'
@@ -666,26 +488,17 @@ export const pt = {
     investmentTitle: 'Um Investimento Eterno',
     investmentDesc: [
       'Muitos de nós gastamos sem pensar com streamings, lanches e coisas que perecem.',
-<<<<<<< HEAD
       'Mas hesitamos em investir no fortalecimento do nosso espírito.',
-=======
-      'But we hesitate to invest in strengthening our spirit.',
->>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
       'Shalom custa menos que uma pizza por ano.',
       'Mas o valor de ter sua mente blindada pela Palavra...',
       'Isso não tem preço.'
     ],
-<<<<<<< HEAD
     testimonialQuote: '"Eu estava à beira de um burnout. O Guia Espiritual no WhatsApp foi a voz de Deus nas minhas madrugadas de insônia. Não sei o que seria de mim sem essa ferramenta."',
-=======
-    testimonialQuote: '"Eu estava à beira de um burnout. O Guia Espiritual no WhatsApp foi a voz de Deus nas minhas madrugadas de insônia. No sei o que seria de mim sem essa ferramenta."',
->>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
     testimonialAuthor: 'Juliana M.',
     testimonialInfo: 'Membro há 3 meses • São Paulo',
     devicesTitle: 'Sua jornada de fé, em qualquer lugar.',
     devicesTag: 'Presença constante em sua vida',
     devicesDesc: 'Acompanhe seu progresso bíblico no PC, ouça louvores no Tablet e receba sua oração diária no celular. Tudo conectado.',
-<<<<<<< HEAD
     premiumTitle: 'O Arsenal que Vai Blindar sua Casa',
     premiumSubtitle: 'Mais que um app, um ambiente seguro onde o mundo não entra.',
     flixTitle: 'Shalom Flix: O Fim da Guerra pelas Telas',
@@ -697,8 +510,6 @@ export const pt = {
     reconnectionTitle: 'Manual de Reaproximação',
     reconnectionDesc: 'A chama se apagou? Você sente que sua oração bate no teto? Nosso manual passo a passo te guia de volta ao primeiro amor. Sem religiosidade, apenas o caminho real de volta aos braços do Pai.',
     valueCall: 'Entregamos em suas mãos as ferramentas para uma vida de paz inabalável.',
-=======
->>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
     pricingHeadline: 'Quanto vale a paz da sua alma e a proteção da sua família?',
     pricingSub: 'Provavelmente não tem preço. Mas hoje, nós tornamos isso acessível para todos.',
     offerTag: 'Oferta Exclusiva de Lançamento',
@@ -710,11 +521,7 @@ export const pt = {
       { label: "Reflexões Diárias" }
     ],
     selectPlan: 'Selecione seu plano:',
-<<<<<<< HEAD
     monthly: 'Mensal',
-=======
-    monthly: 'Mensual',
->>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
     monthlyPrice: 'R$ 9,90',
     monthlySub: '/mês',
     monthlyFlex: 'Flexibilidade total',
