@@ -145,6 +145,17 @@ export interface TriviaCategory {
   questions: BibleTriviaQuestion[];
 }
 
+export interface Video {
+  id: string;
+  youtubeId: string;
+  title: string;
+  description: string;
+  thumbnail: string;
+  duration: string;
+  category: 'movies' | 'kids' | 'series';
+  isNew?: boolean;
+}
+
 // Analytics Types
 export interface QuizSession {
   id: string;
