@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="facebook-domain-verification" content="3du5yupg7fzbc15tg0e275ejuqtnb5" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Shalom</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            paper: 'var(--color-paper)',
+            surface: 'var(--color-surface)',
+            ink: 'var(--color-ink)',
+            subtle: 'var(--color-subtle)',
+            brown: '#57534e',
+            'brown-dark': '#44403c',
+            gold: '#fbbf24',
+            'gold-dark': '#d97706',
+            orange: '#f97316',
+            'orange-light': '#ffedd5',
+            inverted: 'var(--color-inverted)',
+          },
+          fontFamily: {
+            serif: ['Merriweather', 'serif'],
+            sans: ['Inter', 'sans-serif'],
+          },
+          boxShadow: {
+            'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+            'card': '0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025)',
+            'inner-book': 'inset 20px 0 30px -10px rgba(0,0,0,0.05)',
+          },
+          animation: {
+            'slide-up': 'slideUp 0.4s ease-out forwards',
+            'fade-in': 'fadeIn 0.5s ease-out forwards',
+            'turn-next': 'turnPageLeft 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards',
+            'turn-prev': 'turnPageRight 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards',
+            'float-up': 'floatUp 1.5s ease-out forwards',
+          },
+          keyframes: {
+            slideUp: {
+              '0%': { transform: 'translateY(20px)', opacity: '0' },
+              '100%': { transform: 'translateY(0)', opacity: '1' },
+            },
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' },
+            },
+            turnPageLeft: {
+              '0%': { transform: 'rotateY(-30deg) translateX(20px)', opacity: '0', transformOrigin: 'left center' },
+              '100%': { transform: 'rotateY(0deg) translateX(0)', opacity: '1', transformOrigin: 'left center' },
+            },
+            turnPageRight: {
+              '0%': { transform: 'rotateY(30deg) translateX(-20px)', opacity: '0', transformOrigin: 'right center' },
+              '100%': { transform: 'rotateY(0deg) translateX(0)', opacity: '1', transformOrigin: 'right center' },
+            },
+            floatUp: {
+              '0%': { transform: 'translateY(0) scale(0.5)', opacity: '0' },
+              '20%': { opacity: '1', transform: 'translateY(-20px) scale(1.2)' },
+              '100%': { transform: 'translateY(-200px) scale(1)', opacity: '0' }
+            }
+          }
+        },
+      },
+    };
+  </script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --color-paper: #fafaf9;
+      /* Stone 50 */
+      --color-surface: #ffffff;
+      --color-ink: #1c1917;
+      /* Stone 900 */
+      --color-subtle: #78716c;
+      /* Stone 500 */
+      --color-inverted: #ffffff;
+    }
+
+    .dark {
+      --color-paper: #0c0a09;
+      /* Stone 950 */
+      --color-surface: #1c1917;
+      /* Stone 900 */
+      --color-ink: #f5f5f4;
+      /* Stone 100 */
+      --color-subtle: #a8a29e;
+      /* Stone 400 */
+      --color-inverted: #1c1917;
+    }
+
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      /* IE and Edge */
+      scrollbar-width: none;
+      /* Firefox */
+    }
+
+    body {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Perspective for 3D Flip */
+    .book-perspective {
+      perspective: 1500px;
+    }
+  </style>
+  <link rel="stylesheet" href="/index.css">
+</head>
+
+<body class="bg-paper text-ink antialiased font-sans overflow-hidden select-none transition-colors duration-300">
+  <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+
+</html>

@@ -1,0 +1,40 @@
+export const POPULAR_VERSES = [
+  "Jeremiah 29:11", "Philippians 4:13", "John 3:16", "Romans 8:28",
+  "Isaiah 41:10", "Psalms 23:1", "Joshua 1:9", "Matthew 11:28",
+  "Proverbs 3:5-6", "Isaiah 40:31", "Romans 12:2", "Philippians 4:6-7",
+  "2 Timothy 1:7", "Hebrews 11:1", "1 Corinthians 13:4-7", "2 Corinthians 5:17",
+  "Galatians 5:22-23", "Ephesians 2:8-9", "Psalm 46:1", "Psalm 91:1-2",
+  "Lamentations 3:22-23", "Romans 8:38-39", "James 1:2-3", "1 Peter 5:7",
+  "Micah 6:8", "Zephaniah 3:17", "John 14:27", "Psalm 121:1-2"
+];
+
+export const FALLBACK_VERSES_DATA: Record<string, string> = {
+  "Jeremiah 29:11": "Porque eu bem sei os pensamentos que tenho a vosso respeito, diz o Senhor; pensamentos de paz, e não de mal, para vos dar o fim que esperais.",
+  "Philippians 4:13": "Posso todas as coisas naquele que me fortalece.",
+  "John 3:16": "Porque Deus amou o mundo de tal maneira que deu o seu Filho unigênito, para que todo aquele que nele crê não pereça, mas tenha a vida eterna.",
+  "Romans 8:28": "E sabemos que todas as coisas contribuem juntamente para o bem daqueles que amam a Deus, daqueles que são chamados segundo o seu propósito.",
+  "Isaiah 41:10": "Não temas, porque eu sou contigo; não te assombres, porque eu sou teu Deus; eu te fortaleço, e te ajudo, e te sustento com a destra da minha justiça.",
+  "Psalms 23:1": "O Senhor é o meu pastor, nada me faltará.",
+  "Joshua 1:9": "Não to mandei eu? Esforça-te, e tem bom ânimo; não temas, nem te espantes; porque o Senhor teu Deus é contigo, por onde quer que andares.",
+  "Matthew 11:28": "Vinde a mim, todos os que estais cansados e oprimidos, e eu vos aliviarei.",
+  "Proverbs 3:5-6": "Confia no Senhor de todo o teu coração, e não te estribes no teu próprio entendimento. Reconhece-o em todos os teus caminhos, e ele endireitará as tuas veredas.",
+  "Isaiah 40:31": "Mas os que esperam no Senhor renovarão as forças, subirão com asas como águias; correrão, e não se cansarão; caminharão, e não se fatigarão.",
+  "Romans 12:2": "E não sede conformados com este mundo, mas sede transformados pela renovação do vosso entendimento, para que experimenteis qual seja a boa, agradável, e perfeita vontade de Deus.",
+  "Philippians 4:6-7": "Não estejais inquietos por coisa alguma; antes as vossas petições sejam em tudo conhecidas diante de Deus pela oração e súplica, com ação de graças. E a paz de Deus, que excede todo o entendimento, guardará os vossos corações e os vossos sentimentos em Cristo Jesus.",
+  "2 Timothy 1:7": "Porque Deus não nos deu o espírito de temor, mas de fortaleza, e de amor, e de moderação.",
+  "Hebrews 11:1": "Ora, a fe é o firme fundamento das coisas que se esperam, e a prova das coisas que se não veem.",
+  "1 Corinthians 13:4-7": "O amor é sofredor, é benigno; o amor não é invejoso; o amor não trata com leviandade, não se ensoberbece. Não se porta com indecência, não busca os seus interesses, não se irrita, não suspeita mal; Não folga com a injustiça, mas folga com a verdade; Tudo sofre, tudo crê, tudo espera, tudo suporta.",
+  "2 Corinthians 5:17": "Assim que, se alguém está em Cristo, nova criatura é; as coisas velhas já passaram; eis que tudo se fez novo.",
+  "Galatians 5:22-23": "Mas o fruto do Espírito é: amor, gozo, paz, longanimidade, benignidade, bondade, fé, mansidão, temperança. Contra estas coisas não há lei.",
+  "Ephesians 2:8-9": "Porque pela graça sois salvos, por meio da fé; e isto não vem de vós, é dom de Deus. Não vem das obras, para que ninguém se glorie.",
+  "Psalm 46:1": "Deus é o nosso refúgio e fortaleza, socorro bem presente na angústia.",
+  "Psalm 91:1-2": "Aquele que habita no esconderijo do Altíssimo, à sombra do Onipotente descansará. Direi do Senhor: Ele é o meu Deus, o meu refúgio, a minha fortaleza, e nele confiarei.",
+  "Lamentations 3:22-23": "As misericórdias do Senhor são a causa de não sermos consumidos, porque as suas misericórdias não têm fim; Novas são cada manhã; grande é a tua fidelidade.",
+  "Romans 8:38-39": "Porque estou certo de que, nem a morte, nem a vida, nem os anjos, nem os principados, nem as potestades, nem o presente, nem o porvir, Nem a altura, nem a profundidade, nem alguma outra criatura nos poderá separar do amor de Deus, que está em Cristo Jesus nosso Senhor.",
+  "James 1:2-3": "Meus irmãos, tende grande gozo quando cairdes em várias tentações; Sabendo que a prova da vossa fé opera a paciência.",
+  "1 Peter 5:7": "Lançando sobre ele toda a vossa ansiedade, porque ele tem cuidado de vós.",
+  "Micah 6:8": "Ele te declarou, ó homem, o que é bom; e que é o que o Senhor pede de ti, senão que pratiques a justiça, e ames a beneficência, e andes humildemente com o teu Deus?",
+  "Zephaniah 3:17": "O Senhor teu Deus, o poderoso, está no meio de ti, ele salvará; ele se deleitará em ti com alegria; calar-se-á por seu amor, regozijar-se-á em ti com júbilo.",
+  "John 14:27": "Deixo-vos a paz, a minha paz vos dou; não vo-la dou como o mundo a dá. Não se turbe o vosso coração, nem se atemorize.",
+  "Psalm 121:1-2": "Levantarei os meus olhos para os montes, de onde vem o meu socorro. O meu socorro vem do Senhor que fez o céu e a terra."
+};
