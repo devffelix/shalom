@@ -1,32 +1,21 @@
 
 import React, { useEffect } from 'react';
-<<<<<<< HEAD
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-=======
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
->>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
-import Layout from '../components/Layout';
-import Home from './Home';
-import Landing from './Landing';
-import Bible from './Bible';
-import Worship from './Worship';
-import Challenges from './Challenges';
-import { KidsZone } from './Illustrations';
-import Settings from './Settings';
-import Trails from './Trails';
-import Quiz from './Quiz';
-import AdminDashboard from './AdminDashboard';
-import BibleTriviaPage from './BibleTriviaPage';
-<<<<<<< HEAD
-import Reflections from './Reflections';
-import PsalmsExplained from './PsalmsExplained';
-import ReconnectionGuide from './ReconnectionGuide';
-import Shalomflix from './Shalomflix';
-=======
->>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
-import { UserProgress } from '../types';
-import { AudioProvider } from '../contexts/AudioContext';
-import { LanguageProvider } from '../contexts/LanguageContext';
+import Layout from './components/Layout';
+import Home from './pages/Home';
+import Landing from './pages/Landing';
+import Bible from './pages/Bible';
+import Worship from './pages/Worship';
+import Challenges from './pages/Challenges';
+import { KidsZone } from './pages/Illustrations';
+import Settings from './pages/Settings';
+import Trails from './pages/Trails';
+import Quiz from './pages/Quiz';
+import AdminDashboard from './pages/AdminDashboard';
+import BibleTriviaPage from './pages/BibleTriviaPage';
+import { UserProgress } from './types';
+import { AudioProvider } from './contexts/AudioContext';
+import { LanguageProvider } from './contexts/LanguageContext';
 
 const INITIAL_PROGRESS: UserProgress = {
   readChapters: [],
@@ -48,11 +37,7 @@ const App: React.FC = () => {
     } else {
       const parsed = JSON.parse(saved);
       const today = new Date().toISOString().split('T')[0];
-<<<<<<< HEAD
-
-=======
       
->>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
       // Migration & Daily Reset Logic
       let updated = { ...parsed };
       let changed = false;
@@ -64,11 +49,7 @@ const App: React.FC = () => {
         updated.todayStudyMinutes = 0; // Reset study time
         changed = true;
       }
-<<<<<<< HEAD
-
-=======
       
->>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
       // Ensure XP field exists
       if (typeof parsed.xp === 'undefined') {
         updated.xp = 0;
@@ -80,11 +61,7 @@ const App: React.FC = () => {
         updated.dailyReadCount = 0;
         changed = true;
       }
-<<<<<<< HEAD
-
-=======
       
->>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
       // Ensure Study Minutes field exists
       if (typeof parsed.todayStudyMinutes === 'undefined') {
         updated.todayStudyMinutes = 0;
@@ -101,11 +78,7 @@ const App: React.FC = () => {
         localStorage.setItem('lumina_progress', JSON.stringify(updated));
       }
     }
-<<<<<<< HEAD
-
-=======
     
->>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
     // Check Theme preference
     const savedTheme = localStorage.getItem('lumina_theme');
     if (savedTheme === 'dark') {
@@ -150,13 +123,6 @@ const App: React.FC = () => {
               <Route path="/settings" element={<Settings />} />
               <Route path="/trails" element={<Trails />} />
               <Route path="/trivia" element={<BibleTriviaPage />} />
-<<<<<<< HEAD
-              <Route path="/reflections" element={<Reflections />} />
-              <Route path="/psalms-explained" element={<PsalmsExplained />} />
-              <Route path="/reconnection-guide" element={<ReconnectionGuide />} />
-              <Route path="/shalomflix" element={<Shalomflix />} />
-=======
->>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
             </Routes>
           </Layout>
         </Router>

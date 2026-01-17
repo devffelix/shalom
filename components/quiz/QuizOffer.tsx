@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
 import React, { useRef, useState, useEffect } from 'react';
 import { TrendingUp, Activity, Star, MessageCircle, Sparkles, ShieldCheck, Zap, HeartHandshake, Music, Check, AlertTriangle, ArrowRight, Shield, Lock, Play, Pause, Calendar, Flame, Heart, Battery, Sun, Home, BookOpen, Target, CheckCircle2, Clock, ChevronDown, ChevronUp, HelpCircle, ArrowLeft } from 'lucide-react';
 import { ShalomLogo } from '../Layout';
@@ -61,6 +64,7 @@ const QuizOffer: React.FC<QuizOfferProps> = ({ name, genderTerm, timeLeft, forma
     }
   ];
 
+<<<<<<< HEAD
   // Audio Logic with Safety
   useEffect(() => {
     previewAudioRef.current = new Audio("https://files.catbox.moe/v0y3em.mp3");
@@ -71,6 +75,13 @@ const QuizOffer: React.FC<QuizOfferProps> = ({ name, genderTerm, timeLeft, forma
             previewAudioRef.current = null; 
         } 
     }
+=======
+  // Audio Logic
+  useEffect(() => {
+    previewAudioRef.current = new Audio("https://files.catbox.moe/v0y3em.mp3");
+    previewAudioRef.current.onended = () => setIsPlayingPreview(false);
+    return () => { if(previewAudioRef.current) { previewAudioRef.current.pause(); previewAudioRef.current = null; } }
+>>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
   }, []);
 
   const togglePreview = () => {
@@ -79,11 +90,15 @@ const QuizOffer: React.FC<QuizOfferProps> = ({ name, genderTerm, timeLeft, forma
           previewAudioRef.current.pause();
           setIsPlayingPreview(false);
       } else {
+<<<<<<< HEAD
           // Fix: Added catch to handle 'Uncaught (in promise) DOMException: The play() request was interrupted'
           previewAudioRef.current.play().catch(e => {
             console.warn("Audio preview interrupted or blocked:", e);
             setIsPlayingPreview(false);
           });
+=======
+          previewAudioRef.current.play().catch(e => console.error(e));
+>>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
           setIsPlayingPreview(true);
       }
   };
@@ -264,7 +279,11 @@ const QuizOffer: React.FC<QuizOfferProps> = ({ name, genderTerm, timeLeft, forma
                             </div>
                         ))}
                     </div>
+<<<<<<< HEAD
                     {/* CENTER MOCKUP */}
+=======
+                    {/* CENTER MOCKUP - High Quality Phone */}
+>>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
                     <div className="order-1 lg:order-2 flex justify-center">
                         <div className="relative w-full max-w-[280px] aspect-[9/19] bg-stone-950 rounded-[3rem] shadow-[0_20px_50px_-10px_rgba(0,0,0,0.3)] border-[8px] border-stone-900 overflow-hidden ring-4 ring-stone-200/50 dark:ring-stone-800 origin-center">
                             <div className="h-full w-full bg-[#fafaf9] flex flex-col relative font-sans overflow-hidden">
@@ -335,6 +354,7 @@ const QuizOffer: React.FC<QuizOfferProps> = ({ name, genderTerm, timeLeft, forma
                 </div>
             </div>
 
+<<<<<<< HEAD
             {/* ADDITIONAL SECTIONS */}
             <KidsBonus />
             <WhatsAppMockup />
@@ -342,6 +362,23 @@ const QuizOffer: React.FC<QuizOfferProps> = ({ name, genderTerm, timeLeft, forma
 
             {/* FINAL OFFER SECTION */}
             <div className="bg-white dark:bg-stone-900 rounded-[2.5rem] p-6 md:p-8 shadow-2xl border-4 border-stone-100 dark:border-stone-800 relative overflow-hidden mb-10">
+=======
+            {/* --- SECTIONS IN CORRECT ORDER --- */}
+            
+            {/* 1. KIDS BONUS */}
+            <KidsBonus />
+
+            {/* 2. WHATSAPP MOCKUP (CHERRY ON TOP) - Placed AFTER Kids */}
+            <WhatsAppMockup />
+
+            {/* 3. TESTIMONIALS (NEW SECTION) */}
+            <Testimonials />
+
+            {/* --- NEW OFFER SECTION --- */}
+            <div className="bg-white dark:bg-stone-900 rounded-[2.5rem] p-6 md:p-8 shadow-2xl border-4 border-stone-100 dark:border-stone-800 relative overflow-hidden mb-10">
+                
+                {/* Offer Headline Text */}
+>>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
                 <div className="text-center mb-8 relative z-10">
                     <p className="text-base md:text-lg text-stone-600 dark:text-stone-300 font-medium leading-relaxed">
                         Ter um mentor espiritual humano custaria caro e exigiria horários fixos.
@@ -351,14 +388,28 @@ const QuizOffer: React.FC<QuizOfferProps> = ({ name, genderTerm, timeLeft, forma
                     </p>
                 </div>
 
+<<<<<<< HEAD
                 <div className="space-y-4 mb-8 relative z-10">
+=======
+                {/* Plans Selection */}
+                <div className="space-y-4 mb-8 relative z-10">
+                    {/* Yearly Plan (Hero) */}
+>>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
                     <div 
                         onClick={() => setSelectedPlan('yearly')} 
                         className={`relative cursor-pointer rounded-3xl p-6 border-2 transition-all flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl ${selectedPlan === 'yearly' ? 'border-gold bg-white dark:bg-stone-800 ring-4 ring-gold/10' : 'border-stone-200 opacity-60'}`}
                     >
+<<<<<<< HEAD
                          <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-green-100 text-green-700 text-sm font-black px-8 py-2.5 rounded-full uppercase tracking-widest border-2 border-green-200 shadow-md">
                             92% Escolhem
                          </div>
+=======
+                         {/* Badge */}
+                         <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-green-100 text-green-700 text-sm font-black px-8 py-2.5 rounded-full uppercase tracking-widest border-2 border-green-200 shadow-md">
+                            92% Escolhem
+                         </div>
+
+>>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
                          <div className="flex items-center gap-4 w-full md:w-auto">
                             <div className="w-6 h-6 rounded-full bg-gold flex items-center justify-center text-white shrink-0">
                                 <Check size={14} strokeWidth={4} />
@@ -369,15 +420,28 @@ const QuizOffer: React.FC<QuizOfferProps> = ({ name, genderTerm, timeLeft, forma
                                 <p className="text-sm font-bold text-green-600 dark:text-green-400">por apenas:</p>
                             </div>
                          </div>
+<<<<<<< HEAD
+=======
+
+>>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
                          <div className="text-center md:text-right">
                              <span className="block text-4xl font-black text-ink dark:text-white tracking-tighter">49,90</span>
                              <span className="text-[10px] font-bold text-subtle uppercase tracking-wider block">Pagamento Único</span>
                          </div>
+<<<<<<< HEAD
+=======
+
+                         {/* Float Badge */}
+>>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
                          <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-stone-900 text-white text-[10px] font-bold px-4 py-1.5 rounded-full shadow-lg flex items-center gap-1 whitespace-nowrap border border-white/10">
                             <TrendingUp size={10} className="text-green-400" /> Menos que uma pizza por ano...
                          </div>
                     </div>
 
+<<<<<<< HEAD
+=======
+                    {/* Monthly Option */}
+>>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
                     <div 
                         onClick={() => setSelectedPlan('monthly')}
                         className={`relative cursor-pointer rounded-2xl p-4 border-2 transition-all flex items-center justify-between gap-4 group ${selectedPlan === 'monthly' ? 'border-stone-400 bg-stone-50 dark:bg-stone-800' : 'border-stone-200 dark:border-stone-800 opacity-60'}`}
@@ -395,6 +459,10 @@ const QuizOffer: React.FC<QuizOfferProps> = ({ name, genderTerm, timeLeft, forma
                     </div>
                 </div>
 
+<<<<<<< HEAD
+=======
+                {/* Yellow Warning Box */}
+>>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
                 <div className="mt-10 mb-8 bg-yellow-50 dark:bg-yellow-900/10 border-2 border-yellow-200 dark:border-yellow-800/30 border-dashed rounded-2xl p-6 text-center relative z-10">
                     <div className="flex items-center justify-center gap-2 mb-2 text-yellow-700 dark:text-yellow-500 font-bold text-sm uppercase tracking-widest">
                         <AlertTriangle size={16} /> Atenção
@@ -404,6 +472,10 @@ const QuizOffer: React.FC<QuizOfferProps> = ({ name, genderTerm, timeLeft, forma
                     </p>
                 </div>
 
+<<<<<<< HEAD
+=======
+                {/* CTA Button */}
+>>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
                 <button 
                     onClick={() => {
                         const link = selectedPlan === 'yearly' 
@@ -416,6 +488,10 @@ const QuizOffer: React.FC<QuizOfferProps> = ({ name, genderTerm, timeLeft, forma
                     <span className="flex items-center gap-2">LIBERAR MEU ACESSO AGORA <ArrowRight strokeWidth={4} size={20} /></span>
                     <span className="text-[10px] font-medium opacity-90 tracking-widest uppercase">Garantia de 7 dias ou seu dinheiro de volta</span>
                 </button>
+<<<<<<< HEAD
+=======
+
+>>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
             </div>
 
             {/* Guarantee Section */}
@@ -425,7 +501,11 @@ const QuizOffer: React.FC<QuizOfferProps> = ({ name, genderTerm, timeLeft, forma
                 </div>
                 <h3 className="text-xl font-bold text-ink dark:text-white mb-2">Risco Zero Absoluto</h3>
                 <p className="text-stone-500 text-sm leading-relaxed">
+<<<<<<< HEAD
                     Você tem 7 dias para testar o Shalom. Se não sentir que sua fé foi fortalecida, devolvemos 100% do seu dinheiro. Sem perguntas, sem letras miúdas.
+=======
+                    Você tem 7 dias para testar o Shalom. Se não sentir que sua fé foi fortalecida, devolvemos 100% do seu investimento. Sem perguntas, sem letras miúdas.
+>>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
                 </p>
             </div>
 
@@ -456,10 +536,26 @@ const QuizOffer: React.FC<QuizOfferProps> = ({ name, genderTerm, timeLeft, forma
             <div className="mt-20 text-center opacity-60 pb-10">
                 <ShalomLogo size="w-6 h-6" className="mx-auto mb-4" />
                 <p className="text-xs text-stone-400">© 2024 Shalom App. Todos os direitos reservados.</p>
+<<<<<<< HEAD
             </div>
+=======
+                <div className="flex justify-center gap-4 mt-2 text-[10px] text-stone-400 font-bold uppercase tracking-widest">
+                    <span>Termos de Uso</span>
+                    <span>•</span>
+                    <span>Privacidade</span>
+                    <span>•</span>
+                    <span>Suporte</span>
+                </div>
+            </div>
+
+>>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
         </div>
     </div>
   );
 };
 
+<<<<<<< HEAD
 export default QuizOffer;
+=======
+export default QuizOffer;
+>>>>>>> a1c76c45b8057bdb889cea829282a0d7039dfa9e
