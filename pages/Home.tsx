@@ -7,6 +7,7 @@ import { calculateLevel } from '../services/gamification';
 import { Mood, UserProgress, Note, LevelData } from '../types';
 import { TOTAL_CHAPTERS, POPULAR_VERSES } from '../constants';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useProgress } from '../contexts/ProgressContext';
 import Onboarding, { Step } from '../components/Onboarding';
 
 const MOOD_IMAGES: Record<string, string> = {
@@ -68,7 +69,7 @@ const Home: React.FC = () => {
   const [aiPrayer, setAiPrayer] = useState<string>('');
   const [isLoadingPrayer, setIsLoadingPrayer] = useState(false);
   const [isLoadingVerse, setIsLoadingVerse] = useState(false);
-  const [progress, setProgress] = useState<UserProgress | null>(null);
+  const { progress, markManualAsCompleted } = useProgress();
   const [levelData, setLevelData] = useState<LevelData | null>(null);
   const [userName, setUserName] = useState('Viajante');
   const [isAmenAnimating, setIsAmenAnimating] = useState(false);
@@ -91,13 +92,8 @@ const Home: React.FC = () => {
   if (hour >= 18) timeGreeting = t.home.greetingEvening;
 
   useEffect(() => {
-    const saved = localStorage.getItem('lumina_progress');
-    if (saved) {
-      const p = JSON.parse(saved);
-      setProgress(p);
-      setLevelData(calculateLevel(p.xp || 0));
-    } else {
-      setLevelData(calculateLevel(0));
+    if (progress) {
+      setLevelData(calculateLevel(progress.xp || 0));
     }
     const savedNotes = localStorage.getItem('lumina_notes');
     if (savedNotes) setNotes(JSON.parse(savedNotes));
@@ -117,7 +113,7 @@ const Home: React.FC = () => {
     }
 
     handleRefreshVerse();
-  }, [language]); // Refresh when language changes
+  }, [language, progress]); // Refresh when language or progress changes
 
   const handleRefreshVerse = async (e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
@@ -490,10 +486,11 @@ const Home: React.FC = () => {
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex-1 text-center md:text-left">
             <div className="inline-flex items-center gap-2 text-xs font-bold text-amber-600 bg-amber-50 dark:bg-amber-900/30 px-3 py-1 rounded-full uppercase tracking-wider mb-3">
-              <Sparkles size={12} fill="currentColor" /> Sabedoria Diária
+              <Sparkles size={12} fill="currentColor" /> Sabedoria Diária • <span className="text-[10px] opacity-70">Atualizado hoje</span>
             </div>
-            <h3 className="text-3xl font-serif font-black text-stone-800 dark:text-stone-100 leading-tight mb-2">
+            <h3 className="text-3xl font-serif font-black text-stone-800 dark:text-stone-100 leading-tight mb-2 flex items-center gap-3">
               Jesus queria que você soubesse...
+              {progress?.readReflections && progress.readReflections.length > 0 && <CheckCircle2 size={24} className="text-emerald-500 opacity-30" />}
             </h3>
             <p className="text-stone-500 dark:text-stone-400 font-medium leading-relaxed">
               Mais de 100 reflexões simples para transformar o seu dia a dia com paz e sabedoria.
@@ -516,10 +513,11 @@ const Home: React.FC = () => {
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex-1 text-center md:text-left">
             <div className="inline-flex items-center gap-2 text-xs font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 px-3 py-1 rounded-full uppercase tracking-wider mb-3">
-              <Sparkles size={12} fill="currentColor" /> Resgate Espiritual
+              <Sparkles size={12} fill="currentColor" /> Resgate Espiritual • <CheckCircle2 size={10} className={progress?.completedManual ? "text-emerald-600" : "opacity-30"} />
             </div>
-            <h3 className="text-3xl font-serif font-black text-stone-800 dark:text-stone-100 leading-tight mb-2">
+            <h3 className="text-3xl font-serif font-black text-stone-800 dark:text-stone-100 leading-tight mb-2 flex items-center gap-3">
               Manual de Reaproximação
+              {progress?.completedManual && <CheckCircle2 size={28} className="text-emerald-500 animate-in zoom-in" fill="currentColor" opacity={0.2} />}
             </h3>
             <p className="text-stone-500 dark:text-stone-400 font-medium leading-relaxed">
               Sente-se longe de Deus? Este guia passo a passo vai te ensinar como voltar à intimidade e ao primeiro amor.
@@ -543,10 +541,11 @@ const Home: React.FC = () => {
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex-1 text-center md:text-left">
             <div className="inline-flex items-center gap-2 text-xs font-bold text-blue-600 bg-blue-50 dark:bg-blue-900/30 px-3 py-1 rounded-full uppercase tracking-wider mb-3">
-              <Sun size={12} fill="currentColor" /> Conforto na Alma
+              <Sun size={12} fill="currentColor" /> Conforto na Alma • <span className="text-[10px] opacity-70">Novos Salmos Diários</span>
             </div>
-            <h3 className="text-3xl font-serif font-black text-stone-800 dark:text-stone-100 leading-tight mb-2">
+            <h3 className="text-3xl font-serif font-black text-stone-800 dark:text-stone-100 leading-tight mb-2 flex items-center gap-3">
               Salmos explicados
+              {progress?.readPsalms && progress.readPsalms.length > 0 && <CheckCircle2 size={24} className="text-blue-400 opacity-20" />}
             </h3>
             <p className="text-stone-500 dark:text-stone-400 font-medium leading-relaxed">
               Encontre paz nas palavras mais profundas da Bíblia, explicadas para o seu dia a através do Espírito.

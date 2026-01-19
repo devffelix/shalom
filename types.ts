@@ -21,6 +21,9 @@ export interface UserProgress {
   dailyReadCount: number; // Field for Daily Goal Meter
   todayStudyMinutes: number; // Actual minutes studied today
   earnedBadges: string[]; // List of Badge IDs
+  readReflections: number[]; // List of Reflection IDs
+  readPsalms: number[]; // List of Psalm IDs
+  completedManual: boolean; // Whether Reconnection Guide is finished
 }
 
 export interface UserGoals {
@@ -64,6 +67,7 @@ export interface SongSuggestion {
   artist: string;
   reason: string;
   audioUrl?: string; // Link direto para o arquivo MP3
+  category?: string; // Tópico do louvor
 }
 
 export interface Challenge {

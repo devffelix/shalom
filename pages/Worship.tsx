@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { SongSuggestion } from '../types';
 import { useAudio } from '../contexts/AudioContext';
-import { Music, Search, Play, Pause, AlertCircle, Volume2, VolumeX, BarChart3, SkipBack, SkipForward, Sparkles } from 'lucide-react';
+import { Music, Search, Play, Pause, AlertCircle, Volume2, VolumeX, BarChart3, SkipBack, SkipForward, Sparkles, Star, Flame, Heart, Crown, Home, CheckCircle2 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import Onboarding, { Step } from '../components/Onboarding';
 
@@ -11,6 +11,7 @@ const Worship: React.FC = () => {
   const [topic, setTopic] = useState('');
   const [songs, setSongs] = useState<SongSuggestion[]>([]);
   const [loading, setLoading] = useState(false);
+  const [activeCategory, setActiveCategory] = useState('all');
 
   // Global Audio Context
   const { currentSong, isPlaying, playSong, togglePlay, progress, duration, seek, volume, setVolume } = useAudio();
@@ -20,24 +21,40 @@ const Worship: React.FC = () => {
     handleSearch('');
   }, [t]); // Reload when language changes
 
-  const handleSearch = (query: string) => {
+  const handleSearch = (query: string, category: string = activeCategory) => {
     setLoading(true);
-    // Filter local translated songs instead of calling API which had hardcoded data
-    const allSongs = t.songsList || []; 
-    
+    let allSongs = t.songsList || [];
+
+    // Global filter by category first
+    if (category !== 'all') {
+      allSongs = allSongs.filter(song => song.category === category);
+    }
+
     if (!query || query.trim() === '') {
-        setSongs(allSongs);
+      setSongs(allSongs);
     } else {
-        const lowerQuery = query.toLowerCase();
-        const results = allSongs.filter(song => 
-            song.title.toLowerCase().includes(lowerQuery) || 
-            song.artist.toLowerCase().includes(lowerQuery) ||
-            song.reason.toLowerCase().includes(lowerQuery)
-        );
-        setSongs(results);
+      const lowerQuery = query.toLowerCase();
+      const results = allSongs.filter(song =>
+        song.title.toLowerCase().includes(lowerQuery) ||
+        song.artist.toLowerCase().includes(lowerQuery) ||
+        song.reason.toLowerCase().includes(lowerQuery)
+      );
+      setSongs(results);
     }
     setLoading(false);
   };
+
+  const dailySongs = (t.songsList || []).slice(-3).reverse();
+
+  const categories = [
+    { id: 'all', label: t.worship.all, icon: <Music size={16} />, color: 'from-indigo-500 to-purple-600' },
+    { id: 'topicPaz', label: t.worship.topicPaz, icon: <Sparkles size={16} />, color: 'from-blue-400 to-cyan-500' },
+    { id: 'topicFe', label: t.worship.topicFe, icon: <Star size={16} />, color: 'from-amber-400 to-orange-500' },
+    { id: 'topicEspirito', label: t.worship.topicEspirito, icon: <Flame size={16} />, color: 'from-orange-500 to-red-600' },
+    { id: 'topicClamor', label: t.worship.topicClamor, icon: <Heart size={16} />, color: 'from-rose-400 to-pink-600' },
+    { id: 'topicAdoracao', label: t.worship.topicAdoracao, icon: <Crown size={16} />, color: 'from-violet-500 to-fuchsia-600' },
+    { id: 'topicFamilia', label: t.worship.topicFamilia, icon: <Home size={16} />, color: 'from-emerald-400 to-teal-600' },
+  ];
 
   const formatTime = (seconds: number) => {
     if (!seconds) return "0:00";
@@ -77,10 +94,22 @@ const Worship: React.FC = () => {
         </div>
       </div>
 
+      {/* Daily Update Notification */}
+      <div className="bg-gradient-to-r from-orange-500/10 via-gold/10 to-yellow-500/10 dark:from-orange-500/20 dark:to-yellow-500/20 border-2 border-gold/30 rounded-[2rem] p-6 flex items-center gap-5 animate-in fade-in slide-in-from-top-4 duration-700 shadow-xl shadow-gold/5 relative overflow-hidden group">
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 opacity-30"></div>
+        <div className="w-14 h-14 bg-gradient-to-br from-orange-600 via-gold to-orange-500 rounded-2xl flex items-center justify-center text-white shadow-lg transform group-hover:scale-110 transition-transform flex-shrink-0">
+          <Sparkles size={28} />
+        </div>
+        <div>
+          <p className="text-stone-900 dark:text-white font-black text-lg leading-tight">{t.worship.dailyUpdate}</p>
+          <p className="text-stone-700 dark:text-stone-300 text-sm font-semibold">Novas melodias para o seu encontro com o Pai.</p>
+        </div>
+      </div>
+
       {/* Search Input */}
       <div id="worship-search" className="relative">
-        <input 
-          type="text" 
+        <input
+          type="text"
           placeholder={t.worship.searchPlaceholder}
           className="w-full p-6 pl-14 bg-surface dark:bg-stone-800 rounded-[2rem] shadow-soft border-2 border-transparent focus:border-gold outline-none text-lg font-medium text-ink dark:text-white placeholder-stone-400 transition-all"
           value={topic}
@@ -92,193 +121,259 @@ const Worship: React.FC = () => {
         <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-stone-400" size={24} />
       </div>
 
+      {/* Category Chips */}
+      <div className="flex items-center gap-3 overflow-x-auto pb-2 no-scrollbar">
+        {categories.map((cat) => (
+          <button
+            key={cat.id}
+            onClick={() => {
+              setActiveCategory(cat.id);
+              handleSearch(topic, cat.id);
+            }}
+            className={`
+              flex items-center gap-2 px-6 py-3 rounded-full font-bold whitespace-nowrap transition-all duration-300
+              ${activeCategory === cat.id
+                ? `bg-gradient-to-r ${cat.color} text-white shadow-lg shadow-black/20 scale-105 border-0`
+                : 'bg-surface dark:bg-stone-800 text-stone-500 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-700 border border-stone-100 dark:border-stone-800'}
+            `}
+          >
+            {cat.icon}
+            {cat.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Daily Playlist Highlights */}
+      {activeCategory === 'all' && !topic && (
+        <div className="space-y-4 animate-in fade-in duration-1000">
+          <div className="flex items-center justify-between px-2">
+            <div>
+              <h3 className="text-xl font-bold text-ink dark:text-white font-serif">{t.worship.dailyPlaylist}</h3>
+              <p className="text-stone-500 dark:text-stone-400 text-sm">{t.worship.dailyPlaylistDesc}</p>
+            </div>
+            <div className="bg-orange/10 text-orange p-2 rounded-xl">
+              <Sparkles size={20} />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {dailySongs.map((song) => (
+              <div
+                key={`daily-${song.id}`}
+                onClick={() => playSong(song)}
+                className={`
+                    p-6 rounded-[2rem] border-2 transition-all cursor-pointer relative overflow-hidden group
+                    ${currentSong?.id === song.id
+                    ? 'bg-gradient-to-br from-stone-900 to-black border-gold shadow-2xl scale-[1.02]'
+                    : 'bg-gradient-to-br from-gold/10 to-orange-500/10 border-gold/20 dark:border-gold/10 hover:border-gold/50 hover:shadow-xl'}
+                  `}
+              >
+                <div className="relative z-10">
+                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-5 transition-transform group-hover:scale-110 ${currentSong?.id === song.id ? 'bg-gold text-white' : 'bg-gradient-to-br from-gold to-orange-600 text-white shadow-xl shadow-gold/20'}`}>
+                    {currentSong?.id === song.id && isPlaying ? <BarChart3 size={24} className="animate-pulse" /> : <Play size={24} fill="currentColor" className="ml-1" />}
+                  </div>
+                  <h4 className="font-black text-xl text-stone-900 dark:text-white group-hover:text-gold transition-colors">{song.title}</h4>
+                  <p className="text-base font-bold text-stone-700 dark:text-stone-300 truncate">{song.artist}</p>
+                </div>
+                {/* Decorative background icon */}
+                <div className="absolute -bottom-6 -right-6 opacity-[0.08] rotate-12 group-hover:scale-125 transition-transform duration-500 text-gold dark:text-gold">
+                  <Music size={100} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Active Player Controls (Premium Design) */}
       {currentSong && (
         <div className="sticky top-4 z-40 animate-slide-up mb-8">
-           <div className="bg-surface/95 dark:bg-stone-900/95 backdrop-blur-xl rounded-[2.5rem] p-6 shadow-2xl border border-stone-200 dark:border-white/10 text-ink dark:text-white relative overflow-hidden transition-colors duration-300">
-              
-              {/* Background Glows */}
-              <div className="absolute -top-20 -left-20 w-60 h-60 bg-gold/10 dark:bg-gold/20 rounded-full blur-[80px]"></div>
-              <div className="absolute -bottom-20 -right-20 w-60 h-60 bg-orange/10 dark:bg-orange/20 rounded-full blur-[80px]"></div>
+          <div className="bg-surface/95 dark:bg-stone-900/95 backdrop-blur-xl rounded-[2.5rem] p-6 shadow-2xl border border-stone-200 dark:border-white/10 text-ink dark:text-white relative overflow-hidden transition-colors duration-300">
 
-              <div className="relative z-10 flex flex-col md:flex-row items-center gap-6">
-                 
-                 {/* Album Art & Visualizer */}
-                 <div className="relative flex-shrink-0">
-                    <div className={`w-24 h-24 md:w-28 md:h-28 rounded-full bg-stone-900 border-4 border-gold/20 flex items-center justify-center relative shadow-2xl ${isPlaying ? 'animate-[spin_6s_linear_infinite]' : ''}`}>
-                       <div className="absolute inset-0 rounded-full bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30"></div>
-                       <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-gold to-orange flex items-center justify-center shadow-inner">
-                          <Music size={16} className="text-white drop-shadow-md" />
-                       </div>
-                    </div>
-                    {/* Playing Indicator Badge */}
-                    {isPlaying && (
-                       <div className="absolute -bottom-2 -right-2 bg-green-500 text-white text-[10px] font-bold px-2 py-1 rounded-full border-2 border-surface dark:border-ink flex items-center gap-1 shadow-lg">
-                          <BarChart3 size={10} className="animate-pulse" /> {t.worship.playing}
-                       </div>
-                    )}
-                 </div>
+            {/* Background Glows */}
+            <div className="absolute -top-20 -left-20 w-60 h-60 bg-gold/10 dark:bg-gold/20 rounded-full blur-[80px]"></div>
+            <div className="absolute -bottom-20 -right-20 w-60 h-60 bg-orange/10 dark:bg-orange/20 rounded-full blur-[80px]"></div>
 
-                 {/* Info & Timeline */}
-                 <div className="flex-1 w-full flex flex-col justify-center text-center md:text-left min-w-0">
-                    <h3 className="font-serif font-bold text-xl md:text-2xl text-ink dark:text-white truncate drop-shadow-sm">{currentSong.title}</h3>
-                    <p className="text-orange dark:text-gold/80 font-medium text-sm truncate mb-4 tracking-wide uppercase">{currentSong.artist}</p>
-                    
-                    {/* Custom Timeline Slider */}
-                    <div className="w-full flex items-center gap-3">
-                        <span className="text-xs font-mono text-subtle w-10 text-right">{formatTime(progress)}</span>
-                        <div className="relative flex-1 h-6 flex items-center group">
-                            <div className="absolute w-full h-1.5 bg-stone-200 dark:bg-white/10 rounded-full overflow-hidden">
-                                <div 
-                                    className="h-full bg-gradient-to-r from-gold to-orange rounded-full relative" 
-                                    style={{width: `${(progress / (duration || 1)) * 100}%`}}
-                                >
-                                    {/* Animated shimmer on progress bar */}
-                                    {isPlaying && <div className="absolute inset-0 bg-white/30 w-full animate-[shimmer_2s_infinite]"></div>}
-                                </div>
-                            </div>
-                            <input 
-                                type="range" 
-                                min="0" 
-                                max={duration || 100} 
-                                value={progress}
-                                onChange={(e) => seek(parseFloat(e.target.value))}
-                                className="absolute w-full h-full opacity-0 cursor-pointer"
-                            />
-                            {/* Visual Thumb (Follows progress) */}
-                            <div 
-                                className="absolute h-4 w-4 bg-white rounded-full shadow-[0_0_10px_rgba(251,191,36,0.5)] pointer-events-none transition-all group-hover:scale-125 border border-stone-100 dark:border-none"
-                                style={{left: `${(progress / (duration || 1)) * 100}%`, transform: 'translateX(-50%)'}}
-                            ></div>
-                        </div>
-                        <span className="text-xs font-mono text-subtle w-10 text-left">{formatTime(duration)}</span>
-                    </div>
-                 </div>
+            <div className="relative z-10 flex flex-col md:flex-row items-center gap-6">
 
-                 {/* Playback Controls */}
-                 <div className="flex items-center gap-4 w-full md:w-auto justify-center md:justify-end px-4 md:px-0">
-                    {/* Volume (Hidden on mobile to save space) */}
-                    <div className="hidden md:flex items-center gap-2 group bg-stone-100 dark:bg-black/20 px-3 py-2 rounded-full border border-stone-200 dark:border-white/5 backdrop-blur-sm transition-colors">
-                       <button onClick={() => setVolume(volume === 0 ? 1 : 0)}>
-                           {volume === 0 ? <VolumeX size={16} className="text-subtle"/> : <Volume2 size={16} className="text-gold"/>}
-                       </button>
-                       <div className="w-16 h-1 bg-stone-300 dark:bg-stone-600 rounded-full relative">
-                          <div className="absolute h-full bg-ink dark:bg-white rounded-full" style={{width: `${volume * 100}%`}}></div>
-                          <input 
-                            type="range" 
-                            min="0" 
-                            max="1" 
-                            step="0.05"
-                            value={volume}
-                            onChange={(e) => setVolume(parseFloat(e.target.value))}
-                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                          />
-                       </div>
-                    </div>
-
-                    <div className="flex items-center gap-6 md:gap-4">
-                        <button className="p-2 text-stone-400 hover:text-ink dark:hover:text-white transition-colors" disabled>
-                            <SkipBack size={24} className="md:w-5 md:h-5" />
-                        </button>
-                        
-                        <button 
-                            onClick={togglePlay}
-                            className="w-16 h-16 md:w-16 md:h-16 rounded-full bg-gradient-to-tr from-gold to-orange text-white flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-xl shadow-orange/30 border-2 border-white/10"
-                        >
-                            {isPlaying ? <Pause size={28} fill="currentColor" /> : <Play size={28} fill="currentColor" className="ml-1" />}
-                        </button>
-
-                        <button className="p-2 text-stone-400 hover:text-ink dark:hover:text-white transition-colors" disabled>
-                            <SkipForward size={24} className="md:w-5 md:h-5" />
-                        </button>
-                    </div>
-                 </div>
+              {/* Album Art & Visualizer */}
+              <div className="relative flex-shrink-0">
+                <div className={`w-24 h-24 md:w-28 md:h-28 rounded-full bg-stone-900 border-4 border-gold/20 flex items-center justify-center relative shadow-2xl ${isPlaying ? 'animate-[spin_6s_linear_infinite]' : ''}`}>
+                  <div className="absolute inset-0 rounded-full bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30"></div>
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-gold to-orange flex items-center justify-center shadow-inner">
+                    <Music size={16} className="text-white drop-shadow-md" />
+                  </div>
+                </div>
+                {/* Playing Indicator Badge */}
+                {isPlaying && (
+                  <div className="absolute -bottom-2 -right-2 bg-green-500 text-white text-[10px] font-bold px-2 py-1 rounded-full border-2 border-surface dark:border-ink flex items-center gap-1 shadow-lg">
+                    <BarChart3 size={10} className="animate-pulse" /> {t.worship.playing}
+                  </div>
+                )}
               </div>
-           </div>
+
+              {/* Info & Timeline */}
+              <div className="flex-1 w-full flex flex-col justify-center text-center md:text-left min-w-0">
+                <h3 className="font-serif font-bold text-xl md:text-2xl text-ink dark:text-white truncate drop-shadow-sm">{currentSong.title}</h3>
+                <p className="text-orange dark:text-gold/80 font-medium text-sm truncate mb-4 tracking-wide uppercase">{currentSong.artist}</p>
+
+                {/* Custom Timeline Slider */}
+                <div className="w-full flex items-center gap-3">
+                  <span className="text-xs font-mono text-subtle w-10 text-right">{formatTime(progress)}</span>
+                  <div className="relative flex-1 h-6 flex items-center group">
+                    <div className="absolute w-full h-1.5 bg-stone-200 dark:bg-white/10 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-gold to-orange rounded-full relative"
+                        style={{ width: `${(progress / (duration || 1)) * 100}%` }}
+                      >
+                        {/* Animated shimmer on progress bar */}
+                        {isPlaying && <div className="absolute inset-0 bg-white/30 w-full animate-[shimmer_2s_infinite]"></div>}
+                      </div>
+                    </div>
+                    <input
+                      type="range"
+                      min="0"
+                      max={duration || 100}
+                      value={progress}
+                      onChange={(e) => seek(parseFloat(e.target.value))}
+                      className="absolute w-full h-full opacity-0 cursor-pointer"
+                    />
+                    {/* Visual Thumb (Follows progress) */}
+                    <div
+                      className="absolute h-4 w-4 bg-white rounded-full shadow-[0_0_10px_rgba(251,191,36,0.5)] pointer-events-none transition-all group-hover:scale-125 border border-stone-100 dark:border-none"
+                      style={{ left: `${(progress / (duration || 1)) * 100}%`, transform: 'translateX(-50%)' }}
+                    ></div>
+                  </div>
+                  <span className="text-xs font-mono text-subtle w-10 text-left">{formatTime(duration)}</span>
+                </div>
+              </div>
+
+              {/* Playback Controls */}
+              <div className="flex items-center gap-4 w-full md:w-auto justify-center md:justify-end px-4 md:px-0">
+                {/* Volume (Hidden on mobile to save space) */}
+                <div className="hidden md:flex items-center gap-2 group bg-stone-100 dark:bg-black/20 px-3 py-2 rounded-full border border-stone-200 dark:border-white/5 backdrop-blur-sm transition-colors">
+                  <button onClick={() => setVolume(volume === 0 ? 1 : 0)}>
+                    {volume === 0 ? <VolumeX size={16} className="text-subtle" /> : <Volume2 size={16} className="text-gold" />}
+                  </button>
+                  <div className="w-16 h-1 bg-stone-300 dark:bg-stone-600 rounded-full relative">
+                    <div className="absolute h-full bg-ink dark:bg-white rounded-full" style={{ width: `${volume * 100}%` }}></div>
+                    <input
+                      type="range"
+                      min="0"
+                      max="1"
+                      step="0.05"
+                      value={volume}
+                      onChange={(e) => setVolume(parseFloat(e.target.value))}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-6 md:gap-4">
+                  <button className="p-2 text-stone-400 hover:text-ink dark:hover:text-white transition-colors" disabled>
+                    <SkipBack size={24} className="md:w-5 md:h-5" />
+                  </button>
+
+                  <button
+                    onClick={togglePlay}
+                    className="w-16 h-16 md:w-16 md:h-16 rounded-full bg-gradient-to-tr from-gold to-orange text-white flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-xl shadow-orange/30 border-2 border-white/10"
+                  >
+                    {isPlaying ? <Pause size={28} fill="currentColor" /> : <Play size={28} fill="currentColor" className="ml-1" />}
+                  </button>
+
+                  <button className="p-2 text-stone-400 hover:text-ink dark:hover:text-white transition-colors" disabled>
+                    <SkipForward size={24} className="md:w-5 md:h-5" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
       {/* Results List */}
       <div className="space-y-4">
-        <h3 className="text-lg font-bold text-ink dark:text-white px-2 mb-4 font-serif">{t.worship.libraryTitle}</h3>
+        <h3 className="text-lg font-bold text-ink dark:text-white px-2 mb-4 font-serif">
+          {activeCategory === 'all' ? t.worship.libraryTitle : categories.find(c => c.id === activeCategory)?.label}
+        </h3>
         {songs.map((song, index) => (
-          <div 
-             key={song.id} 
-             id={index === 0 ? "worship-first-card" : undefined}
-             className={`
+          <div
+            key={song.id}
+            id={index === 0 ? "worship-first-card" : undefined}
+            className={`
              group rounded-[2rem] border transition-all duration-300 overflow-hidden relative cursor-pointer
-             ${currentSong?.id === song.id 
-                ? 'bg-ink dark:bg-stone-800 border-gold shadow-lg transform scale-[1.01]' 
-                : 'bg-surface dark:bg-stone-800/50 border-stone-100 dark:border-stone-800 hover:border-gold/50 shadow-soft'}
+             ${currentSong?.id === song.id
+                ? 'bg-ink dark:bg-stone-800 border-gold shadow-2xl transform scale-[1.02]'
+                : `bg-surface dark:bg-stone-800/50 border-stone-100 dark:border-stone-800 hover:border-${(categories.find(c => c.id === song.category)?.color.split(' ').pop() || 'gold').replace('to-', '')}/40 shadow-soft`}
           `}>
-             <div 
-                className="p-5 flex items-center gap-5"
-                onClick={() => playSong(song)}
-             >
-                {/* Visualizer / Play Icon Box */}
-                <div className={`
+            <div
+              className="p-5 flex items-center gap-5"
+              onClick={() => playSong(song)}
+            >
+              {/* Visualizer / Play Icon Box */}
+              <div className={`
                     w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg transition-all flex-shrink-0 relative overflow-hidden
-                    ${currentSong?.id === song.id ? 'bg-gradient-to-br from-gold to-orange text-white' : 'bg-stone-100 dark:bg-stone-700 text-stone-400 group-hover:bg-stone-200 dark:group-hover:bg-stone-600'}
+                    ${currentSong?.id === song.id ? 'bg-gradient-to-br from-gold to-orange text-white' : `bg-gradient-to-br ${categories.find(c => c.id === song.category)?.color} text-white opacity-80 group-hover:opacity-100`}
                 `}>
-                    {currentSong?.id === song.id && isPlaying ? (
-                         <div className="flex items-end gap-1 h-6">
-                            <div className="w-1 bg-white animate-[height_1s_ease-in-out_infinite] h-3"></div>
-                            <div className="w-1 bg-white animate-[height_1.5s_ease-in-out_infinite] h-6"></div>
-                            <div className="w-1 bg-white animate-[height_0.5s_ease-in-out_infinite] h-4"></div>
-                         </div>
-                    ) : (
-                        <Play size={24} fill="currentColor" className="ml-1" />
-                    )}
-                </div>
-
-                <div className="flex-1 min-w-0">
-                    <h3 className={`font-bold text-lg truncate transition-colors ${currentSong?.id === song.id ? 'text-gold' : 'text-ink dark:text-white'}`}>
-                        {song.title}
-                    </h3>
-                    <p className="text-stone-500 dark:text-stone-400 font-medium text-sm truncate mb-1">{song.artist}</p>
-                    {song.reason && <p className="text-xs text-subtle italic truncate opacity-80">"{song.reason}"</p>}
-                    
-                    {!song.audioUrl && (
-                        <div className="flex items-center gap-1 text-red-400 text-[10px] mt-2 font-bold uppercase tracking-wider">
-                            <AlertCircle size={10} /> {t.worship.noAudio}
-                        </div>
-                    )}
-                </div>
-
-                {/* Playing Status Text */}
-                {currentSong?.id === song.id && (
-                    <div className="hidden md:block px-4 py-1.5 bg-gold/10 text-gold rounded-full text-xs font-bold border border-gold/20">
-                        {isPlaying ? t.worship.playing : t.worship.paused}
-                    </div>
+                {currentSong?.id === song.id && isPlaying ? (
+                  <div className="flex items-end gap-1 h-6">
+                    <div className="w-1 bg-white animate-[height_1s_ease-in-out_infinite] h-3"></div>
+                    <div className="w-1 bg-white animate-[height_1.5s_ease-in-out_infinite] h-6"></div>
+                    <div className="w-1 bg-white animate-[height_0.5s_ease-in-out_infinite] h-4"></div>
+                  </div>
+                ) : (
+                  <Play size={24} fill="currentColor" className="ml-1" />
                 )}
-             </div>
-             
-             {/* Progress Bar Background for List Item */}
-             {currentSong?.id === song.id && (
-                 <div className="absolute bottom-0 left-0 w-full h-1 bg-stone-800">
-                     <div 
-                        className="h-full bg-gold transition-all duration-300" 
-                        style={{width: `${(progress / (duration || 1)) * 100}%`}}
-                     ></div>
-                 </div>
-             )}
+              </div>
+
+              <div className="flex-1 min-w-0">
+                <h3 className={`font-bold text-lg truncate transition-colors ${currentSong?.id === song.id ? 'text-gold' : 'text-ink dark:text-white'}`}>
+                  {song.title}
+                </h3>
+                <p className="text-stone-500 dark:text-stone-400 font-medium text-sm truncate mb-1">{song.artist}</p>
+                {song.reason && <p className="text-xs text-subtle italic truncate opacity-80">"{song.reason}"</p>}
+
+                {!song.audioUrl && (
+                  <div className="flex items-center gap-1 text-red-400 text-[10px] mt-2 font-bold uppercase tracking-wider">
+                    <AlertCircle size={10} /> {t.worship.noAudio}
+                  </div>
+                )}
+              </div>
+
+              {/* Playing Status Text */}
+              {currentSong?.id === song.id && (
+                <div className="hidden md:block px-4 py-1.5 bg-gold/10 text-gold rounded-full text-xs font-bold border border-gold/20">
+                  {isPlaying ? t.worship.playing : t.worship.paused}
+                </div>
+              )}
+            </div>
+
+            {/* Progress Bar Background for List Item */}
+            {currentSong?.id === song.id && (
+              <div className="absolute bottom-0 left-0 w-full h-1 bg-stone-800">
+                <div
+                  className="h-full bg-gold transition-all duration-300"
+                  style={{ width: `${(progress / (duration || 1)) * 100}%` }}
+                ></div>
+              </div>
+            )}
           </div>
         ))}
-        
+
         {songs.length === 0 && !loading && (
           <div className="text-center py-12 px-6">
-             <div className="w-20 h-20 bg-stone-100 dark:bg-stone-800 rounded-full flex items-center justify-center mx-auto mb-4 text-stone-300">
-                <Sparkles size={32} />
-             </div>
-             <p className="text-subtle font-serif">{t.worship.noResults}</p>
+            <div className="w-20 h-20 bg-stone-100 dark:bg-stone-800 rounded-full flex items-center justify-center mx-auto mb-4 text-stone-300">
+              <Sparkles size={32} />
+            </div>
+            <p className="text-subtle font-serif">{t.worship.noResults}</p>
           </div>
         )}
 
         {loading && (
-           <div className="flex flex-col items-center justify-center py-20 gap-4 opacity-60">
-              <div className="w-10 h-10 border-4 border-gold border-t-transparent rounded-full animate-spin"></div>
-              <p className="text-sm text-brown font-medium">{t.worship.loading}</p>
-           </div>
+          <div className="flex flex-col items-center justify-center py-20 gap-4 opacity-60">
+            <div className="w-10 h-10 border-4 border-gold border-t-transparent rounded-full animate-spin"></div>
+            <p className="text-sm text-brown font-medium">{t.worship.loading}</p>
+          </div>
         )}
       </div>
     </div>

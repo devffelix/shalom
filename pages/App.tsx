@@ -20,6 +20,7 @@ import Shalomflix from './Shalomflix';
 import { UserProgress } from '../types';
 import { AudioProvider } from '../contexts/AudioContext';
 import { LanguageProvider } from '../contexts/LanguageContext';
+import { ProgressProvider } from '../contexts/ProgressContext';
 
 const INITIAL_PROGRESS: UserProgress = {
   readChapters: [],
@@ -29,7 +30,10 @@ const INITIAL_PROGRESS: UserProgress = {
   xp: 0,
   dailyReadCount: 0,
   todayStudyMinutes: 0,
-  earnedBadges: []
+  earnedBadges: [],
+  readReflections: [],
+  readPsalms: [],
+  completedManual: false
 };
 
 const App: React.FC = () => {
@@ -78,6 +82,24 @@ const App: React.FC = () => {
         changed = true;
       }
 
+      // Ensure Reflection tracking exists
+      if (typeof parsed.readReflections === 'undefined') {
+        updated.readReflections = [];
+        changed = true;
+      }
+
+      // Ensure Psalm tracking exists
+      if (typeof parsed.readPsalms === 'undefined') {
+        updated.readPsalms = [];
+        changed = true;
+      }
+
+      // Ensure Manual tracking exists
+      if (typeof parsed.completedManual === 'undefined') {
+        updated.completedManual = false;
+        changed = true;
+      }
+
       if (changed) {
         localStorage.setItem('lumina_progress', JSON.stringify(updated));
       }
@@ -113,27 +135,29 @@ const App: React.FC = () => {
   return (
     <LanguageProvider>
       <AudioProvider>
-        <Router>
-          <Layout>
-            <Routes>
-              <Route path="/" element={<Landing />} />
-              <Route path="/quiz" element={<Quiz />} />
-              <Route path="/admin" element={<AdminDashboard />} />
-              <Route path="/app" element={<Home />} />
-              <Route path="/bible" element={<Bible />} />
-              <Route path="/worship" element={<Worship />} />
-              <Route path="/challenges" element={<Challenges />} />
-              <Route path="/kids" element={<KidsZone />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/trails" element={<Trails />} />
-              <Route path="/trivia" element={<BibleTriviaPage />} />
-              <Route path="/reflections" element={<Reflections />} />
-              <Route path="/psalms-explained" element={<PsalmsExplained />} />
-              <Route path="/reconnection-guide" element={<ReconnectionGuide />} />
-              <Route path="/shalomflix" element={<Shalomflix />} />
-            </Routes>
-          </Layout>
-        </Router>
+        <ProgressProvider>
+          <Router>
+            <Layout>
+              <Routes>
+                <Route path="/" element={<Landing />} />
+                <Route path="/quiz" element={<Quiz />} />
+                <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/app" element={<Home />} />
+                <Route path="/bible" element={<Bible />} />
+                <Route path="/worship" element={<Worship />} />
+                <Route path="/challenges" element={<Challenges />} />
+                <Route path="/kids" element={<KidsZone />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/trails" element={<Trails />} />
+                <Route path="/trivia" element={<BibleTriviaPage />} />
+                <Route path="/reflections" element={<Reflections />} />
+                <Route path="/psalms-explained" element={<PsalmsExplained />} />
+                <Route path="/reconnection-guide" element={<ReconnectionGuide />} />
+                <Route path="/shalomflix" element={<Shalomflix />} />
+              </Routes>
+            </Layout>
+          </Router>
+        </ProgressProvider>
       </AudioProvider>
     </LanguageProvider>
   );

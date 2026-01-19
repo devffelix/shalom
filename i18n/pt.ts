@@ -42,24 +42,35 @@ const ptWorship = {
   noAudio: 'Áudio indisponível',
   libraryTitle: 'Biblioteca de Adoração',
   noResults: 'Nenhum louvor encontrado.',
-  loading: 'Carregando louvores...'
+  loading: 'Carregando louvores...',
+  dailyUpdate: '3 novos louvores todos os dias',
+  dailyPlaylist: 'Louvores de Hoje',
+  dailyPlaylistDesc: 'Sugestões especiais para o seu momento.',
+  categories: 'Navegue por tópicos',
+  all: 'Todos',
+  topicPaz: 'Paz & Quietude',
+  topicFe: 'Fé & Milagres',
+  topicEspirito: 'Espírito Santo',
+  topicFamilia: 'Família & Lar',
+  topicClamor: 'Clamor & Libertação',
+  topicAdoracao: 'Adoração & Glória'
 };
 
 const ptSongsList = [
-  { id: "1", title: "Milagres do Caminho", artist: "Soraya Moraes", reason: "Deus abre caminhos onde não há.", audioUrl: "https://files.catbox.moe/v0y3em.mp3" },
-  { id: "2", title: "Ajuda-me Jesus", artist: "Rayne Almeida", reason: "Um clamor sincero por força e renovação.", audioUrl: "https://files.catbox.moe/kn3ywn.mp3" },
-  { id: "3", title: "Oração Silenciosa", artist: "Louvor", reason: "Momento de paz e comunhão com Deus.", audioUrl: "https://files.catbox.moe/mh8izw.mp3" },
-  { id: "4", title: "Chama Eterna", artist: "Adoração", reason: "Que o fogo do Espírito nunca se apague.", audioUrl: "https://files.catbox.moe/p5qwhk.mp3" },
-  { id: "5", title: "O Abraço de Deus", artist: "Adoração", reason: "Sinta o conforto e o amor do Pai te envolvendo.", audioUrl: "https://files.catbox.moe/ulohm3.mp3" },
-  { id: "6", title: "Língua dos Anjos", artist: "Adoração", reason: "Uma atmosfera celestial para edificar seu espírito.", audioUrl: "https://files.catbox.moe/pzx4kx.mp3" },
-  { id: "7", title: "Estrela Guia", artist: "Adoração", reason: "A luz de Jesus ilumina o seu caminho.", audioUrl: "https://files.catbox.moe/kaddqg.mp3" },
-  { id: "8", title: "Sopro Divino", artist: "Adoração", reason: "Sinta o renovo do Espírito Santo em sua vida.", audioUrl: "https://files.catbox.moe/i1kvh4.mp3" },
-  { id: "9", title: "Calma que vem de Deus", artist: "Adoração", reason: "Sinta a paz profunda que só o Espírito pode dar.", audioUrl: "https://files.catbox.moe/xsydaw.mp3" },
-  { id: "10", title: "Chuva de Tesouros", artist: "Adoração", reason: "Promessas de abundância e bênçãos sobre sua vida.", audioUrl: "https://files.catbox.moe/ot79va.mp3" },
-  { id: "11", title: "Liberta o meu coração", artist: "Adoração", reason: "Um clamor por liberdade espiritual e cura interior.", audioUrl: "https://files.catbox.moe/zlhcub.mp3" },
-  { id: "12", title: "Abençoa meus planos", artist: "Shalom Adoração", reason: "Entregue seus projetos nas mãos de quem tudo pode.", audioUrl: "https://files.catbox.moe/pycxoe.mp3" },
-  { id: "13", title: "Cuida da minha casa, Deus", artist: "Shalom Adoração", reason: "Uma oração de proteção e paz para o seu lar.", audioUrl: "https://files.catbox.moe/kn4ni7.mp3" },
-  { id: "14", title: "Fogo em meu coração", artist: "Shalom Adoração", reason: "Que o Espírito Santo incendeie sua alma com paixão.", audioUrl: "https://files.catbox.moe/f6dfvg.mp3" }
+  { id: "1", title: "Milagres do Caminho", artist: "Soraya Moraes", reason: "Deus abre caminhos onde não há.", audioUrl: "https://files.catbox.moe/v0y3em.mp3", category: "topicFe" },
+  { id: "2", title: "Ajuda-me Jesus", artist: "Rayne Almeida", reason: "Um clamor sincero por força e renovação.", audioUrl: "https://files.catbox.moe/kn3ywn.mp3", category: "topicClamor" },
+  { id: "3", title: "Oração Silenciosa", artist: "Louvor", reason: "Momento de paz e comunhão com Deus.", audioUrl: "https://files.catbox.moe/mh8izw.mp3", category: "topicPaz" },
+  { id: "4", title: "Chama Eterna", artist: "Adoração", reason: "Que o fogo do Espírito nunca se apague.", audioUrl: "https://files.catbox.moe/p5qwhk.mp3", category: "topicEspirito" },
+  { id: "5", title: "O Abraço de Deus", artist: "Adoração", reason: "Sinta o conforto e o amor do Pai te envolvendo.", audioUrl: "https://files.catbox.moe/ulohm3.mp3", category: "topicPaz" },
+  { id: "6", title: "Língua dos Anjos", artist: "Adoração", reason: "Uma atmosfera celestial para edificar seu espírito.", audioUrl: "https://files.catbox.moe/pzx4kx.mp3", category: "topicAdoracao" },
+  { id: "7", title: "Estrela Guia", artist: "Adoração", reason: "A luz de Jesus ilumina o seu caminho.", audioUrl: "https://files.catbox.moe/kaddqg.mp3", category: "topicFe" },
+  { id: "8", title: "Sopro Divino", artist: "Adoração", reason: "Sinta o renovo do Espírito Santo em sua vida.", audioUrl: "https://files.catbox.moe/i1kvh4.mp3", category: "topicEspirito" },
+  { id: "9", title: "Calma que vem de Deus", artist: "Adoração", reason: "Sinta a paz profunda que só o Espírito pode dar.", audioUrl: "https://files.catbox.moe/xsydaw.mp3", category: "topicPaz" },
+  { id: "10", title: "Chuva de Tesouros", artist: "Adoração", reason: "Promessas de abundância e bênçãos sobre sua vida.", audioUrl: "https://files.catbox.moe/ot79va.mp3", category: "topicFe" },
+  { id: "11", title: "Liberta o meu coração", artist: "Adoração", reason: "Um clamor por liberdade espiritual e cura interior.", audioUrl: "https://files.catbox.moe/zlhcub.mp3", category: "topicClamor" },
+  { id: "12", title: "Abençoa meus planos", artist: "Shalom Adoração", reason: "Entregue seus projetos nas mãos de quem tudo pode.", audioUrl: "https://files.catbox.moe/pycxoe.mp3", category: "topicFe" },
+  { id: "13", title: "Cuida da minha casa, Deus", artist: "Shalom Adoração", reason: "Uma oração de proteção e paz para o seu lar.", audioUrl: "https://files.catbox.moe/kn4ni7.mp3", category: "topicFamilia" },
+  { id: "14", title: "Fogo em meu coração", artist: "Shalom Adoração", reason: "Que o Espírito Santo incendeie sua alma com paixão.", audioUrl: "https://files.catbox.moe/f6dfvg.mp3", category: "topicEspirito" }
 ];
 
 const ptJourney = {

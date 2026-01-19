@@ -94,5 +94,61 @@ export const RECONNECTION_GUIDE: GuideStep[] = [
         verse: "Onde estiverem dois ou três reunidos em meu nome, ali estou eu.",
         verseRef: "Mateus 18:20",
         action: "Mande uma mensagem para um amigo cristão hoje e peça: 'Ore por mim nesta semana'."
+    },
+    {
+        id: 7,
+        title: "Vencendo a Barreira da Culpa",
+        subtitle: "Ocupar-se do Perdão, não do erro",
+        description: "O maior inimigo da reaproximação é a culpa. O inimigo quer que você olhe para o seu pecado; Deus quer que você olhe para o Seu perdão total e absoluto através da Cruz.",
+        advice: [
+            "Arrepender-se não é sentir remorso, é mudar de direção.",
+            "A voz que te condena nunca vem de Deus. Ele te convence do erro para te curar, não para te destruir.",
+            "Se Deus já esqueceu o seu passado, por que você ainda o carrega?"
+        ],
+        verse: "Se confessarmos os nossos pecados, ele é fiel e justo para nos perdoar.",
+        verseRef: "1 João 1:9",
+        action: "Escreva em um papel um pecado que te atormenta, ore pedindo perdão e rasgue-o como símbolo da liberdade que Cristo te deu."
+    },
+    {
+        id: 8,
+        title: "Adoração como Arma",
+        subtitle: "Louvor muda o ambiente espiritual",
+        description: "Muitas vezes não 'sentimos' vontade de orar. É nessas horas que o louvor entra como uma ferramenta de guerra. A música certa alinha seu coração à frequência do Céu.",
+        advice: [
+            "Cante mesmo sem vontade; o sacrifício de louvor é precioso para Deus.",
+            "Deixe o louvor tocar em sua casa, mesmo que você não esteja ouvindo atentamente.",
+            "Declare as verdades das letras sobre as suas circunstâncias."
+        ],
+        verse: "Entrai por suas portas com ações de graças e em seus átrios com louvor.",
+        verseRef: "Salmos 100:4",
+        action: "Escolha um louvor agora e ouça-o de olhos fechados, focando apenas na grandeza de Deus."
+    },
+    {
+        id: 9,
+        title: "A Sentinela da Mente",
+        subtitle: "Filtrando o que entra no seu coração",
+        description: "Seus olhos e ouvidos são portas. Se você consome apenas ansiedade e futilidade o dia todo, sua fé terá dificuldade em respirar. Proteja seus pensamentos.",
+        advice: [
+            "Selecione melhor os perfis que você segue nas redes sociais.",
+            "Troque 15 minutos de notícias ruins por 15 minutos de conteúdo que edifica.",
+            "O que você alimenta, cresce. O que você ignora, morre."
+        ],
+        verse: "Tudo o que é verdadeiro... nisso pensai.",
+        verseRef: "Filipenses 4:8",
+        action: "Desinstale ou silencie por 24h uma fonte de conteúdo que costuma te deixar ansioso ou irritado."
+    },
+    {
+        id: 10,
+        title: "O Amigo que Mora em Você",
+        subtitle: "Dependendo do Espírito Santo",
+        description: "Você não precisa de força de vontade, mas de dependência. O Espírito Santo é o seu Ajudador, o Guia que te conduz de volta aos braços do Pai a cada segundo.",
+        advice: [
+            "Diga 'Bom dia, Espírito Santo' ao acordar.",
+            "Peça que Ele te lembre da Palavra nos momentos de teste.",
+            "Ele é o seu selo de garantia: você pertence a Deus, não importa o que aconteça."
+        ],
+        verse: "O Consolador, o Espírito Santo... vos ensinará todas as coisas.",
+        verseRef: "João 14:26",
+        action: "Feche os olhos por um minuto e apenas diga: 'Espírito Santo, eu dependo de Ti. Guia os meus passos hoje'."
     }
 ];
