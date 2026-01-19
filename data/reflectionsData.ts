@@ -358,9 +358,30 @@ export const REFLECTIONS: Reflection[] = [
         author: "João",
         tags: ["Mundanismo", "Valores"]
     },
+    {
+        id: 51,
+        title: "Consagre seus projetos",
+        content: "Muitas vezes fazemos planos, traçamos metas e só depois pedimos para Deus abençoar. Experimente o contrário: antes de começar, entregue o papel em branco para Ele. Deixe que Ele escreva as prioridades. Quando Deus é o arquiteto do plano, você não precisa ter medo da execução. 'Entrega o teu caminho ao Senhor; confia nele, e ele tudo fará' (Salmo 37:5). Se um projeto não deu certo, talvez não fosse uma bênção, mas um livramento. Confie que o que é Seu chegará no tempo certo e com a paz que excede todo o entendimento.",
+        author: "Sabedoria Bíblica",
+        tags: ["Propósito", "Confiança"]
+    },
+    {
+        id: 52,
+        title: "O Altar da sua Casa",
+        content: "Sua casa é o seu primeiro ministério. Não adianta ser luz na rua e trevas no corredor de casa. O cuidado de Deus começa na mesa do jantar, no perdão entre as discussões e na oração antes de dormir com seus filhos. Blinde seu lar com a presença de Deus. Quando uma casa ora unida, as tempestades externas podem até balançar as janelas, mas o fundamento permanece firme. Decida hoje que a paz entrará pela sua porta e que o seu lar será um refúgio de amor e gratidão.",
+        author: "Reflexão Shalom",
+        tags: ["Família", "Paz"]
+    },
+    {
+        id: 53,
+        title: "Reacendendo a Chama",
+        content: "Às vezes a rotina nos deixa 'mornos'. Oramos por hábito, lemos a Bíblia por obrigação. Mas Deus quer fogo! Não um fogo emocional passageiro, mas uma chama constante de paixão por Ele. Se o seu coração esfriou, peça hoje por um novo avivamento pessoal. Recomece com pequenas buscas, momentos de silêncio e louvor sincero. Não deixe que as cinzas do cansaço apaguem o brilho do seu primeiro amor. O Espírito Santo está pronto para soprar brasas vivas sobre a sua alma agora mesmo.",
+        author: "Avivamento",
+        tags: ["Espiritualidade", "Fervor"]
+    },
     // Gerando mais 60 reflexões genéricas para completar o volume solicitado
     ...Array.from({ length: 60 }, (_, i) => ({
-        id: 51 + i,
+        id: 54 + i,
         title: `Sabedoria Diária #${i + 1}`,
         content: `Lembre-se: Deus está nos detalhes do seu dia. Quando você sorri para alguém, quando tem paciência no trânsito, ou quando agradece pela comida, você está vivendo o amor d'Ele na prática. O extraordinário mora no ordinário.`,
         author: "Sabedoria Bíblica",

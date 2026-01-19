@@ -56,7 +56,10 @@ const ptSongsList = [
   { id: "8", title: "Sopro Divino", artist: "Adoração", reason: "Sinta o renovo do Espírito Santo em sua vida.", audioUrl: "https://files.catbox.moe/i1kvh4.mp3" },
   { id: "9", title: "Calma que vem de Deus", artist: "Adoração", reason: "Sinta a paz profunda que só o Espírito pode dar.", audioUrl: "https://files.catbox.moe/xsydaw.mp3" },
   { id: "10", title: "Chuva de Tesouros", artist: "Adoração", reason: "Promessas de abundância e bênçãos sobre sua vida.", audioUrl: "https://files.catbox.moe/ot79va.mp3" },
-  { id: "11", title: "Liberta o meu coração", artist: "Adoração", reason: "Um clamor por liberdade espiritual e cura interior.", audioUrl: "https://files.catbox.moe/zlhcub.mp3" }
+  { id: "11", title: "Liberta o meu coração", artist: "Adoração", reason: "Um clamor por liberdade espiritual e cura interior.", audioUrl: "https://files.catbox.moe/zlhcub.mp3" },
+  { id: "12", title: "Abençoa meus planos", artist: "Shalom Adoração", reason: "Entregue seus projetos nas mãos de quem tudo pode.", audioUrl: "https://files.catbox.moe/pycxoe.mp3" },
+  { id: "13", title: "Cuida da minha casa, Deus", artist: "Shalom Adoração", reason: "Uma oração de proteção e paz para o seu lar.", audioUrl: "https://files.catbox.moe/kn4ni7.mp3" },
+  { id: "14", title: "Fogo em meu coração", artist: "Shalom Adoração", reason: "Que o Espírito Santo incendeie sua alma com paixão.", audioUrl: "https://files.catbox.moe/f6dfvg.mp3" }
 ];
 
 const ptJourney = {
