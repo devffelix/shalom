@@ -57,17 +57,17 @@ const esWorship = {
 };
 
 const esSongsList = [
-  { id: "1", title: "Milagros del Camino", artist: "Soraya Moraes", reason: "Dios abre caminos donde no los hay.", audioUrl: "https://files.catbox.moe/v0y3em.mp3" },
-  { id: "2", title: "Ayúdame Jesús", artist: "Rayne Almeida", reason: "Un clamor sincero por fuerza y renovación.", audioUrl: "https://files.catbox.moe/kn3ywn.mp3" },
-  { id: "3", title: "Oración Silenciosa", artist: "Alabanza", reason: "Momento de paz y comunión con Dios.", audioUrl: "https://files.catbox.moe/mh8izw.mp3" },
-  { id: "4", title: "Llama Eterna", artist: "Adoración", reason: "Que el fuego del Espíritu nunca se apague.", audioUrl: "https://files.catbox.moe/p5qwhk.mp3" },
-  { id: "5", title: "El Abrazo de Dios", artist: "Adoración", reason: "Siente el consuelo y el amor del Padre rodeándote.", audioUrl: "https://files.catbox.moe/ulohm3.mp3" },
-  { id: "6", title: "Lengua de Ángeles", artist: "Adoración", reason: "Una atmósfera celestial para edificar tu espíritu.", audioUrl: "https://files.catbox.moe/pzx4kx.mp3" },
-  { id: "7", title: "Estrella Guía", artist: "Adoración", reason: "La luz de Jesús ilumina tu camino.", audioUrl: "https://files.catbox.moe/kaddqg.mp3" },
-  { id: "8", title: "Aliento Divino", artist: "Adoración", reason: "Siente la renovación del Espíritu Santo en tu vida.", audioUrl: "https://files.catbox.moe/i1kvh4.mp3" },
-  { id: "9", title: "Calma que viene de Dios", artist: "Adoración", reason: "Siente la paz profunda que solo el Espíritu pode dar.", audioUrl: "https://files.catbox.moe/xsydaw.mp3" },
-  { id: "10", title: "Lluvia de Tesoros", artist: "Adoración", reason: "Promessas de abundancia y bendiciones sobre su vida.", audioUrl: "https://files.catbox.moe/ot79va.mp3" },
-  { id: "11", title: "Liberta mi corazón", artist: "Adoración", reason: "Un clamor por libertad espiritual y sanidad interior.", audioUrl: "https://files.catbox.moe/zlhcub.mp3" }
+  { id: "1", title: "Milagros del Camino", artist: "Soraya Moraes", reason: "Dios abre caminos donde no los hay.", audioUrl: "https://files.catbox.moe/v0y3em.mp3", category: "topicFe" },
+  { id: "2", title: "Ayúdame Jesús", artist: "Rayne Almeida", reason: "Un clamor sincero por fuerza e renovación.", audioUrl: "https://files.catbox.moe/kn3ywn.mp3", category: "topicClamor" },
+  { id: "3", title: "Oración Silenciosa", artist: "Alabanza", reason: "Momento de paz y comunión con Dios.", audioUrl: "https://files.catbox.moe/mh8izw.mp3", category: "topicPaz" },
+  { id: "4", title: "Llama Eterna", artist: "Adoración", reason: "Que el fuego del Espíritu nunca se apague.", audioUrl: "https://files.catbox.moe/p5qwhk.mp3", category: "topicEspirito" },
+  { id: "5", title: "El Abrazo de Dios", artist: "Adoración", reason: "Siente el consuelo y el amor del Padre rodeándote.", audioUrl: "https://files.catbox.moe/ulohm3.mp3", category: "topicPaz" },
+  { id: "6", title: "Lengua de Ángeles", artist: "Adoración", reason: "Una atmósfera celestial para edificar tu espíritu.", audioUrl: "https://files.catbox.moe/pzx4kx.mp3", category: "topicAdoracao" },
+  { id: "7", title: "Estrella Guía", artist: "Adoración", reason: "La luz de Jesús ilumina tu camino.", audioUrl: "https://files.catbox.moe/kaddqg.mp3", category: "topicFe" },
+  { id: "8", title: "Aliento Divino", artist: "Adoración", reason: "Siente la renovación del Espíritu Santo en tu vida.", audioUrl: "https://files.catbox.moe/i1kvh4.mp3", category: "topicEspirito" },
+  { id: "9", title: "Calma que viene de Dios", artist: "Adoración", reason: "Siente la paz profunda que solo el Espíritu pode dar.", audioUrl: "https://files.catbox.moe/xsydaw.mp3", category: "topicPaz" },
+  { id: "10", title: "Lluvia de Tesoros", artist: "Adoración", reason: "Promessas de abundancia y bendiciones sobre su vida.", audioUrl: "https://files.catbox.moe/ot79va.mp3", category: "topicFe" },
+  { id: "11", title: "Liberta mi corazón", artist: "Adoración", reason: "Un clamor por libertad espiritual y sanidad interior.", audioUrl: "https://files.catbox.moe/zlhcub.mp3", category: "topicClamor" }
 ];
 
 const esJourney = {

@@ -57,17 +57,23 @@ const enWorship = {
 };
 
 const enSongsList = [
-  { id: "1", title: "Path Miracles", artist: "Soraya Moraes", reason: "God opens ways where there are none.", audioUrl: "https://files.catbox.moe/v0y3em.mp3" },
-  { id: "2", title: "Help me Jesus", artist: "Rayne Almeida", reason: "A sincere cry for strength and renewal.", audioUrl: "https://files.catbox.moe/kn3ywn.mp3" },
-  { id: "3", title: "Silent Prayer", artist: "Worship", reason: "Moment of peace and communion with God.", audioUrl: "https://files.catbox.moe/mh8izw.mp3" },
-  { id: "4", title: "Eternal Flame", artist: "Adoration", reason: "May the Spirit's fire never go out.", audioUrl: "https://files.catbox.moe/p5qwhk.mp3" },
-  { id: "5", title: "God's Embrace", artist: "Adoration", reason: "Feel the Father's comfort and love surrounding you.", audioUrl: "https://files.catbox.moe/ulohm3.mp3" },
-  { id: "6", title: "Angel Tongue", artist: "Adoration", reason: "A celestial atmosphere to edify your spirit.", audioUrl: "https://files.catbox.moe/pzx4kx.mp3" },
-  { id: "7", title: "Guiding Star", artist: "Adoration", reason: "Jesus' light illuminates your path.", audioUrl: "https://files.catbox.moe/kaddqg.mp3" },
-  { id: "8", title: "Divine Breath", artist: "Adoration", reason: "Feel the Holy Spirit's renewal in your life.", audioUrl: "https://files.catbox.moe/i1kvh4.mp3" },
-  { id: "9", title: "Calm from God", artist: "Worship", reason: "Feel the deep peace that only the Spirit can give.", audioUrl: "https://files.catbox.moe/xsydaw.mp3" },
-  { id: "10", title: "Rain of Treasures", artist: "Worship", reason: "Promises of abundance and blessings over your life.", audioUrl: "https://files.catbox.moe/ot79va.mp3" },
-  { id: "11", title: "Free my heart", artist: "Worship", reason: "A cry for spiritual freedom and inner healing.", audioUrl: "https://files.catbox.moe/zlhcub.mp3" }
+  { id: "1", title: "Path Miracles", artist: "Soraya Moraes", reason: "God opens ways where there are none.", audioUrl: "https://files.catbox.moe/v0y3em.mp3", category: "topicFe" },
+  { id: "2", title: "Help me Jesus", artist: "Rayne Almeida", reason: "A sincere cry for strength and renewal.", audioUrl: "https://files.catbox.moe/kn3ywn.mp3", category: "topicClamor" },
+  { id: "3", title: "Silent Prayer", artist: "Worship", reason: "Moment of peace and communion with God.", audioUrl: "https://files.catbox.moe/mh8izw.mp3", category: "topicPaz" },
+  { id: "4", title: "Eternal Flame", artist: "Adoration", reason: "May the Spirit's fire never go out.", audioUrl: "https://files.catbox.moe/p5qwhk.mp3", category: "topicEspirito" },
+  { id: "5", title: "God's Embrace", artist: "Adoration", reason: "Feel the Father's comfort and love surrounding you.", audioUrl: "https://files.catbox.moe/ulohm3.mp3", category: "topicPaz" },
+  { id: "6", title: "Angel Tongue", artist: "Adoration", reason: "A celestial atmosphere to edify your spirit.", audioUrl: "https://files.catbox.moe/pzx4kx.mp3", category: "topicAdoracao" },
+  { id: "7", title: "Guiding Star", artist: "Adoration", reason: "Jesus' light illuminates your path.", audioUrl: "https://files.catbox.moe/kaddqg.mp3", category: "topicFe" },
+  { id: "8", title: "Divine Breath", artist: "Adoration", reason: "Feel the Holy Spirit's renewal in your life.", audioUrl: "https://files.catbox.moe/i1kvh4.mp3", category: "topicEspirito" },
+  { id: "9", title: "Calm from God", artist: "Worship", reason: "Feel the deep peace that only the Spirit can give.", audioUrl: "https://files.catbox.moe/xsydaw.mp3", category: "topicPaz" },
+  { id: "10", title: "Rain of Treasures", artist: "Worship", reason: "Promises of abundance and blessings over your life.", audioUrl: "https://files.catbox.moe/ot79va.mp3", category: "topicFe" },
+  { id: "11", title: "Free my heart", artist: "Worship", reason: "A cry for spiritual freedom and inner healing.", audioUrl: "https://files.catbox.moe/zlhcub.mp3", category: "topicClamor" },
+  { id: "12", title: "Bless my plans", artist: "Shalom Worship", reason: "Surrender your projects into the hands of the One who can do everything.", audioUrl: "https://files.catbox.moe/pycxoe.mp3", category: "topicFe" },
+  { id: "13", title: "Take care of my home, God", artist: "Shalom Worship", reason: "A prayer of protection and peace for your home.", audioUrl: "https://files.catbox.moe/kn4ni7.mp3", category: "topicFamilia" },
+  { id: "14", title: "Fire in my heart", artist: "Shalom Worship", reason: "May the Holy Spirit set your soul on fire with passion.", audioUrl: "https://files.catbox.moe/f6dfvg.mp3", category: "topicEspirito" },
+  { id: "15", title: "My Family", artist: "Shalom Worship", reason: "A song to bless and protect your family.", audioUrl: "https://files.catbox.moe/v0y3em.mp3", category: "topicFamilia" },
+  { id: "16", title: "My Refuge", artist: "Shalom Worship", reason: "Finding peace and security in God's presence.", audioUrl: "https://files.catbox.moe/kn3ywn.mp3", category: "topicPaz" },
+  { id: "17", title: "My Strength", artist: "Shalom Worship", reason: "A declaration of faith in God's power.", audioUrl: "https://files.catbox.moe/mh8izw.mp3", category: "topicFe" }
 ];
 
 const enJourney = {
