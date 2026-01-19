@@ -42,7 +42,18 @@ const enWorship = {
   noAudio: 'Audio unavailable',
   libraryTitle: 'Worship Library',
   noResults: 'No worship found.',
-  loading: 'Loading worship...'
+  loading: 'Loading worship...',
+  dailyUpdate: '3 new worship songs every day',
+  dailyPlaylist: 'Today\'s Worship',
+  dailyPlaylistDesc: 'Special suggestions for your moment.',
+  categories: 'Browse by topics',
+  all: 'All',
+  topicPaz: 'Peace & Quiet',
+  topicFe: 'Faith & Miracles',
+  topicEspirito: 'Holy Spirit',
+  topicFamilia: 'Family & Home',
+  topicClamor: 'Cry & Deliverance',
+  topicAdoracao: 'Worship & Glory'
 };
 
 const enSongsList = [

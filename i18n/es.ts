@@ -42,7 +42,18 @@ const esWorship = {
   noAudio: 'Audio no disponible',
   libraryTitle: 'Biblioteca de Adoración',
   noResults: 'No se encontró alabanza.',
-  loading: 'Cargando alabanzas...'
+  loading: 'Cargando alabanzas...',
+  dailyUpdate: '3 nuevas alabanzas todos los días',
+  dailyPlaylist: 'Alabanzas de Hoy',
+  dailyPlaylistDesc: 'Sugerencias especiales para tu momento.',
+  categories: 'Navegar por temas',
+  all: 'Todos',
+  topicPaz: 'Paz y Quietud',
+  topicFe: 'Fe y Milagros',
+  topicEspirito: 'Espíritu Santo',
+  topicFamilia: 'Familia y Hogar',
+  topicClamor: 'Clamor y Liberación',
+  topicAdoracao: 'Adoración y Gloria'
 };
 
 const esSongsList = [

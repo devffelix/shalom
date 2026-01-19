@@ -16,11 +16,11 @@ export const calculateLevel = (xp: number): LevelData => {
 
   const currentLevelBaseXp = currentLevelObj.xp;
   const nextLevelXp = nextLevelObj.xp;
-  
+
   // Calculate progress within current level
   const xpInLevel = xp - currentLevelBaseXp;
   const xpNeededForNext = nextLevelXp - currentLevelBaseXp;
-  
+
   // Avoid division by zero if at max level
   let progressPercent = xpNeededForNext > 0 ? (xpInLevel / xpNeededForNext) * 100 : 100;
   progressPercent = Math.min(100, Math.max(0, progressPercent));
@@ -50,15 +50,18 @@ export const addXp = (amount: number): { newProgress: UserProgress, leveledUp: b
       xp: 0,
       dailyReadCount: 0,
       todayStudyMinutes: 0,
-      earnedBadges: []
+      earnedBadges: [],
+      readReflections: [],
+      readPsalms: [],
+      completedManual: false
     };
   }
 
   const oldXp = progress.xp;
   const oldLevelData = calculateLevel(oldXp);
-  
+
   progress.xp += amount;
-  
+
   const newLevelData = calculateLevel(progress.xp);
   const leveledUp = newLevelData.currentLevel > oldLevelData.currentLevel;
 
@@ -70,21 +73,21 @@ export const addXp = (amount: number): { newProgress: UserProgress, leveledUp: b
 export const recordStudySession = (seconds: number): { minutesAdded: number, xpGained: number } => {
   const saved = localStorage.getItem('lumina_progress');
   if (!saved) return { minutesAdded: 0, xpGained: 0 };
-  
+
   const progress: UserProgress = JSON.parse(saved);
   const minutes = Math.floor(seconds / 60);
-  
+
   if (minutes < 1) return { minutesAdded: 0, xpGained: 0 };
 
   // Update study time
   progress.todayStudyMinutes = (progress.todayStudyMinutes || 0) + minutes;
-  
+
   // XP Calculation: 10 XP per 5 minutes
   const xpGained = Math.floor(minutes / 5) * 10;
   progress.xp = (progress.xp || 0) + xpGained;
 
   localStorage.setItem('lumina_progress', JSON.stringify(progress));
-  
+
   return { minutesAdded: minutes, xpGained };
 };
 
@@ -131,12 +134,12 @@ export const checkAndUnlockBibleBadge = (book: BibleBook): Badge | null => {
   const saved = localStorage.getItem('lumina_progress');
   if (!saved) return null;
   const progress: UserProgress = JSON.parse(saved);
-  
+
   // Ensure earnedBadges exists
   if (!progress.earnedBadges) progress.earnedBadges = [];
 
   const badgeId = `badge_book_${book.englishName}`;
-  
+
   // If already earned, return null
   if (progress.earnedBadges.includes(badgeId)) return null;
 
@@ -144,27 +147,27 @@ export const checkAndUnlockBibleBadge = (book: BibleBook): Badge | null => {
   // We check both English and Portuguese key formats to be safe
   let allRead = true;
   for (let i = 1; i <= book.chapters; i++) {
-     const enId = `${book.englishName}-${i}`;
-     const ptId = `${book.name}-${i}`;
-     if (!progress.readChapters.includes(enId) && !progress.readChapters.includes(ptId)) {
-        allRead = false;
-        break;
-     }
+    const enId = `${book.englishName}-${i}`;
+    const ptId = `${book.name}-${i}`;
+    if (!progress.readChapters.includes(enId) && !progress.readChapters.includes(ptId)) {
+      allRead = false;
+      break;
+    }
   }
 
   if (allRead) {
-     // Unlock!
-     progress.earnedBadges.push(badgeId);
-     progress.xp += XP_PER_BADGE; // Bonus XP
-     localStorage.setItem('lumina_progress', JSON.stringify(progress));
-     
-     return {
-        id: badgeId,
-        title: `Leitor de ${book.name}`,
-        description: `Leu todos os capítulos de ${book.name}.`,
-        icon: 'BookOpen',
-        type: 'bible'
-     };
+    // Unlock!
+    progress.earnedBadges.push(badgeId);
+    progress.xp += XP_PER_BADGE; // Bonus XP
+    localStorage.setItem('lumina_progress', JSON.stringify(progress));
+
+    return {
+      id: badgeId,
+      title: `Leitor de ${book.name}`,
+      description: `Leu todos os capítulos de ${book.name}.`,
+      icon: 'BookOpen',
+      type: 'bible'
+    };
   }
 
   return null;
@@ -193,7 +196,7 @@ export const checkJourneyEligibility = (challengeId: string, totalDays: number):
 
   const savedMain = localStorage.getItem('lumina_progress');
   const savedChallenge = localStorage.getItem(`lumina_challenge_progress_${challengeId}`);
-  
+
   if (!savedMain || !savedChallenge) return null;
 
   const progress: UserProgress = JSON.parse(savedMain);
@@ -205,7 +208,7 @@ export const checkJourneyEligibility = (challengeId: string, totalDays: number):
   if (progress.earnedBadges.includes(badgeId)) return null;
 
   if (completedDays.length >= totalDays) {
-     return STATIC_BADGES.find(b => b.id === badgeId) || null;
+    return STATIC_BADGES.find(b => b.id === badgeId) || null;
   }
 
   return null;
@@ -214,7 +217,7 @@ export const checkJourneyEligibility = (challengeId: string, totalDays: number):
 export const claimBadge = (badgeId: string, xpReward: number): { success: boolean, badge: Badge | null } => {
   const saved = localStorage.getItem('lumina_progress');
   if (!saved) return { success: false, badge: null };
-  
+
   const progress: UserProgress = JSON.parse(saved);
   if (!progress.earnedBadges) progress.earnedBadges = [];
 
@@ -224,15 +227,15 @@ export const claimBadge = (badgeId: string, xpReward: number): { success: boolea
 
   progress.earnedBadges.push(badgeId);
   progress.xp += xpReward;
-  
+
   localStorage.setItem('lumina_progress', JSON.stringify(progress));
 
   // Find badge definition
   let badgeDef = STATIC_BADGES.find(b => b.id === badgeId);
   if (!badgeDef) {
-     // Fallback for dynamic/bible badges if needed, but this function is primarily for Journey manual claims
-     // for now, return generic structure if not found
-     badgeDef = { id: badgeId, title: 'Conquista Desbloqueada', description: '', icon: 'Award', type: 'special' };
+    // Fallback for dynamic/bible badges if needed, but this function is primarily for Journey manual claims
+    // for now, return generic structure if not found
+    badgeDef = { id: badgeId, title: 'Conquista Desbloqueada', description: '', icon: 'Award', type: 'special' };
   }
 
   return { success: true, badge: badgeDef };
