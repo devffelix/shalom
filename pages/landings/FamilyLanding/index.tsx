@@ -52,6 +52,11 @@ const FamilyLanding: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-white dark:bg-black font-sans selection:bg-orange-500/30 overflow-x-hidden">
+            <noscript>
+                <img height="1" width="1" style={{ display: 'none' }}
+                    src="https://www.facebook.com/tr?id=1447330990360231&ev=PageView&noscript=1"
+                />
+            </noscript>
 
 
             {/* Hero Section */}
