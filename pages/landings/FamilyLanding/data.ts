@@ -3,7 +3,7 @@ export const FAMILY_LANDING_CONTENT = {
         title: "Transforme o Vício em Telas em Momentos de Fé e Criatividade com o Maior Acervo Cristão Infantil do Brasil.",
         subtitle: "Chega de TER MEDO de conteúdos duvidosos. O App Shalom une o digital e o real para edificar seu filho: Acesso Liberado imediatamente a +125 moldes bíblicos de brinquedos de papel, +150 desenhos bíblicos para colorir, +37 histórias bíblicas infantis em vídeos animados de alta qualidade, +32 atividades bíblicas lúdicas, +12 jogos bíblicos, +17 louvores infantis… e MAIS!!!",
         cta: "QUERO TUDO ILIMITADO",
-        image: "/shalom_kids_hero_real.png"
+        image: "/shalom_hero_new.jpg"
     },
     carousel: {
         title: "Veja um pouco do aplicativo Shalom que você vai receber imediatamente.",

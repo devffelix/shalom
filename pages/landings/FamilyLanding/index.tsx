@@ -358,9 +358,10 @@ const FamilyLanding: React.FC = () => {
                         {/* Bonuses Grid */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                             {bonusesBlock.items.map((bonus, index) => {
-                                const Icon = {
+                                const iconMap: Record<string, any> = {
                                     Bot, Search, Sun, HeartHandshake, BookHeart, Target, Music2, Map, Clapperboard, Library, Key
-                                }[bonus.icon as keyof typeof import("lucide-react")];
+                                };
+                                const Icon = iconMap[bonus.icon];
 
                                 return (
                                     <div key={index} className="group relative bg-white dark:bg-zinc-950 rounded-3xl overflow-hidden shadow-lg border border-zinc-100 dark:border-zinc-800 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 flex flex-col h-full">
