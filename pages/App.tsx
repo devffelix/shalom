@@ -17,6 +17,7 @@ import Reflections from './Reflections';
 import PsalmsExplained from './PsalmsExplained';
 import ReconnectionGuide from './ReconnectionGuide';
 import Shalomflix from './Shalomflix';
+import FamilyLanding from './landings/FamilyLanding';
 import { UserProgress } from '../types';
 import { AudioProvider } from '../contexts/AudioContext';
 import { LanguageProvider } from '../contexts/LanguageContext';
@@ -154,6 +155,7 @@ const App: React.FC = () => {
                 <Route path="/psalms-explained" element={<PsalmsExplained />} />
                 <Route path="/reconnection-guide" element={<ReconnectionGuide />} />
                 <Route path="/shalomflix" element={<Shalomflix />} />
+                <Route path="/parafamilias" element={<FamilyLanding />} />
               </Routes>
             </Layout>
           </Router>

@@ -26,10 +26,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { t } = useLanguage();
   const [isUpdatesOpen, setIsUpdatesOpen] = useState(false);
 
-  const isSimpleLayout = location.pathname === '/' || location.pathname === '/quiz' || location.pathname === '/admin' || location.pathname === '/shalomflix' || location.pathname === '/reflections' || location.pathname === '/psalms-explained' || location.pathname === '/reconnection-guide';
+  const isSimpleLayout = location.pathname === '/' || location.pathname === '/quiz' || location.pathname === '/admin' || location.pathname === '/shalomflix' || location.pathname === '/reflections' || location.pathname === '/psalms-explained' || location.pathname === '/reconnection-guide' || location.pathname === '/parafamilias';
 
   useEffect(() => {
-    const publicRoutes = ['/', '/quiz'];
+    const publicRoutes = ['/', '/quiz', '/parafamilias'];
     if (!publicRoutes.includes(location.pathname)) {
       const userEmail = localStorage.getItem('lumina_email');
       if (!userEmail) {
