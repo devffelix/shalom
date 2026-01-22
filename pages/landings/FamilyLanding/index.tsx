@@ -60,7 +60,7 @@ const FamilyLanding: React.FC = () => {
 
 
             {/* Hero Section */}
-            <section className="pt-32 pb-20 px-4 bg-white dark:bg-black overflow-hidden relative">
+            <section className="pt-20 pb-4 px-4 bg-white dark:bg-black overflow-hidden relative">
                 {/* Decorative background animations */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-orange-100/40 via-transparent to-transparent opacity-60 dark:opacity-20 pointer-events-none animate-pulse duration-[5000ms]"></div>
 
@@ -78,40 +78,34 @@ const FamilyLanding: React.FC = () => {
                 <div className="max-w-5xl mx-auto text-center flex flex-col items-center relative z-10">
 
                     {/* 1. Headline */}
-                    <h1 className="text-4xl md:text-6xl font-black text-black dark:text-white mb-8 leading-[1.1] tracking-tight max-w-4xl animate-fade-in-up">
+                    <h1 className="text-3xl md:text-5xl font-black text-black dark:text-white mb-6 leading-[1.1] tracking-tight max-w-4xl animate-fade-in-up">
                         Transforme o <span className="relative inline-block text-blue-600">
                             Vício em Telas
                         </span> em Momentos de <span className="text-pink-500">Fé</span> e <span className="text-green-500">Criatividade</span> com o <span className="bg-gradient-to-r from-yellow-400 to-orange-400 text-black px-3 py-1 rounded-xl transform -rotate-1 inline-block shadow-lg hover:rotate-1 transition-transform cursor-default border-b-4 border-orange-600">Maior Acervo Cristão</span> do Brasil.
                     </h1>
 
                     {/* 2. Image (Center) - Blended with User Image */}
-                    <div className="w-full max-w-5xl mb-8 relative group">
-                        {/* Gradient Mask for Seamless White Blend */}
-                        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-white via-white/80 to-transparent z-20 pointer-events-none dark:from-black dark:via-black/80"></div>
+                    <div className="w-full max-w-3xl mb-4 relative group">
                         <div className="absolute -inset-4 bg-orange-500/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
 
                         <img
                             src={hero.image}
                             alt="Acervo Cristão Shalom Kids"
                             className="relative w-full h-auto block mx-auto object-contain z-10 animate-float-slow"
-                            style={{
-                                maskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)',
-                                WebkitMaskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)'
-                            }}
                         />
                     </div>
 
                     {/* 3. Subheadline */}
-                    <div className="text-lg md:text-2xl text-zinc-600 dark:text-zinc-400 mb-12 max-w-4xl mx-auto leading-relaxed font-medium text-center relative z-30">
+                    <div className="text-lg md:text-2xl text-zinc-600 dark:text-zinc-400 mb-8 max-w-4xl mx-auto leading-relaxed font-medium text-center relative z-30">
                         <span className="font-bold text-white bg-black px-4 py-1.5 rounded-lg shadow-lg inline-block transform -rotate-2 hover:rotate-0 transition-transform mb-2 md:mb-0 mr-2 text-base md:text-lg border-2 border-orange-500/20">CHEGA DE MEDO</span> de conteúdos duvidosos. O App Shalom une o digital e o real para edificar seu filho: Acesso Liberado imediatamente a <span className="font-bold text-black dark:text-white decoration-yellow-400 decoration-wavy decoration-2 underline underline-offset-4">+125 moldes</span> de brinquedos, <span className="font-bold text-black dark:text-white decoration-yellow-400 decoration-wavy decoration-2 underline underline-offset-4">+150 desenhos</span>, e <span className="font-bold text-black dark:text-white decoration-yellow-400 decoration-wavy decoration-2 underline underline-offset-4">+37 histórias bíblicas</span>!
                     </div>
 
                     {/* 4. CTA Button - ENHANCED VISIBILITY & ANIMATION */}
-                    <div className="w-full flex flex-col items-center pb-8 gap-6 relative z-30">
+                    <div className="w-full flex flex-col items-center pb-0 gap-6 relative z-30">
                         <button
                             onClick={scrollToPricing}
-                            style={{ backgroundColor: '#22C55E', color: '#ffffff', boxShadow: '0 8px 0 #15803d' }}
-                            className="relative w-full md:w-auto px-12 py-6 rounded-2xl font-black text-2xl md:text-4xl transition-all hover:translate-y-1 active:translate-y-2 uppercase tracking-wide group overflow-hidden"
+                            style={{ backgroundColor: '#22C55E', color: '#ffffff', boxShadow: '0 4px 0 #15803d' }}
+                            className="relative w-auto px-8 py-3 rounded-xl font-black text-lg md:text-xl transition-all hover:translate-y-1 active:translate-y-2 uppercase tracking-wide group overflow-hidden whitespace-nowrap"
                         >
                             <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
                             <span className="relative z-10">
@@ -124,16 +118,16 @@ const FamilyLanding: React.FC = () => {
             </section>
 
             {/* Block 02: Demonstrative Carousel (Multi-Card Coverflow) */}
-            <section className="py-20 bg-white dark:bg-black overflow-hidden relative">
+            <section className="pt-8 pb-20 bg-white dark:bg-black overflow-hidden relative">
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-zinc-50/50 to-transparent pointer-events-none"></div>
 
                 <div className="max-w-7xl mx-auto px-4 text-center relative z-10">
-                    <h2 className="text-3xl md:text-5xl font-black text-black dark:text-white mb-8 max-w-4xl mx-auto leading-tight">
+                    <h2 className="text-3xl md:text-5xl font-black text-black dark:text-white mb-2 max-w-4xl mx-auto leading-tight">
                         {FAMILY_LANDING_CONTENT.carousel.title}
                     </h2>
 
                     {/* Carousel Container - Multi-Card 3D Effect */}
-                    <div className="relative w-full max-w-6xl mx-auto mb-16 perspective-1000 min-h-[400px] md:min-h-[500px]">
+                    <div className="relative w-full max-w-6xl mx-auto mb-16 perspective-1000 min-h-[300px] md:min-h-[400px]">
                         {/* Decorative background glow */}
                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[500px] bg-blue-500/5 blur-[100px] rounded-full pointer-events-none"></div>
 
@@ -237,11 +231,11 @@ const FamilyLanding: React.FC = () => {
                     <div className="flex flex-col items-center gap-4">
                         <button
                             onClick={scrollToPricing}
-                            className="group relative px-8 py-6 bg-white text-black rounded-full font-black text-2xl md:text-4xl shadow-[0_10px_20px_rgba(255,255,255,0.2)] hover:shadow-[0_20px_40px_rgba(255,255,255,0.4)] hover:-translate-y-1 active:translate-y-1 transition-all duration-300 overflow-hidden"
+                            className="group relative px-8 py-4 bg-green-500 text-white rounded-full font-black text-lg md:text-xl shadow-[0_8px_0_#15803d] hover:translate-y-1 active:translate-y-2 transition-all duration-300 overflow-hidden whitespace-nowrap w-auto"
                         >
-                            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-100 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></span>
+                            <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
                             <span className="relative flex items-center gap-3">
-                                <Zap className="w-8 h-8 md:w-10 md:h-10 fill-current animate-pulse text-yellow-500" />
+                                <Zap className="w-5 h-5 md:w-6 md:h-6 fill-current animate-pulse text-yellow-400" />
                                 {urgencyBlock?.cta || "QUERO ACESSO IMEDIATO AGORA"}
                             </span>
                         </button>
@@ -333,51 +327,45 @@ const FamilyLanding: React.FC = () => {
                 <div className="absolute top-0 right-0 w-1/2 h-full bg-orange-50/50 dark:bg-orange-900/10 -skew-x-12 translate-x-1/3"></div>
 
                 <div className="max-w-6xl mx-auto px-4 relative z-10">
-                    <div className="flex flex-col md:flex-row items-center gap-12">
+                    <div className="max-w-4xl mx-auto">
+                        <div className="bg-white dark:bg-zinc-900 rounded-[2.5rem] shadow-2xl border-4 border-yellow-400 overflow-hidden relative transform hover:-translate-y-1 transition-transform duration-300">
 
-                        {/* Left: Device Showcase Image */}
-                        <div className="w-full md:w-1/2 flex justify-center">
-                            <div className="relative group">
-                                <img
-                                    src="/shalom_device_suite.png"
-                                    alt="Shalom App em todos os dispositivos"
-                                    className="relative w-full max-w-[550px] object-contain z-10 hover:scale-105 transition-transform duration-500"
-                                />
+                            {/* Top Banner/Header inside the box */}
+                            <div className="bg-yellow-400 p-8 text-center relative overflow-hidden">
+                                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+                                <h2 className="text-2xl md:text-3xl font-black leading-tight text-black uppercase tracking-tight relative z-10 drop-shadow-sm mb-6">
+                                    VOCÊ VAI RECEBER <span className="bg-black text-yellow-400 px-2 rounded transform -rotate-1 inline-block">ACESSO IMEDIATO</span> AO APLICATIVO SHALOM:
+                                </h2>
+
+                                {/* Mockups Inside the Yellow Box */}
+                                <div className="relative z-10 mb-4 px-4">
+                                    <img
+                                        src="/shalom_full_kit.png"
+                                        alt="Kit Completo Shalom Famílias"
+                                        className="w-full max-w-[600px] mx-auto object-contain hover:scale-105 transition-transform duration-500 drop-shadow-xl"
+                                    />
+                                </div>
                             </div>
-                        </div>
 
-                        {/* Right: Feature Box */}
-                        <div className="w-full md:w-1/2">
-                            <div className="bg-white dark:bg-zinc-900 rounded-[2.5rem] shadow-2xl border-4 border-yellow-400 overflow-hidden relative transform hover:-translate-y-1 transition-transform duration-300">
-
-                                {/* Top Banner/Header inside the box */}
-                                <div className="bg-yellow-400 p-8 text-center relative overflow-hidden">
-                                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-                                    <h2 className="text-2xl md:text-3xl font-black leading-tight text-black uppercase tracking-tight relative z-10 drop-shadow-sm">
-                                        VOCÊ VAI RECEBER <span className="bg-black text-yellow-400 px-2 rounded transform -rotate-1 inline-block">ACESSO IMEDIATO</span> AO APLICATIVO SHALOM:
-                                    </h2>
-                                </div>
-
-                                {/* List Content */}
-                                <div className="p-8 md:p-10 bg-white dark:bg-zinc-900 relative">
-                                    <ul className="space-y-5 relative z-10">
-                                        {FAMILY_LANDING_CONTENT.mainProductBlock.items.map((item, index) => (
-                                            <li key={index} className="flex items-center gap-4 group">
-                                                <div className="flex-shrink-0 w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white shadow-md shadow-green-500/30 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
-                                                    <Check size={24} strokeWidth={4} />
-                                                </div>
-                                                <span className="text-lg md:text-xl font-black text-zinc-800 dark:text-zinc-100 group-hover:text-green-600 transition-colors">
-                                                    {item}
-                                                </span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
+                            {/* List Content */}
+                            <div className="p-8 md:p-10 bg-white dark:bg-zinc-900 relative">
+                                <ul className="space-y-5 relative z-10">
+                                    {FAMILY_LANDING_CONTENT.mainProductBlock.items.map((item, index) => (
+                                        <li key={index} className="flex items-center gap-4 group">
+                                            <div className="flex-shrink-0 w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white shadow-md shadow-green-500/30 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
+                                                <Check size={24} strokeWidth={4} />
+                                            </div>
+                                            <span className="text-lg md:text-xl font-black text-zinc-800 dark:text-zinc-100 group-hover:text-green-600 transition-colors">
+                                                {item}
+                                            </span>
+                                        </li>
+                                    ))}
+                                </ul>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
+            </section >
 
             {/* Block 07: Bônus Exclusivos (Presentes) */}
             {bonusesBlock && (
@@ -429,7 +417,6 @@ const FamilyLanding: React.FC = () => {
 
                                         {/* Yellow Ribbon Title */}
                                         <div className="bg-yellow-400 py-3 px-4 relative">
-                                            {/* Ribbon folding effect CSS triangle could go here if we wanted complex pure CSS, but simple is bold enough */}
                                             <h3 className="text-black font-black text-center text-sm md:text-base uppercase tracking-tight leading-4">
                                                 {bonus.name}
                                             </h3>
@@ -690,7 +677,7 @@ const FamilyLanding: React.FC = () => {
                     perspective: 1000px;
                 }
             `}</style>
-        </div >
+        </div>
     );
 };
 
@@ -717,7 +704,7 @@ const Carousel = ({ images }: { images: string[] }) => {
 
     return (
         <div
-            className="w-full h-[700px] md:h-[700px] relative flex items-center justify-center overflow-visible"
+            className="w-full h-[400px] md:h-[600px] relative flex items-center justify-center overflow-visible"
             onMouseEnter={() => setIsAutoPlaying(false)}
             onMouseLeave={() => setIsAutoPlaying(true)}
         >
